@@ -31,7 +31,7 @@ public class CameraFollowPlayer : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            var oldName = CurrentPlayer.Name;
+            //var oldName = CurrentPlayer.Name;
 
             selectedUserId =
                 selectedUserId + 1 >= PlayerCharacters.Length - 1 ?

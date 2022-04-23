@@ -28,6 +28,12 @@ public class PlayerMovement : MonoBehaviour
 
     //game logic
 
+
+    // private bool isGrounded;
+    //public Transform groundCheck;
+    //public LayerMask GroundLayer;
+    //const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
+
     public PlayerMovement()
     {
         PlayerCharacters = new Character[] {
@@ -85,17 +91,19 @@ public class PlayerMovement : MonoBehaviour
            // Debug.LogWarning($"Current user is {CurrentPlayer.Name}");
 
             //Only Ulrick can jump
-            if (CurrentPlayer is Viking1_Ulrick)
-            {
+            //if (CurrentPlayer is Viking1_Ulrick)
+            //{
                 jump = true;
                 animator.SetBool("IsJumping", true);
 
-                Debug.Log($"Player {CurrentPlayer.Name} => Jump");
-            }
-            else
-            {
-                Debug.Log($"Sorry, but {CurrentPlayer.Name} can't jump");
-            }
+            //    Debug.Log($"Player {CurrentPlayer.Name} => Jump");
+            //}
+            //else
+            //{
+            //    Debug.Log($"Sorry, but {CurrentPlayer.Name} can't jump");
+            //}
+
+
         }
     }
 
@@ -106,13 +114,20 @@ public class PlayerMovement : MonoBehaviour
         // Move our character (go, jump)
         controller.Move(CurrentPlayer, horizontalMove * Time.fixedDeltaTime, crouch, jump);
         jump = false;
+
+        //jump = Physics2D.OverlapCircle(groundCheck.position, k_GroundedRadius, GroundLayer);
+
+        //if (!jump)
+        //{
+        //     animator.SetBool("IsJumping", false);
+        //}
     }
 
     /// <summary>
     /// How get it ??
     /// </summary>
-    public void OnLanding()
-    {
-        animator.SetBool("IsJumping", false);
-    }
+    ////public void LandViking()
+    ////{
+    ////    animator.SetBool("IsJumping", false);
+    ////}
 }

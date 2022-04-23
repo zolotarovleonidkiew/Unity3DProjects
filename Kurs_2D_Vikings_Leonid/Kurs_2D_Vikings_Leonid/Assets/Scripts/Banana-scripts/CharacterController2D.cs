@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
-    [SerializeField] private float m_JumpForce = 800f;							// Amount of force added when the player jumps.
+    [SerializeField] private float m_JumpForce = 10000;							// Amount of force added when the player jumps. 800
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 
     private Vector3 m_Velocity = Vector3.zero;
@@ -14,15 +15,19 @@ public class CharacterController2D : MonoBehaviour
     private bool playerIconDirectionToRight = true;
     private bool playerOnTheFloor = true;
 
+    //land
+  //  public UnityEvent OnLandEvent;
+    const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
+    private bool isGrounded;
+    public Transform groundCheck;
+    public LayerMask GroundLayer;
+
     private void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
 
         //if (OnLandEvent == null)
         //    OnLandEvent = new UnityEvent();
-
-        //if (OnCrouchEvent == null)
-        //    OnCrouchEvent = new BoolEvent();
     }
 
     // Start is called before the first frame update
@@ -32,9 +37,32 @@ public class CharacterController2D : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        //bool wasGrounded = isGrounded;
+        //isGrounded = false;
 
+        //// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+        //// This can be done using layers instead but Sample Assets will not overwrite your project settings.
+        //Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
+        //for (int i = 0; i < colliders.Length; i++)
+        //{
+        //    if (colliders[i].gameObject != gameObject)
+        //    {
+        //        isGrounded = true;
+        //        if (!wasGrounded)
+        //            OnLandEvent.Invoke();
+        //    }
+        //}
+
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, k_GroundedRadius, GroundLayer);
+
+        playerOnTheFloor = isGrounded;
+
+        if (!isGrounded)
+        {
+           // animator.SetBool("IsJumping", false);
+        }
     }
 
     public void Move(Character currentPlayer, float move, bool crouch, bool jump)
@@ -57,9 +85,16 @@ public class CharacterController2D : MonoBehaviour
         }
         else if (jump)
         {
-            // Add a vertical force to the player.
-            playerOnTheFloor = false;
-            m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            if (isGrounded)
+            {
+                playerOnTheFloor = false;
+                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            }
+            else
+            {
+                playerOnTheFloor = true;
+            }
+
         }
     }
 
