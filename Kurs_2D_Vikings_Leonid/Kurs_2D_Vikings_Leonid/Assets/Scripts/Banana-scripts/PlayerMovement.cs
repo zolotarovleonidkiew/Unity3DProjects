@@ -2,22 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///  MAKE JUMP !!!
+/// </summary>
+
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private string Name;
+
     public CharacterController2D controller;
     public Animator animator;
     public float runSpeed = 40f;
 
     float horizontalMove = 0f;
-    // bool jump = false;
+    bool jump = false;
     // bool crouch = false;
 
     //game logic
-    Character[] PlayerCharacters; // list of characters
+    public Character[] PlayerCharacters; // list of characters
 
     //выбранный персонаж
     int selectedUserId = 0;
-    Character CurrentPlayer;
+    
+    public Character CurrentPlayer;
 
     //game logic
 
@@ -45,11 +52,11 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
+        //сменить игрока
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            Debug.Log($"Key 'Tab' pressed.");
-            
-            var oldName = CurrentPlayer.Name;
+           // var t = this.GetComponent("Hero-Olaf")
+           // var oldName = CurrentPlayer.Name;
 
             selectedUserId =
                 selectedUserId + 1  > PlayerCharacters.Length - 1 ?
@@ -58,17 +65,54 @@ public class PlayerMovement : MonoBehaviour
 
             CurrentPlayer = PlayerCharacters[selectedUserId];
 
-            Debug.Log($"Player changed from {oldName} to {CurrentPlayer.Name}");
+          //  Debug.Log($"Player changed from {oldName} to {CurrentPlayer.Name}");
+
+            //logic +
+            //if (Name != CurrentPlayer.Name)
+            //{
+            //    var t = this.GetComponent<CharacterController2D>();
+            //    t.enabled = false;
+            //}
+            //else
+            //{
+            //    var t = this.GetComponent<CharacterController2D>();
+            //    t.enabled = true;
+            //}
+            //logic -
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+           // Debug.LogWarning($"Current user is {CurrentPlayer.Name}");
+
+            //Only Ulrick can jump
+            if (CurrentPlayer is Viking1_Ulrick)
+            {
+                jump = true;
+                animator.SetBool("IsJumping", true);
+
+                Debug.Log($"Player {CurrentPlayer.Name} => Jump");
+            }
+            else
+            {
+                Debug.Log($"Sorry, but {CurrentPlayer.Name} can't jump");
+            }
         }
     }
 
     void FixedUpdate()
     {
         var crouch = false;
-        var jump = false;
 
-        // Move our character
-        controller.Move(horizontalMove * Time.fixedDeltaTime, crouch, jump);
+        // Move our character (go, jump)
+        controller.Move(CurrentPlayer, horizontalMove * Time.fixedDeltaTime, crouch, jump);
         jump = false;
+    }
+
+    /// <summary>
+    /// How get it ??
+    /// </summary>
+    public void OnLanding()
+    {
+        animator.SetBool("IsJumping", false);
     }
 }

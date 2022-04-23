@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterController2D : MonoBehaviour
 {
+    [SerializeField] private float m_JumpForce = 800f;							// Amount of force added when the player jumps.
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 
     private Vector3 m_Velocity = Vector3.zero;
@@ -11,8 +12,7 @@ public class CharacterController2D : MonoBehaviour
     private Rigidbody2D m_Rigidbody2D;
 
     private bool playerIconDirectionToRight = true;
-
-
+    private bool playerOnTheFloor = true;
 
     private void Awake()
     {
@@ -37,20 +37,29 @@ public class CharacterController2D : MonoBehaviour
 
     }
 
-    public void Move(float move, bool crouch, bool jump)
+    public void Move(Character currentPlayer, float move, bool crouch, bool jump)
     {
-        Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
-
-        // And then smoothing it out and applying it to the character
-        m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-
-        if (move > 0 && !playerIconDirectionToRight)
+        if (playerOnTheFloor && !jump)
         {
-            Flip();
+            Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
+
+            // And then smoothing it out and applying it to the character
+            m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+
+            if (move > 0 && !playerIconDirectionToRight)
+            {
+                Flip();
+            }
+            else if (move < 0 && playerIconDirectionToRight)
+            {
+                Flip();
+            }
         }
-        else if (move < 0 && playerIconDirectionToRight)
+        else if (jump)
         {
-            Flip();
+            // Add a vertical force to the player.
+            playerOnTheFloor = false;
+            m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
         }
     }
 
