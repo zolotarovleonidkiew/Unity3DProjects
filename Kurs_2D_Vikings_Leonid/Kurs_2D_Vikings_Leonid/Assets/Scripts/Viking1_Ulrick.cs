@@ -8,8 +8,6 @@ public class Viking1_Ulrick : Character
     public Viking1_Ulrick() : base("Ulrick", CharacterType.viking_1)
     {
         CanJump = true;
-
-        //CharacterSprite =  ???
     }
 
     /// <summary>

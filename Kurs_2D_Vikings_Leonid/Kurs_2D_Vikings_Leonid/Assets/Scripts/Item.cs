@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public enum ItemTypes
 {
+    BlueKey,
+    RedKey,
+    YellowKey,
     Food,
     Bomb,
     Drinks
@@ -85,7 +88,7 @@ public class BombItem : Item
     public override void ApplyItem(Character player)
     {
         //бомбу можно только поместить, и она через 3 секунды должна взорваться (корутина)
-        OnBombPlant(player.CharacterPosition);
+       // OnBombPlant(player.position);
     }
 
     /// <summary>
@@ -117,5 +120,51 @@ public class VodkaItem : Item
     {
         //уменьшить здоровье (убить)
         player.CurrentHealth -= DecreaseHealthPoint;
+    }
+}
+
+/// <summary>
+/// Синий ключ
+/// </summary>
+public class BlueKey : Item
+{
+    public BlueKey()
+    {
+        Type = ItemTypes.BlueKey;
+    }
+
+    public override void ApplyItem(Character player)
+    {
+     
+    }
+}
+
+/// <summary>
+/// Красный ключ
+/// </summary>
+public class RedKey : Item
+{
+    public RedKey()
+    {
+        Type = ItemTypes.RedKey;
+    }
+
+    public override void ApplyItem(Character player)
+    {
+    }
+}
+
+/// <summary>
+/// Желтый ключ
+/// </summary>
+public class YellowKey : Item
+{
+    public YellowKey()
+    {
+        Type = ItemTypes.YellowKey;
+    }
+
+    public override void ApplyItem(Character player)
+    {
     }
 }

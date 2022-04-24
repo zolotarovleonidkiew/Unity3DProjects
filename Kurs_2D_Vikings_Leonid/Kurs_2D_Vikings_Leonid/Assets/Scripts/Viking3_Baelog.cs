@@ -8,8 +8,6 @@ public class Viking3_Baelog : Character
     public Viking3_Baelog() : base("Baelog", CharacterType.viking_1)
     {
         CanShoot = true;
-
-        //CharacterSprite =  ???
     }
 
     /// <summary>

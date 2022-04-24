@@ -8,8 +8,6 @@ public class Viking2_Olaf : Character
     public Viking2_Olaf() : base("Olaf", CharacterType.viking_1)
     {
         CanDefendByShield = true;
-
-        //CharacterSprite =  ???
     }
 
     /// <summary>
