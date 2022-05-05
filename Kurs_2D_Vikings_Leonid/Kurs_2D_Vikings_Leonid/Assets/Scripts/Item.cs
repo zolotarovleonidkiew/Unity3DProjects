@@ -19,7 +19,7 @@ public enum ItemTypes
 public partial class Item
 {
     public ItemTypes Type { get; set; }
-
+}
 
 
 /// <summary>
