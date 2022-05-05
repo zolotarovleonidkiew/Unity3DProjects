@@ -30,6 +30,13 @@ public class PlayerMovement : MonoBehaviour
 
     //game logic
 
+    /// <summary>
+    /// Персонаж в коллайдере двери, ждет нажатия Е чтобы ключом открыть дверь
+    /// </summary>
+    public bool TryToOpenDoorFlag;
+    public ItemTypes NeededItemToOpenDoorType;
+    public DoorController GameObjectDoorReference;
+
 
     // private bool isGrounded;
     //public Transform groundCheck;
@@ -106,6 +113,37 @@ public class PlayerMovement : MonoBehaviour
             //}
 
 
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            //применить текущий элемент в инвентаре
+            if (TryToOpenDoorFlag)
+            {
+                var selectedItem = controller.GetInventoryItemByIndex();
+
+                if (selectedItem != null)
+                {
+                    if (selectedItem.Type == NeededItemToOpenDoorType)
+                    {
+                        var referenceDoorController = GameObjectDoorReference.GetComponent<DoorController>();
+
+                        if (referenceDoorController == null)
+                        {
+                            //Debug
+
+                            //"звук Доступ запрещен"
+                        }
+                        else
+                        {
+                            //юзер, имея правильный ключ, нажал кнопку открытия дверей
+                            referenceDoorController.DoorReadyToOpenFlag = true;
+
+                            //удалить использованный ключ
+                            controller.RemoveItemFromInventory();
+                        }
+                    }
+                }
+            }
         }
     }
 

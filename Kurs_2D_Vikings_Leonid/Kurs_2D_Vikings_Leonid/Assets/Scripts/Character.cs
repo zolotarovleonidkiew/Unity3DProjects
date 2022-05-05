@@ -12,16 +12,6 @@ public partial class Character : MonoBehaviour
     public string Name { get; private set; }
 
     /// <summary>
-    /// Позиция викинга
-    /// </summary>
-    public Vector3 CharacterPosition { get; set; }
-
-    //2D
-    public float MotionSpeed { get; set; }
-    public float JumpForce { get; set; }
-    public Sprite CharacterSprite { get; set; }
-
-    /// <summary>
     /// Тип: викинг 1, 2, 3 или враг
     /// </summary>
     public CharacterType Type {get;set;}
@@ -136,20 +126,20 @@ public partial class Character : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Применить выбранный элемент инвентаря (можно выбрать пустой)
-    /// </summary>
-    public void OnApplyItem()
-    {
-        var item = InventoryArr[SelectedItem];
+    ///////// <summary>
+    ///////// Применить выбранный элемент инвентаря (можно выбрать пустой)
+    ///////// </summary>
+    //////public void OnApplyItem()
+    //////{
+    //////    //var item = InventoryArr[SelectedItem];
 
-        if (item != null)
-        {
-            item.ApplyItem(this);
+    //////    //if (item != null)
+    //////    //{
+    //////    //    item.ApplyItem(this);
 
-            InventoryArr[SelectedItem] = null;
-        }
-    }
+    //////    //    InventoryArr[SelectedItem] = null;
+    //////    //}
+    //////}
 
     /// <summary>
     /// Викинг умирает

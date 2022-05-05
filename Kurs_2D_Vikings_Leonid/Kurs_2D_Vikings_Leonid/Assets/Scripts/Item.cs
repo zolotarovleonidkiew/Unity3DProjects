@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -19,34 +16,10 @@ public enum ItemTypes
 /// <summary>
 /// Ёлемент инвентар€ / вал€етс€ на полу
 /// </summary>
-public abstract partial class Item : MonoBehaviour
+public partial class Item
 {
     public ItemTypes Type { get; set; }
-    public Sprite ItemSprite { get; set; }
 
-    /// <summary>
-    /// ƒействие, которое может совершить викинг с этим предметом при его »—ѕќЋ№«ќ¬јЌ»»
-    /// </summary>
-    abstract public void ApplyItem(Character player);
-}
-
-/// <summary>
-/// —ообыти€  Unity
-/// </summary>
-public partial class Item : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
 
 
 /// <summary>
@@ -61,11 +34,6 @@ public class FoodItem : Item
 
     public const int RestoreHealthpoints = 3;
 
-    public override void ApplyItem(Character player)
-    {
-        //лечение
-        player.CurrentHealth += RestoreHealthpoints;
-    }
 }
 
 /// <summary>
@@ -85,23 +53,6 @@ public class BombItem : Item
 
     public const int DestroyRadius = 3;
 
-    public override void ApplyItem(Character player)
-    {
-        //бомбу можно только поместить, и она через 3 секунды должна взорватьс€ (корутина)
-       // OnBombPlant(player.position);
-    }
-
-    /// <summary>
-    /// EVENT - викинг положил бомбу
-    /// </summary>
-    /// <param name="position"></param>
-    public void OnBombPlant(Vector3 position)
-    {
-        BombPlantedPosition = position;
-
-        //таймер + взырв + корутина
-        //нарисовать Ѕ”ћ
-    }
 }
 
 /// <summary>
@@ -115,12 +66,6 @@ public class VodkaItem : Item
     }
 
     public const int DecreaseHealthPoint = 3;
-
-    public override void ApplyItem(Character player)
-    {
-        //уменьшить здоровье (убить)
-        player.CurrentHealth -= DecreaseHealthPoint;
-    }
 }
 
 /// <summary>
@@ -133,10 +78,6 @@ public class BlueKey : Item
         Type = ItemTypes.BlueKey;
     }
 
-    public override void ApplyItem(Character player)
-    {
-     
-    }
 }
 
 /// <summary>
@@ -149,9 +90,6 @@ public class RedKey : Item
         Type = ItemTypes.RedKey;
     }
 
-    public override void ApplyItem(Character player)
-    {
-    }
 }
 
 /// <summary>
@@ -164,7 +102,4 @@ public class YellowKey : Item
         Type = ItemTypes.YellowKey;
     }
 
-    public override void ApplyItem(Character player)
-    {
-    }
 }

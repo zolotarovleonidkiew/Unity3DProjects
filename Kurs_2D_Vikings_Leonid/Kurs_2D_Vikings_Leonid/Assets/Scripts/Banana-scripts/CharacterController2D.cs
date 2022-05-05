@@ -5,6 +5,19 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
+    #region For Exit Level
+    [SerializeField] public string VikingName;
+    #endregion
+
+    #region Inventory
+
+    const int InventoryItemsMax = 4;
+    public Item[] Inventory;
+
+    private int indexSelectedInventoryItem = 0;
+
+    #endregion
+
     [SerializeField] private float m_JumpForce = 10000;							// Amount of force added when the player jumps. 800
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 
@@ -16,7 +29,7 @@ public class CharacterController2D : MonoBehaviour
     private bool playerOnTheFloor = true;
 
     //land
-  //  public UnityEvent OnLandEvent;
+    //  public UnityEvent OnLandEvent;
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
     private bool isGrounded;
     public Transform groundCheck;
@@ -32,8 +45,8 @@ public class CharacterController2D : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-
+    {       
+        Inventory = new Item[4] { null, null, null, null };
     }
 
     // Update is called once per frame
@@ -61,7 +74,7 @@ public class CharacterController2D : MonoBehaviour
 
         if (!isGrounded)
         {
-           // animator.SetBool("IsJumping", false);
+            // animator.SetBool("IsJumping", false);
         }
     }
 
@@ -109,4 +122,74 @@ public class CharacterController2D : MonoBehaviour
         theScale.x *= -1;
         transform.localScale = theScale;
     }
+
+
+    #region Inventory operations
+
+    /// <summary>
+    /// Получить итем по indexSelectedInventoryItem
+    /// </summary>
+    public Item GetInventoryItemByIndex()
+    {
+        return Inventory[indexSelectedInventoryItem];
+    }
+
+    /// <summary>
+    /// Управление инвентарем по инексу
+    /// </summary>
+    /// <param name="i"></param>
+    public void ChangeindexSelectedInventoryItem()
+    {
+        indexSelectedInventoryItem ++;
+
+        if (indexSelectedInventoryItem == InventoryItemsMax)
+        {
+            indexSelectedInventoryItem = 0;
+        }
+    }
+
+    /// <summary>
+    /// Добавить итем винвентарь - ИНВЕНТАРЬ ВСЕГДА ПУСТ. ПОЧЕМУ ???
+    /// </summary>
+    /// <param name="i">Item</param>
+    /// <returns>успешно/рюкзак полон</returns>
+    public bool AddItemToInventory(Item i)
+    {
+        if (Inventory[0] == null)
+        {
+            Inventory[0] = i;
+            return true;
+        }
+        else if (Inventory[1] == null)
+        {
+            Inventory[1] = i;
+            return true;
+        }
+        else if (Inventory[2] == null)
+        {
+            Inventory[2] = i;
+            return true;
+        }
+        else if(Inventory[3] == null)
+        {
+            Inventory[3] = i;
+            return true;
+        }
+        else
+        {
+            Debug.LogError("Рюкзак полон");
+
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Удалить текущий (выбранный) в инваентаре элемент
+    /// </summary>
+    /// <returns> успешно (итем исчез) / не успешно (итем не исчез)</returns>
+    public void RemoveItemFromInventory()
+    {
+        Inventory[indexSelectedInventoryItem] = null;
+    }
+    #endregion
 }

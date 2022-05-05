@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -13,40 +11,102 @@ using UnityEngine;
 /// </summary>
 public class DoorController : MonoBehaviour
 {
+    private CharacterController2D controller;
+
     //  public Animator animator;
     public AudioSource audioSource;
     public SpriteRenderer spriteRenderer;
-    public Sprite OpenedDoor;
-    public Sprite ClosedDoor;
+    [SerializeField] private Sprite OpenedDoor;
+    [SerializeField] private Sprite ClosedDoor;
+    [SerializeField] bool NoKeyNeeded;
+    [SerializeField] private ItemTypes RequiredItemToOpenDoor;
 
-    public bool RequireBlueKey = false;
-    public bool RequireRedKey = false;
-    public bool RequireYellowKey = false;
-
-    public bool RequireExplosion = false;
+    public bool DoorReadyToOpenFlag = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Collision hit detected");
 
-        //animator.SetBool("doorToOpen", true);
+        if (!NoKeyNeeded)
+        {
+            // nothing
+            SetFlagPlayerToOpenDoor(collision);
+        }
+        else
+        {
+            OpenDoor();
+        }
+
+    }
+
+    void OpenDoor()
+    {
+        //убрать child collision
+        if (transform.childCount == 1)
+        {
+            var childTransform = transform.GetChild(0);
+            var child = childTransform.gameObject;
+            var collider = child.GetComponent<BoxCollider2D>();
+            collider.enabled = false;
+        }
+
         spriteRenderer.sprite = OpenedDoor;
 
         PlayAudio();
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        Debug.Log("Collision EXIT hit detected");
-
-        //animator.SetBool("doorToOpen", false);
-        spriteRenderer.sprite = ClosedDoor;
-
-      //  PlayAudio();
-    }
-
     void PlayAudio()
     {
         audioSource.Play();
+    }
+
+    //***************************************************************************************
+
+    void SetFlagPlayerToOpenDoor(Collider2D collision)
+    {
+        var pmController = collision.GetComponent<PlayerMovement>();
+
+        if (pmController != null)
+        {
+            pmController.TryToOpenDoorFlag = true;
+            pmController.NeededItemToOpenDoorType = RequiredItemToOpenDoor;
+            pmController.GameObjectDoorReference = this;
+        }
+    }
+
+    //персонаж не стал открывать дверь и вышел из коллайдера
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+
+        if (!NoKeyNeeded)
+        {
+            var pmController = collision.GetComponent<PlayerMovement>();
+
+            if (pmController != null)
+            {
+                pmController.TryToOpenDoorFlag = false;
+                pmController.GameObjectDoorReference = null;
+            }
+        }
+        else
+        {
+            Debug.Log("Collision EXIT hit detected");
+
+            spriteRenderer.sprite = ClosedDoor;
+
+            PlayAudio();
+        }
+
+
+    }
+
+    void Update()
+    {
+        if (DoorReadyToOpenFlag)
+        {
+            OpenDoor();
+            NoKeyNeeded = true;
+            DoorReadyToOpenFlag = false;
+        }
     }
 }

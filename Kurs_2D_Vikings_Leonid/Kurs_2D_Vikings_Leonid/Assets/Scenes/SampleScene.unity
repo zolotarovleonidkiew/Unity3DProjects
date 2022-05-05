@@ -608,9 +608,10 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 81.73752, y: -9.481499, z: 45.936554}
   m_LocalScale: {x: 2.8109, y: 3.3547099, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1687362679}
   m_Father: {fileID: 1632018929}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &260591521
 Animator:
@@ -647,10 +648,9 @@ MonoBehaviour:
   spriteRenderer: {fileID: 260591519}
   OpenedDoor: {fileID: 21300000, guid: e8cc13e90bc4da54d886e390d2835a96, type: 3}
   ClosedDoor: {fileID: 21300000, guid: 03ac08c863d8abf4d8d79555de37d39b, type: 3}
-  RequireBlueKey: 1
-  RequireRedKey: 0
-  RequireYellowKey: 0
-  RequireExplosion: 0
+  NoKeyNeeded: 0
+  RequiredItemToOpenDoor: 0
+  DoorReadyToOpenFlag: 0
 --- !u!61 &260591523
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1055,10 +1055,9 @@ MonoBehaviour:
   spriteRenderer: {fileID: 332019106}
   OpenedDoor: {fileID: 21300000, guid: e8cc13e90bc4da54d886e390d2835a96, type: 3}
   ClosedDoor: {fileID: 21300000, guid: 03ac08c863d8abf4d8d79555de37d39b, type: 3}
-  RequireBlueKey: 0
-  RequireRedKey: 0
-  RequireYellowKey: 0
-  RequireExplosion: 0
+  NoKeyNeeded: 1
+  RequiredItemToOpenDoor: 0
+  DoorReadyToOpenFlag: 0
 --- !u!61 &332019110
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1907,6 +1906,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   CurrentPlayer: {fileID: 0}
+  TryToOpenDoorFlag: 0
+  NeededItemToOpenDoorType: 0
+  GameObjectDoorReference: {fileID: 0}
 --- !u!114 &604186529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1919,6 +1921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ed089472f5dea42b6fde0dd2592f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  VikingName: Ulrick
   m_JumpForce: 800
   m_MovementSmoothing: 0.05
   groundCheck: {fileID: 90747039}
@@ -2868,6 +2871,63 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.55, y: 1.05}
   m_EdgeRadius: 0
+--- !u!1 &1167093742
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1167093743}
+  - component: {fileID: 1167093744}
+  m_Layer: 0
+  m_Name: DoorCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1167093743
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167093742}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2002888764}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1167093744
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167093742}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.08552481, y: 0.023887098}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.8289504, y: 1.6210667}
+  m_EdgeRadius: 0
 --- !u!1 &1169860748
 GameObject:
   m_ObjectHideFlags: 0
@@ -3141,6 +3201,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1287583901}
   - component: {fileID: 1287583900}
+  - component: {fileID: 1287583902}
+  - component: {fileID: 1287583903}
   m_Layer: 0
   m_Name: Red-Key
   m_TagString: Untagged
@@ -3207,12 +3269,51 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1287583899}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -53.398197, y: 16.289309, z: 20.487545}
+  m_LocalPosition: {x: -38.95, y: 6.3, z: 20.487545}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1169860749}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1287583902
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287583899}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1.42}
+    newSize: {x: 1, y: 1.42}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.4937897, y: 1.42}
+  m_EdgeRadius: 0
+--- !u!114 &1287583903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287583899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2b1c99a94af7df4aa64481e291797b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTypeOfItem: 1
 --- !u!1 &1289993515
 GameObject:
   m_ObjectHideFlags: 0
@@ -3724,7 +3825,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.034406185, y: 0.08259201}
+  m_Offset: {x: 0.009649754, y: 0.08259201}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -3735,7 +3836,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 12.251748, y: 7.0728016}
+  m_Size: {x: 12.33986, y: 7.0728016}
   m_EdgeRadius: 0
 --- !u!212 &1430792752
 SpriteRenderer:
@@ -3813,6 +3914,7 @@ GameObject:
   - component: {fileID: 1534253875}
   - component: {fileID: 1534253874}
   - component: {fileID: 1534253876}
+  - component: {fileID: 1534253877}
   m_Layer: 0
   m_Name: Exit
   m_TagString: Untagged
@@ -3879,8 +3981,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1534253873}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 80.36, y: -5.08, z: 0}
-  m_LocalScale: {x: 1.9934, y: 2.4055166, z: 1}
+  m_LocalPosition: {x: 80.36, y: -4.9985, z: 0}
+  m_LocalScale: {x: 1.9934, y: 2.6968374, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -3898,7 +4000,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.65888023, y: -1.0408151}
+  m_Offset: {x: -0.65888023, y: -0.40569425}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -3909,8 +4011,23 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4.3302455, y: 2.6416302}
+  m_Size: {x: 4.3302455, y: 3.3674817}
   m_EdgeRadius: 0
+--- !u!114 &1534253877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534253873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d89cf5209e7a2f4cac43deb05e1072e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UlrichReachedFlag: 0
+  BaelogReachedFlag: 0
+  OlafReachedFlag: 0
 --- !u!1 &1560992907
 GameObject:
   m_ObjectHideFlags: 0
@@ -4163,7 +4280,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1.5
+  m_GravityScale: 10
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -4190,6 +4307,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   CurrentPlayer: {fileID: 0}
+  TryToOpenDoorFlag: 0
+  NeededItemToOpenDoorType: 0
+  GameObjectDoorReference: {fileID: 0}
 --- !u!114 &1567401355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4202,6 +4322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ed089472f5dea42b6fde0dd2592f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  VikingName: Olaf
   m_JumpForce: 800
   m_MovementSmoothing: 0.05
   groundCheck: {fileID: 159532566}
@@ -4256,8 +4377,8 @@ Transform:
   - {fileID: 847894499}
   - {fileID: 832285399}
   - {fileID: 332019107}
-  - {fileID: 260591520}
   - {fileID: 2002888764}
+  - {fileID: 260591520}
   - {fileID: 204070861}
   - {fileID: 2110932571}
   - {fileID: 1560992908}
@@ -4265,6 +4386,63 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1687362678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1687362679}
+  - component: {fileID: 1687362680}
+  m_Layer: 0
+  m_Name: DoorCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1687362679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687362678}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 260591520}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1687362680
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687362678}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.0277109, y: -0.02321887}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.6674669, y: 1.4643764}
+  m_EdgeRadius: 0
 --- !u!1 &1706146626
 GameObject:
   m_ObjectHideFlags: 0
@@ -4406,6 +4584,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1782853174}
   - component: {fileID: 1782853173}
+  - component: {fileID: 1782853175}
+  - component: {fileID: 1782853176}
   m_Layer: 0
   m_Name: Blue-Key
   m_TagString: Untagged
@@ -4478,6 +4658,45 @@ Transform:
   m_Father: {fileID: 1169860749}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1782853175
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782853172}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.04937935, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1.42}
+    newSize: {x: 1, y: 1.42}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.6913033, y: 1.42}
+  m_EdgeRadius: 0
+--- !u!114 &1782853176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782853172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2b1c99a94af7df4aa64481e291797b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTypeOfItem: 0
 --- !u!1 &1814745694
 GameObject:
   m_ObjectHideFlags: 0
@@ -4760,9 +4979,10 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 68.65, y: -9.45, z: 45.936554}
   m_LocalScale: {x: 2.8109, y: 3.3547099, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1167093743}
   m_Father: {fileID: 1632018929}
-  m_RootOrder: 22
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &2002888765
 BoxCollider2D:
@@ -4806,10 +5026,9 @@ MonoBehaviour:
   spriteRenderer: {fileID: 2002888768}
   OpenedDoor: {fileID: 21300000, guid: e8cc13e90bc4da54d886e390d2835a96, type: 3}
   ClosedDoor: {fileID: 21300000, guid: 03ac08c863d8abf4d8d79555de37d39b, type: 3}
-  RequireBlueKey: 0
-  RequireRedKey: 1
-  RequireYellowKey: 0
-  RequireExplosion: 0
+  NoKeyNeeded: 0
+  RequiredItemToOpenDoor: 1
+  DoorReadyToOpenFlag: 0
 --- !u!95 &2002888767
 Animator:
   serializedVersion: 3
