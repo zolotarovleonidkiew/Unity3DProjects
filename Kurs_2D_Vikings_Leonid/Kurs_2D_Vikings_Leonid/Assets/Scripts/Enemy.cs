@@ -7,65 +7,129 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// Здоровье
     /// </summary>
-    [SerializeField] public int Health = 1;
+    [SerializeField] private int Health = 1;
 
     /// <summary>
-    /// Начало патрулирования
+    /// Сила атаки
     /// </summary>
-    [SerializeField] public Vector3 StartPointPatrolling { get; set; }
-    /// <summary>
-    /// Конец патрулирования
-    /// </summary>
-    [SerializeField] public Vector3 EndPointPatrolling { get; set; }
+    [SerializeField] private int Attack = 1;
+
+    [SerializeField] private float _patrulPathLength = 5;
+
     /// <summary>
     /// Скрорсть
     /// </summary>
-    [SerializeField] public int Speed = 5;
+    [SerializeField] private int Speed = 5;
 
-    [SerializeField] public Sprite EnemySprite { get; set; }
+    [SerializeField] private Sprite EnemySprite { get; set; }
 
     /// <summary>
-    /// Если БОСС -> живучесть * 5;
+    /// БОСС
     /// </summary>
-    [SerializeField] public bool IsBoss = false;
+    [SerializeField] private bool IsBoss = false;
 
-    public Enemy()
+
+    private Vector3 _startPosition;
+    private float _XstartPatrul;
+    private float _XendPatrul;
+
+    private bool _pointAreached;
+    private bool _pointBreached;
+
+    private bool _playerIconDirectionToRight = true;
+
+    //2D
+    private void Start()
     {
-        // Это сработает ???
-        if (IsBoss)
+        _startPosition = this.transform.position;
+
+        _XstartPatrul = _startPosition.x - _patrulPathLength;
+        _XendPatrul = _startPosition.x + _patrulPathLength;
+    }
+
+    private void FixedUpdate()
+    {
+        bool shoudAttack = AlienDecidedToAttack();
+
+        if (!shoudAttack)
         {
-            Health *= 5;
+            Patrul();
         }
     }
 
-
-    ///// <summary>
-    ///// EVENT - атакует
-    ///// </summary>
-    //public void OnAttack()
-    //{
-
-    //}
-
-    ///// <summary>
-    ///// EVENT - патрулированиек от StartPointPatrolling до EndPointPatrolling и обратно
-    ///// </summary>
-    //public void OnPatrolling()
-    //{
-
-    //}
-
-    //2D
-
-    // Start is called before the first frame update
-    void Start()
+    private bool AlienDecidedToAttack()
     {
+        return false;
+    }
+
+    private void Patrul()
+    {
+        var currentPosition = this.transform.position;
+
+        if (currentPosition.x <= _XstartPatrul)
+        {
+            _pointAreached = true;
+            _pointBreached = false;
+        }
+        if (currentPosition.x >= _XendPatrul)
+        {
+            _pointAreached = false;
+            _pointBreached = true;
+        }
+
+
+        if (_pointAreached && !_pointBreached)
+        {
+            if (!_playerIconDirectionToRight)
+            {
+                Flip();
+            }
+            //move to B
+            this.transform.position += Vector3.right * Speed * Time.deltaTime;
+        }
+        else if (!_pointAreached && _pointBreached)
+        {
+            if (_playerIconDirectionToRight)
+            {
+                Flip();
+            }
+
+            //move to a
+            this.transform.position += Vector3.left * Speed * Time.deltaTime;
+        }
+        else if (!_pointAreached && !_pointBreached)
+        {
+            if (_playerIconDirectionToRight)
+            {
+                Flip();
+            }
+            //move to a
+            this.transform.position += Vector3.left * Speed * Time.deltaTime;
+        }
 
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Flip()
     {
+        _playerIconDirectionToRight = !_playerIconDirectionToRight;
+
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("Alien collision hit detected");
+
+        var pmController = collision.GetComponent<CharacterController2D>();
+
+        if (pmController != null)
+        {
+            pmController.TakeDamage(Attack);
+
+            Debug.LogError($"Damage: {Attack}");
+        }
 
     }
 }

@@ -5,6 +5,50 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
+    #region Health
+    private int _currentHealth;
+    private bool _isDead;
+
+    //МАКС здоровья
+    private const int MaxHealthPoint = 3;
+
+    /// <summary>
+    /// Отслеживание здоровья
+    /// </summary>
+    public int CurrentHealth
+    {
+        get { return _currentHealth; }
+        set
+        {
+            _currentHealth = value;
+
+            if (_currentHealth > MaxHealthPoint)
+                _currentHealth = MaxHealthPoint;
+            else if (_currentHealth <= 0)
+            {
+                IsDead = true;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Отслеживание состояния жизни
+    /// </summary>
+    public bool IsDead
+    {
+        get { return _isDead; }
+        set
+        {
+            _isDead = value;
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        CurrentHealth -= damage;
+    }
+    #endregion
+
     #region For Exit Level
     [SerializeField] public string VikingName;
     #endregion
@@ -47,6 +91,18 @@ public class CharacterController2D : MonoBehaviour
     void Start()
     {       
         Inventory = new Item[4] { null, null, null, null };
+
+        CurrentHealth = 3;
+    }
+
+    private void Update()
+    {
+        if (_isDead)
+        {
+            //var s = this.GetComponent<SpriteRenderer>();
+            //s.enabled = false;
+            Destroy(this.gameObject);
+        }
     }
 
     // Update is called once per frame
