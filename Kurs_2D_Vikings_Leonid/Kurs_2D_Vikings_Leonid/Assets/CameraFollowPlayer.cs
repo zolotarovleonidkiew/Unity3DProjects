@@ -53,6 +53,7 @@ public class CameraFollowPlayer : MonoBehaviour
         Vector3 cameraPosition = transform.position;
 
         cameraPosition.x = currentVikingTransform.position.x;
+        cameraPosition.y = currentVikingTransform.position.y + 9;  //+ camera.pixelHeight / 2;;
 
         transform.position = cameraPosition;
     }
@@ -66,6 +67,7 @@ public class CameraFollowPlayer : MonoBehaviour
             Vector3 poPosition = po.transform.position;
 
             poPosition.x = currentVikingTransform.position.x;
+            poPosition.y = currentVikingTransform.position.y + 10.5f + 9.1f; // ломает !!!! ???
 
             po.transform.position = poPosition;
         }

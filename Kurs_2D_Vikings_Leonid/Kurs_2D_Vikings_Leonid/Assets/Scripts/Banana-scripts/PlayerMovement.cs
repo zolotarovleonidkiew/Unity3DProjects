@@ -16,6 +16,11 @@ public class PlayerMovement : MonoBehaviour
     public Animator animator;
     public float runSpeed = 40f;
 
+    public void Kill()
+    {
+        throw new System.NotImplementedException();
+    }
+
     float horizontalMove = 0f;
     bool jump = false;
     // bool crouch = false;
@@ -30,6 +35,8 @@ public class PlayerMovement : MonoBehaviour
 
     //game logic
 
+    #region DoorRegion
+
     /// <summary>
     /// Персонаж в коллайдере двери, ждет нажатия Е чтобы ключом открыть дверь
     /// </summary>
@@ -37,6 +44,12 @@ public class PlayerMovement : MonoBehaviour
     public ItemTypes NeededItemToOpenDoorType;
     public DoorController GameObjectDoorReference;
 
+    #endregion
+
+    #region elevator
+    public bool playerOnLiftPlatforfmFlag;
+    public LiftMovement GameObjectLiftReference;
+    #endregion
 
     // private bool isGrounded;
     //public Transform groundCheck;
@@ -70,40 +83,22 @@ public class PlayerMovement : MonoBehaviour
         //сменить игрока
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-           // var t = this.GetComponent("Hero-Olaf")
-           // var oldName = CurrentPlayer.Name;
-
             selectedUserId =
-                selectedUserId + 1  > PlayerCharacters.Length - 1 ?
+                selectedUserId + 1 > PlayerCharacters.Length - 1 ?
                 selectedUserId = 0 :
                 selectedUserId + 1;
 
             CurrentPlayer = PlayerCharacters[selectedUserId];
-
-          //  Debug.Log($"Player changed from {oldName} to {CurrentPlayer.Name}");
-
-            //logic +
-            //if (Name != CurrentPlayer.Name)
-            //{
-            //    var t = this.GetComponent<CharacterController2D>();
-            //    t.enabled = false;
-            //}
-            //else
-            //{
-            //    var t = this.GetComponent<CharacterController2D>();
-            //    t.enabled = true;
-            //}
-            //logic -
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-           // Debug.LogWarning($"Current user is {CurrentPlayer.Name}");
+            // Debug.LogWarning($"Current user is {CurrentPlayer.Name}");
 
             //Only Ulrick can jump
             //if (CurrentPlayer is Viking1_Ulrick)
             //{
-                jump = true;
-                animator.SetBool("IsJumping", true);
+            jump = true;
+            animator.SetBool("IsJumping", true);
 
             //    Debug.Log($"Player {CurrentPlayer.Name} => Jump");
             //}
@@ -142,6 +137,20 @@ public class PlayerMovement : MonoBehaviour
                             controller.RemoveItemFromInventory();
                         }
                     }
+                }
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))//вызвать лифт вверх/вниз 
+        {
+            if (playerOnLiftPlatforfmFlag)
+            {
+                if (GameObjectLiftReference != null)
+                {
+                    GameObjectLiftReference._playerLaunchedLiftMovement = true;
+                }
+                else
+                {
+                    Debug.LogError("GameObjectLiftReference is null");
                 }
             }
         }

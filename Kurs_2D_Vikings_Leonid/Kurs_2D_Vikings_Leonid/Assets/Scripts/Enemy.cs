@@ -39,21 +39,21 @@ public class Enemy : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// EVENT - атакует
-    /// </summary>
-    public void OnAttack()
-    {
+    ///// <summary>
+    ///// EVENT - атакует
+    ///// </summary>
+    //public void OnAttack()
+    //{
 
-    }
+    //}
 
-    /// <summary>
-    /// EVENT - патрулированиек от StartPointPatrolling до EndPointPatrolling и обратно
-    /// </summary>
-    public void OnPatrolling()
-    {
+    ///// <summary>
+    ///// EVENT - патрулированиек от StartPointPatrolling до EndPointPatrolling и обратно
+    ///// </summary>
+    //public void OnPatrolling()
+    //{
 
-    }
+    //}
 
     //2D
 

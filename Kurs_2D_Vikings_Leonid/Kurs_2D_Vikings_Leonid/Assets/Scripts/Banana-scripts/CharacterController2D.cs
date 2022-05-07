@@ -18,7 +18,7 @@ public class CharacterController2D : MonoBehaviour
 
     #endregion
 
-    [SerializeField] private float m_JumpForce = 10000;							// Amount of force added when the player jumps. 800
+    [SerializeField] private float m_JumpForce = 10000 * 500;						// Amount of force added when the player jumps. 800
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 
     private Vector3 m_Velocity = Vector3.zero;
