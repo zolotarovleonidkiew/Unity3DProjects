@@ -32,7 +32,7 @@ public class FoodItem : Item
         Type = ItemTypes.Food;
     }
 
-    public const int RestoreHealthpoints = 3;
+    public int RestoreHealthpoints = 1;
 
 }
 
@@ -44,8 +44,6 @@ public class BombItem : Item
     /// <summary>
     /// Куда установили бомбу
     /// </summary>
-    public Vector3 BombPlantedPosition { get; set; }
-
     public BombItem()
     {
         Type = ItemTypes.Bomb;

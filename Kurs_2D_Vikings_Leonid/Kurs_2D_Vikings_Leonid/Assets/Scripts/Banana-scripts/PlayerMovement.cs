@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
                 selectedUserId + 1;
 
             CurrentPlayer = PlayerCharacters[selectedUserId];
-        }
+        }                // смена персонажа
         else if (Input.GetKeyDown(KeyCode.Space))
         {
             // Debug.LogWarning($"Current user is {CurrentPlayer.Name}");
@@ -123,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
             //}
 
 
-        }
+        }         // прыжок
         else if (Input.GetKeyDown(KeyCode.E))
         {
             //применить текущий элемент в инвентаре
@@ -154,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
                     }
                 }
             }
-        }
+        }             // открыть дверь
         else if (Input.GetKeyDown(KeyCode.UpArrow))//вызвать лифт вверх/вниз 
         {
             if (playerOnLiftPlatforfmFlag)
@@ -168,7 +168,7 @@ public class PlayerMovement : MonoBehaviour
                     Debug.LogError("GameObjectLiftReference is null");
                 }
             }
-        }
+        }       // на лифте - ехать вверх/вниз
         else if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             //Только баеалог может мечом рубануть ког-ото
@@ -182,13 +182,66 @@ public class PlayerMovement : MonoBehaviour
 
                 if (attackTrigger != null)
                 {
-                    _baealogAttackCollider =  attackTrigger.GetComponent<BoxCollider2D>();
+                    _baealogAttackCollider = attackTrigger.GetComponent<BoxCollider2D>();
 
                     _baealogAttackCollider.enabled = true;
 
                 }
             }
-        }
+        }   // атаковать мечом
+        else if (Input.GetKeyDown(KeyCode.Q))                
+        {
+            controller.ChangeindexSelectedInventoryItem();
+        }             // сменить активную ячейку в инвентаре
+        else if (Input.GetKeyDown(KeyCode.R))               
+        {
+            var selectedItem = controller.GetInventoryItemByIndex();
+
+            if (selectedItem != null)
+            {
+                if (selectedItem.Type == ItemTypes.Food)
+                {
+                    if (controller.CurrentHealth <= CharacterController2D.MaxHealthPoint)
+                    {
+                        controller.CurrentHealth += (selectedItem as FoodItem).RestoreHealthpoints;
+
+                        controller.RemoveItemFromInventory();
+                    }
+                }
+                else if (selectedItem.Type == ItemTypes.Bomb)
+                {
+                    //use
+                    GameObject plantedBomb = new GameObject($"{this.name}_plantedBomb");
+                    plantedBomb.AddComponent<SpriteRenderer>();
+                    plantedBomb.AddComponent<BoxCollider2D>();
+                    plantedBomb.AddComponent<Transform>();
+                    plantedBomb.AddComponent<Rigidbody2D>();
+
+                    var script = plantedBomb.AddComponent<PlantedBombTimer>();
+                    script.Explotion = controller._explotionSprite;
+
+                    var tc = plantedBomb.GetComponent<Transform>();
+                    tc.position = transform.position + transform.right;
+
+                    var sr = plantedBomb.GetComponent<SpriteRenderer>();
+                    sr.sprite = controller._bombHasBeenPlanted;
+                    sr.size = new Vector2(300, 300);
+                    sr.sortingOrder = 5;
+
+                    var bc2 = plantedBomb.AddComponent<BoxCollider2D>();
+                    bc2.isTrigger = false;
+                    bc2.size = new Vector2(2, 2);
+
+                    var bc = plantedBomb.GetComponent<BoxCollider2D>();
+                    bc.isTrigger = true;
+                    bc.size = new Vector2(10, 10);
+
+                    
+
+                    controller.RemoveItemFromInventory();
+                }
+            }
+        }             // применить активный элемент в инвентаре
     }
 
     void FixedUpdate()

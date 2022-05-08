@@ -38,6 +38,8 @@ public class Enemy : MonoBehaviour
 
     private bool _playerIconDirectionToRight = true;
 
+    bool shouldDie = false;
+
     //2D
     private void Start()
     {
@@ -45,6 +47,16 @@ public class Enemy : MonoBehaviour
 
         _XstartPatrul = _startPosition.x - _patrulPathLength;
         _XendPatrul = _startPosition.x + _patrulPathLength;
+    }
+
+    private void Update()
+    {
+        if (shouldDie)
+        {
+            shouldDie = false;
+
+            Destroy(this.gameObject);
+        }
     }
 
     private void FixedUpdate()
@@ -148,7 +160,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     void Die()
     {
+        shouldDie = true;
+      //  Destroy(this.gameObject); // failed Unity
 
-        Destroy(this.gameObject);
+        //
     }
 }

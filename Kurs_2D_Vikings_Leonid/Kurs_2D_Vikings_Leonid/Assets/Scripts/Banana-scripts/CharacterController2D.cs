@@ -6,12 +6,22 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
+    #region Planting Bombs
+    [SerializeField] public Sprite _bombHasBeenPlanted;
+    [SerializeField] public Sprite _explotionSprite;
+    #endregion
+
     #region Health
     private int _currentHealth;
     private bool _isDead;
 
+    [SerializeField] private Sprite _health_3_points;
+    [SerializeField] private Sprite _health_2_points;
+    [SerializeField] private Sprite _health_1_points;
+    [SerializeField] private Sprite _health_0_points;
+
     //МАКС здоровья
-    private const int MaxHealthPoint = 3;
+    public const int MaxHealthPoint = 3;
 
     /// <summary>
     /// Отслеживание здоровья
@@ -23,8 +33,12 @@ public class CharacterController2D : MonoBehaviour
         {
             _currentHealth = value;
 
+            UpdateUIHealth(_currentHealth);
+
             if (_currentHealth > MaxHealthPoint)
-                _currentHealth = MaxHealthPoint;
+            {
+                _currentHealth = MaxHealthPoint;      
+            }
             else if (_currentHealth <= 0)
             {
                 IsDead = true;
@@ -48,19 +62,53 @@ public class CharacterController2D : MonoBehaviour
     {
         CurrentHealth -= damage;
     }
-    #endregion
 
-    #region For Exit Level
-    [SerializeField] public string VikingName;
+    private void UpdateUIHealth(int health)
+    {
+        var taggedObjects = GameObject.FindGameObjectsWithTag("UpperPanelTag");
+
+        var nameToSearh = "";
+
+        if (this.name == "Hero-Baealog")
+            nameToSearh = "BaleogStatusBar";
+        else if (this.name == "Hero-Olaf")
+            nameToSearh = "OlafStatusBar";
+        else
+            nameToSearh = "UlrichStatusBar";
+
+        GameObject heroObject = taggedObjects.Where(go => go.name == nameToSearh).First();
+
+        GameObject healthObject = heroObject.transform.GetChild(4).gameObject;
+
+        var sr = healthObject.GetComponent<SpriteRenderer>();
+
+        if (health == 3)
+            sr.sprite = _health_3_points;
+        else if (health == 2)
+            sr.sprite = _health_2_points;
+        else if (health == 1)
+            sr.sprite = _health_1_points;
+        else
+            sr.sprite = _health_0_points;
+    }
+
     #endregion
 
     #region Inventory
     [SerializeField] private Sprite _default_inv_sprite;
+
+    [SerializeField] private Sprite _inventoryCellSelected;
+    [SerializeField] private Sprite _inventoryCellSelectionDismissed;
+
     const int InventoryItemsMax = 4;
     public Item[] Inventory;
 
     private int indexSelectedInventoryItem = 0;
 
+    #endregion
+
+    #region For Exit Level
+    [SerializeField] public string VikingName;
     #endregion
 
     [SerializeField] private float m_JumpForce = 10000 * 500;						// Amount of force added when the player jumps. 800
@@ -94,6 +142,8 @@ public class CharacterController2D : MonoBehaviour
         Inventory = new Item[4] { null, null, null, null };
 
         CurrentHealth = 3;
+
+        UpdateUISelectedItem();
     }
 
     private void Update()
@@ -192,7 +242,6 @@ public class CharacterController2D : MonoBehaviour
     /// <summary>
     /// Управление инвентарем по инексу
     /// </summary>
-    /// <param name="i"></param>
     public void ChangeindexSelectedInventoryItem()
     {
         indexSelectedInventoryItem ++;
@@ -201,6 +250,49 @@ public class CharacterController2D : MonoBehaviour
         {
             indexSelectedInventoryItem = 0;
         }
+
+        UpdateUISelectedItem();
+    }
+
+    public void UpdateUISelectedItem()
+    {
+        var taggedObjects = GameObject.FindGameObjectsWithTag("UpperPanelTag");
+
+        var nameToSearh = "";
+
+        if (this.name == "Hero-Baealog")
+            nameToSearh = "BaleogStatusBar";
+        else if (this.name == "Hero-Olaf")
+            nameToSearh = "OlafStatusBar";
+        else
+            nameToSearh = "UlrichStatusBar";
+
+        GameObject hero = taggedObjects.Where(go => go.name == nameToSearh).First();
+
+        var listItems = new List<Transform>();
+
+        listItems.Add(hero.transform.GetChild(0));
+        listItems.Add(hero.transform.GetChild(1));
+        listItems.Add(hero.transform.GetChild(2));
+        listItems.Add(hero.transform.GetChild(3));
+
+        for (int i = 0; i < listItems.Count(); i++)
+        {
+            if (i == indexSelectedInventoryItem)
+            {
+                var transform = listItems[i].GetChild(0);
+                var sr = transform.GetComponent<SpriteRenderer>();
+                sr.sprite = _inventoryCellSelected;
+            }
+            else
+            {
+                var transform = listItems[i].GetChild(0);
+                var sr = transform.GetComponent<SpriteRenderer>();
+                sr.sprite = _inventoryCellSelectionDismissed;
+            }
+        }
+
+
     }
 
     /// <summary>
@@ -278,7 +370,7 @@ public class CharacterController2D : MonoBehaviour
     {
         Inventory[indexSelectedInventoryItem] = null;
 
-        // TEST
+        //удалить картинку из инвентаря
 
         UpdateUIInventory(indexSelectedInventoryItem, _default_inv_sprite, true);
     }
