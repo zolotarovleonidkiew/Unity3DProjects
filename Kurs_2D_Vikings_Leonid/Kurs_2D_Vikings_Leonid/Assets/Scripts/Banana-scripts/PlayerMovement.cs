@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,9 @@ public class PlayerMovement : MonoBehaviour
     //public LayerMask GroundLayer;
     //const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 
+    private DateTime _finishAttackDatetime = new DateTime();
+    private BoxCollider2D _baealogAttackCollider;
+
     public PlayerMovement()
     {
         PlayerCharacters = new Character[] {
@@ -76,6 +80,17 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_finishAttackDatetime != new DateTime())
+        {
+            if (_finishAttackDatetime <= DateTime.Now)
+            {
+                //закончить атаку Баеалога
+                _baealogAttackCollider.enabled = false;
+                Debug.Log("Баеалог закончил махать мечом");
+                _finishAttackDatetime = new DateTime();
+            }
+        }
+
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
@@ -151,6 +166,26 @@ public class PlayerMovement : MonoBehaviour
                 else
                 {
                     Debug.LogError("GameObjectLiftReference is null");
+                }
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            //Только баеалог может мечом рубануть ког-ото
+            if (transform.gameObject.name == "Hero-Baealog")
+            {
+                //активировать триггер боя
+                var attackTrigger = transform.GetChild(1);
+
+                _finishAttackDatetime = DateTime.Now.AddSeconds(3);
+                Debug.Log("Баеалог начал махать мечом");
+
+                if (attackTrigger != null)
+                {
+                    _baealogAttackCollider =  attackTrigger.GetComponent<BoxCollider2D>();
+
+                    _baealogAttackCollider.enabled = true;
+
                 }
             }
         }

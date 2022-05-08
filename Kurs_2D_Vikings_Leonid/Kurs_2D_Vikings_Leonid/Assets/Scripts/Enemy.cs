@@ -132,4 +132,23 @@ public class Enemy : MonoBehaviour
         }
 
     }
+
+    public void TakeDamage(int damage)
+    {
+        Health -= damage;
+
+        if (Health <= 0)
+        {
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// TO DO: добавить анимацию смерти
+    /// </summary>
+    void Die()
+    {
+
+        Destroy(this.gameObject);
+    }
 }
