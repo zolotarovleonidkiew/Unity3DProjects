@@ -34,7 +34,7 @@ public class CameraFollowPlayer : MonoBehaviour
             //var oldName = CurrentPlayer.Name;
 
             selectedUserId =
-                selectedUserId + 1 >= PlayerCharacters.Length - 1 ?
+                selectedUserId + 1 > 2 ?
                 selectedUserId = 0 :
                 selectedUserId + 1;
 

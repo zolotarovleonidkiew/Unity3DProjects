@@ -32,6 +32,8 @@ public class PlayerSwap : MonoBehaviour
         cnUlrick = Ulrick.GetComponent<CharacterController2D>();
         cnOlaf = Olaf.GetComponent<CharacterController2D>();
         cnBaelog = Baelog.GetComponent<CharacterController2D>();
+
+        ModifyAcceptance(0);
     }
 
     void Update()
@@ -39,43 +41,49 @@ public class PlayerSwap : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             selectedUserId =
-                selectedUserId + 1 > 2 ?
-                selectedUserId = 0 :
-                selectedUserId + 1;
+            selectedUserId + 1 > 2 ?
+            selectedUserId = 0 :
+            selectedUserId + 1;
 
-            if (selectedUserId == 0) //olaf
-            {
-                pmOlaf.enabled = true;
-                cnOlaf.enabled = true;
-
-                pmUlrick.enabled = false;
-                cnUlrick.enabled = false;
-
-                //pmBaelog.enabled = false;
-                //cnBaelog.enabled = false;
-            }
-            else if (selectedUserId == 1) //ulrich
-            {
-                pmUlrick.enabled = true;
-                cnUlrick.enabled = true;
-
-                pmOlaf.enabled = false;
-                cnOlaf.enabled = false;
-
-                //pmBaelog.enabled = false;
-               // cnBaelog.enabled = false;
-            }
-            else if (selectedUserId == 2) //baelog
-            {
-               // pmBaelog.enabled = true;
-               // cnBaelog.enabled = true;
-
-                pmOlaf.enabled = false;
-                cnOlaf.enabled = false;
-
-                pmUlrick.enabled = false;
-                cnUlrick.enabled = false;
-            }
+            ModifyAcceptance(selectedUserId);
         }
+    }
+
+    private void ModifyAcceptance(int userIndex)
+    {
+        if (selectedUserId == 0) //olaf
+        {
+            pmOlaf.enabled = true;
+            cnOlaf.enabled = true;
+
+            pmUlrick.enabled = false;
+            cnUlrick.enabled = false;
+
+            pmBaelog.enabled = false;
+            cnBaelog.enabled = false;
+        }
+        else if (selectedUserId == 1) //ulrich
+        {
+            pmUlrick.enabled = true;
+            cnUlrick.enabled = true;
+
+            pmOlaf.enabled = false;
+            cnOlaf.enabled = false;
+
+            pmBaelog.enabled = false;
+            cnBaelog.enabled = false;
+        }
+        else if (selectedUserId == 2) //baelog
+        {
+            pmBaelog.enabled = true;
+            cnBaelog.enabled = true;
+
+            pmOlaf.enabled = false;
+            cnOlaf.enabled = false;
+
+            pmUlrick.enabled = false;
+            cnUlrick.enabled = false;
+        }
+
     }
 }
