@@ -9,7 +9,7 @@ public class BaealogAttacks : MonoBehaviour
     {
         Debug.Log("Baealog attacks collision hit detected");
 
-        var enemyController = collision.GetComponent<Enemy>(); // WHY null ???
+        var enemyController = collision.GetComponent<Enemy>();
 
         if (enemyController != null)
         {

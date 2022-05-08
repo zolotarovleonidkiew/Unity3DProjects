@@ -12,6 +12,12 @@ public class KeyPicker : MonoBehaviour
     /// </summary>
     [SerializeField] public ItemTypes currentTypeOfItem;
 
+    /// <summary>
+    /// ”меньшенна€ картинка item'а, дл€ч отображени€ на панели
+    /// </summary>
+    [SerializeField] private Sprite _small_icon_for_panel;
+
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         CharacterController2D controller = collision.GetComponent<CharacterController2D>();
@@ -29,7 +35,7 @@ public class KeyPicker : MonoBehaviour
 
                 var item = factory.CreateItemByType(currentTypeOfItem);
 
-                if (controller.AddItemToInventory(item))
+                if (controller.AddItemToInventory(item, _small_icon_for_panel))
                 {
                     Debug.Log($"Picked up {item.Type}");
 
@@ -39,6 +45,8 @@ public class KeyPicker : MonoBehaviour
 
                     var collissionBox = this.GetComponent<Collider2D>();
                     collissionBox.enabled = false;
+
+                    //добавить картинку »тема в инвентарь персонажа
                 }
             }
             else

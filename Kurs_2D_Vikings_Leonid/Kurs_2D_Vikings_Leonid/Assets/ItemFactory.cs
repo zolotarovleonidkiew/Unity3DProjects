@@ -25,6 +25,10 @@
         {
             return new YellowKey();
         }
+        else if (type == ItemTypes.Bomb)
+        {
+            return new BombItem();
+        }
         else
         {
             throw new ItemDoesNotExistsException(type.ToString());

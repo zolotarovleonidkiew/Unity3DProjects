@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -54,7 +55,7 @@ public class CharacterController2D : MonoBehaviour
     #endregion
 
     #region Inventory
-
+    [SerializeField] private Sprite _default_inv_sprite;
     const int InventoryItemsMax = 4;
     public Item[] Inventory;
 
@@ -99,8 +100,6 @@ public class CharacterController2D : MonoBehaviour
     {
         if (_isDead)
         {
-            //var s = this.GetComponent<SpriteRenderer>();
-            //s.enabled = false;
             Destroy(this.gameObject);
         }
     }
@@ -205,30 +204,42 @@ public class CharacterController2D : MonoBehaviour
     }
 
     /// <summary>
-    /// Добавить итем винвентарь - ИНВЕНТАРЬ ВСЕГДА ПУСТ. ПОЧЕМУ ???
+    /// Добавить итем винвентарь
     /// </summary>
     /// <param name="i">Item</param>
     /// <returns>успешно/рюкзак полон</returns>
-    public bool AddItemToInventory(Item i)
+    public bool AddItemToInventory(Item i, Sprite _small_icon_for_panel)
     {
         if (Inventory[0] == null)
         {
             Inventory[0] = i;
+
+            UpdateUIInventory(0, _small_icon_for_panel);
+
             return true;
         }
         else if (Inventory[1] == null)
         {
             Inventory[1] = i;
+
+            UpdateUIInventory(1, _small_icon_for_panel);
+
             return true;
         }
         else if (Inventory[2] == null)
         {
             Inventory[2] = i;
+
+            UpdateUIInventory(2, _small_icon_for_panel);
+
             return true;
         }
-        else if(Inventory[3] == null)
+        else if (Inventory[3] == null)
         {
             Inventory[3] = i;
+
+            UpdateUIInventory(3, _small_icon_for_panel);
+
             return true;
         }
         else
@@ -239,6 +250,26 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
+    private void UpdateUIInventory(int inventoryIndex, Sprite sprite, bool ClearItem = false)
+    {
+        var taggedObjects = GameObject.FindGameObjectsWithTag("UpperPanelTag");
+
+        var nameToSearh = "";
+
+        if (this.name == "Hero-Baealog")
+            nameToSearh = "BaleogStatusBar";
+        else if (this.name == "Hero-Olaf")
+            nameToSearh = "OlafStatusBar";
+        else
+            nameToSearh = "UlrichStatusBar";
+
+        GameObject hero = taggedObjects.Where(go => go.name == nameToSearh).First();
+
+        var inventoryCell1 = hero.transform.GetChild(inventoryIndex);
+        var sr = inventoryCell1.GetComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+    }
+
     /// <summary>
     /// Удалить текущий (выбранный) в инваентаре элемент
     /// </summary>
@@ -246,6 +277,10 @@ public class CharacterController2D : MonoBehaviour
     public void RemoveItemFromInventory()
     {
         Inventory[indexSelectedInventoryItem] = null;
+
+        // TEST
+
+        UpdateUIInventory(indexSelectedInventoryItem, _default_inv_sprite, true);
     }
     #endregion
 }
