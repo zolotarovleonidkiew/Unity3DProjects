@@ -120,9 +120,12 @@ public class PlayerMovement : MonoBehaviour
             //Only Ulrick can jump
             //if (CurrentPlayer is Viking1_Ulrick)
             //{
-            jump = true;
-            animator.SetBool("IsJumping", true);
 
+            if (animator.GetBool("IsJumping") == false)
+            {
+                jump = true;
+                animator.SetBool("IsJumping", true);
+            }
             //    Debug.Log($"Player {CurrentPlayer.Name} => Jump");
             //}
             //else
