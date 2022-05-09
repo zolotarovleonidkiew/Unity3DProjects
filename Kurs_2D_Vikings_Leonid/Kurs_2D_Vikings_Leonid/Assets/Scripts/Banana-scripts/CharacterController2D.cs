@@ -111,7 +111,7 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] public string VikingName;
     #endregion
 
-    [SerializeField] private float m_JumpForce = 10000 * 500;						// Amount of force added when the player jumps. 800
+    [SerializeField] private float m_JumpForce = 10000 * 500;				    // Amount of force added when the player jumps. 800
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 
     private Vector3 m_Velocity = Vector3.zero;
@@ -124,19 +124,15 @@ public class CharacterController2D : MonoBehaviour
     //land
     //  public UnityEvent OnLandEvent;
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
-    private bool isGrounded;
+    public bool isGrounded;
     public Transform groundCheck;
     public LayerMask GroundLayer;
 
     private void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
-
-        //if (OnLandEvent == null)
-        //    OnLandEvent = new UnityEvent();
     }
 
-    // Start is called before the first frame update
     void Start()
     {       
         Inventory = new Item[4] { null, null, null, null };
@@ -148,17 +144,10 @@ public class CharacterController2D : MonoBehaviour
 
     private void Update()
     {
-        if (_isDead)
-        {
-            Destroy(this.gameObject);
-        }
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-        //bool wasGrounded = isGrounded;
-        //isGrounded = false;
 
         //// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         //// This can be done using layers instead but Sample Assets will not overwrite your project settings.
@@ -176,11 +165,6 @@ public class CharacterController2D : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, k_GroundedRadius, GroundLayer);
 
         playerOnTheFloor = isGrounded;
-
-        if (!isGrounded)
-        {
-            // animator.SetBool("IsJumping", false);
-        }
     }
 
     public void Move(Character currentPlayer, float move, bool crouch, bool jump)

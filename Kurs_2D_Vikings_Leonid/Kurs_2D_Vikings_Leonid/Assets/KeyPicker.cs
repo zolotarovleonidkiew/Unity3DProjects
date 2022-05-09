@@ -24,7 +24,7 @@ public class KeyPicker : MonoBehaviour
 
         if (controller == null)
         {
-            Debug.LogError("KeyPicker => OnTriggerEnter2D => controller is null");
+           // Debug.LogError("KeyPicker => OnTriggerEnter2D => controller is null");
         }
         else
         {

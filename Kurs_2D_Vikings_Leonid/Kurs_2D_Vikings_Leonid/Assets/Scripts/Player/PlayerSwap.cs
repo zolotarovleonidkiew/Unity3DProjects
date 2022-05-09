@@ -36,8 +36,13 @@ public class PlayerSwap : MonoBehaviour
         ModifyAcceptance(0);
     }
 
+    /// <summary>
+    /// TO DO: check viking was dead
+    /// </summary>
     void Update()
     {
+        //check - Is Dead הכÿ ךאזהמדמ ÒÓÒ
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             selectedUserId =

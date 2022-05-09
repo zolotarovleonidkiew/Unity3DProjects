@@ -12,6 +12,16 @@ public class CameraFollowPlayer : MonoBehaviour
     private Character CurrentPlayer;
     int selectedUserId = 0;
 
+
+    /// <summary>
+    /// При смерти викинда улаить его из списка, чтоб камера на него не возвращалась больше
+    /// </summary>
+    /// <param name="viking"></param>
+    public void DeleteDeadVikingFromQueue(Character viking)
+    {
+
+    }
+
     public CameraFollowPlayer()
     {
         PlayerCharacters = new Character[] {
@@ -53,7 +63,7 @@ public class CameraFollowPlayer : MonoBehaviour
         Vector3 cameraPosition = transform.position;
 
         cameraPosition.x = currentVikingTransform.position.x;
-        cameraPosition.y = currentVikingTransform.position.y + 9;  //+ camera.pixelHeight / 2;;
+        cameraPosition.y = currentVikingTransform.position.y + 9;
 
         transform.position = cameraPosition;
     }
@@ -67,7 +77,7 @@ public class CameraFollowPlayer : MonoBehaviour
             Vector3 poPosition = po.transform.position;
 
             poPosition.x = currentVikingTransform.position.x;
-            poPosition.y = currentVikingTransform.position.y + 10.5f + 9.1f; // ломает !!!! ???
+            poPosition.y = currentVikingTransform.position.y + 10.5f + 9.1f;
 
             po.transform.position = poPosition;
         }

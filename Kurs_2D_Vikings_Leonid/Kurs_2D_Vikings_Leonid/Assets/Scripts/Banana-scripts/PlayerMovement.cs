@@ -17,9 +17,12 @@ public class PlayerMovement : MonoBehaviour
     public Animator animator;
     public float runSpeed = 40f;
 
+
+    bool _isDead = false;
     public void Kill()
     {
-        throw new System.NotImplementedException();
+       // _isDead = true;
+       // animator.SetBool("IsDead", true);
     }
 
     float horizontalMove = 0f;
@@ -80,6 +83,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (controller.IsDead)
+        {
+            animator.SetBool("IsDead", true);
+        }
+
         if (_finishAttackDatetime != new DateTime())
         {
             if (_finishAttackDatetime <= DateTime.Now)
@@ -189,11 +197,11 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }   // атаковать мечом
-        else if (Input.GetKeyDown(KeyCode.Q))                
+        else if (Input.GetKeyDown(KeyCode.Q))
         {
             controller.ChangeindexSelectedInventoryItem();
         }             // сменить активную €чейку в инвентаре
-        else if (Input.GetKeyDown(KeyCode.R))               
+        else if (Input.GetKeyDown(KeyCode.R))
         {
             var selectedItem = controller.GetInventoryItemByIndex();
 
@@ -236,7 +244,7 @@ public class PlayerMovement : MonoBehaviour
                     bc.isTrigger = true;
                     bc.size = new Vector2(10, 10);
 
-                    
+
 
                     controller.RemoveItemFromInventory();
                 }
@@ -246,6 +254,12 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        //try
+        ////if (controller.isGrounded)
+        ////{
+        ////    animator.SetBool("IsJumping", false);
+        ////}
+
         var crouch = false;
 
         // Move our character (go, jump)
@@ -267,4 +281,11 @@ public class PlayerMovement : MonoBehaviour
     ////{
     ////    animator.SetBool("IsJumping", false);
     ////}
+    ///
+    public void DestoyPlayerObjectAfterDeathAnimFinished()
+    {
+        Destroy(this.gameObject);
+
+        //”далить этого викинга из всех списков, чтоб не упоминалс€ в списках
+    }
 }

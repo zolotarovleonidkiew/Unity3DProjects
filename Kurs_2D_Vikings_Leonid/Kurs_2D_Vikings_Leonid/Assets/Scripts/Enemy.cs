@@ -161,8 +161,5 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         shouldDie = true;
-      //  Destroy(this.gameObject); // failed Unity
-
-        //
     }
 }
