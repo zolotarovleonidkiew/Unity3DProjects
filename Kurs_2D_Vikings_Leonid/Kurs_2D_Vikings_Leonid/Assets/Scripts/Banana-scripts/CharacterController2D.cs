@@ -111,7 +111,7 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] public string VikingName;
     #endregion
 
-    [SerializeField] private float m_JumpForce = 10000 * 500;				    // Amount of force added when the player jumps. 800
+    [SerializeField] private float m_JumpForce = 10000 * 700;				    // Amount of force added when the player jumps. 800
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 
     private Vector3 m_Velocity = Vector3.zero;
@@ -214,6 +214,14 @@ public class CharacterController2D : MonoBehaviour
 
 
     #region Inventory operations
+
+    ////public void CreateEmptyInventory()
+    ////{
+    ////    if (Inventory == null)
+    ////    {
+    ////        Inventory = new Item[4] { null, null, null, null };
+    ////    }
+    ////}
 
     /// <summary>
     /// Получить итем по indexSelectedInventoryItem

@@ -51,6 +51,8 @@ public class CameraFollowPlayer : MonoBehaviour
             CurrentPlayer = PlayerCharacters[selectedUserId];
         }
 
+        //TO DO:  check viking was dead
+
         //move camera
         UpdateCameraPosition(VikingTransforms[selectedUserId]);
 

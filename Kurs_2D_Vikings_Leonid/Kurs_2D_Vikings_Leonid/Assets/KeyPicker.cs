@@ -28,6 +28,11 @@ public class KeyPicker : MonoBehaviour
         }
         else
         {
+            //если кто-то кого-то толкнул - то этот кто-то должен взять итем, а так - тот кто  ТОЛКАЛ его получил
+            //if (controller.Inventory == null)
+            //{
+            //    controller.CreateEmptyInventory();
+            //}
 
             if (controller.Inventory.Length <= 4) // дубликат
             {
