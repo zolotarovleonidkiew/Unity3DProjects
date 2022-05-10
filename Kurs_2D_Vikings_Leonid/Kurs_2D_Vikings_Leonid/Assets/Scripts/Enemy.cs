@@ -29,6 +29,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private bool IsBoss = false;
 
 
+    private Animator _animator;
+
     private Vector3 _startPosition;
     private float _XstartPatrul;
     private float _XendPatrul;
@@ -47,17 +49,19 @@ public class Enemy : MonoBehaviour
 
         _XstartPatrul = _startPosition.x - _patrulPathLength;
         _XendPatrul = _startPosition.x + _patrulPathLength;
+
+        _animator = this.GetComponent<Animator>();
     }
 
-    private void Update()
-    {
-        if (shouldDie)
-        {
-            shouldDie = false;
+    //private void Update()
+    //{
+    //    if (shouldDie)
+    //    {
+    //        shouldDie = false;
 
-            Destroy(this.gameObject);
-        }
-    }
+    //        Destroy(this.gameObject);
+    //    }
+    //}
 
     private void FixedUpdate()
     {
@@ -151,15 +155,29 @@ public class Enemy : MonoBehaviour
 
         if (Health <= 0)
         {
+            _patrulPathLength = 0;
+
+            var attackCollider = this.GetComponent<BoxCollider2D>();
+            attackCollider.enabled = false;
+
             Die();
         }
     }
 
-    /// <summary>
-    /// TO DO: добавить анимацию смерти
-    /// </summary>
     void Die()
     {
         shouldDie = true;
+
+        _animator.SetBool("IsDead", true);
+    }
+
+    public void StopDeadAnimation()
+    {
+        if (_animator.GetBool("IsDead"))
+        {
+            _animator.SetBool("IsDead", false);
+
+            Destroy(this.gameObject);
+        }
     }
 }

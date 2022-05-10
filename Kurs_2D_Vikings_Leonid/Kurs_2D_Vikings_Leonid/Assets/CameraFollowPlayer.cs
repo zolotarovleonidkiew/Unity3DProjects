@@ -79,7 +79,7 @@ public class CameraFollowPlayer : MonoBehaviour
             Vector3 poPosition = po.transform.position;
 
             poPosition.x = currentVikingTransform.position.x;
-            poPosition.y = currentVikingTransform.position.y + 10.5f + 9.1f;
+            poPosition.y = currentVikingTransform.position.y + 10.5f + 9f;
 
             po.transform.position = poPosition;
         }
@@ -89,16 +89,25 @@ public class CameraFollowPlayer : MonoBehaviour
 
         Vector3 BaelogIcoTransform = BaelogIco.transform.position;
 
-        BaelogIcoTransform.x -= 16.34f;
+        BaelogIcoTransform.x -= 20;//16.34f;
 
         BaelogIco.transform.position = BaelogIcoTransform;
+
+        //update Olaf ico position
+        var OlafIco = UpperPanelObjects.Where(u => u.name == "OlafStatusBar").First();
+
+        Vector3 OlafIcoTransform = OlafIco.transform.position;
+
+        OlafIcoTransform.x -= 3 ;//16.34f;
+
+        OlafIco.transform.position = OlafIcoTransform;
 
         //update Ulrich ico position
         var UlrichIco = UpperPanelObjects.Where(u=>u.name == "UlrichStatusBar").First();
 
         Vector3 UlrichIcoTransform = UlrichIco.transform.position;
 
-        UlrichIcoTransform.x += 16;
+        UlrichIcoTransform.x += 16-3;
 
         UlrichIco.transform.position = UlrichIcoTransform;
 

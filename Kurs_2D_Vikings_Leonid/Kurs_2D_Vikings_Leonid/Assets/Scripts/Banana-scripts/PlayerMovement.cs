@@ -103,6 +103,8 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
+        //TO DO: если нажата кнопка Идти (W)и потом нажать Атаку, анимация атаки не отображается
+
         //сменить игрока
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -115,25 +117,11 @@ public class PlayerMovement : MonoBehaviour
         }                // смена персонажа
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            // Debug.LogWarning($"Current user is {CurrentPlayer.Name}");
-
-            //Only Ulrick can jump
-            //if (CurrentPlayer is Viking1_Ulrick)
-            //{
-
             if (animator.GetBool("IsJumping") == false)
             {
                 jump = true;
                 animator.SetBool("IsJumping", true);
             }
-            //    Debug.Log($"Player {CurrentPlayer.Name} => Jump");
-            //}
-            //else
-            //{
-            //    Debug.Log($"Sorry, but {CurrentPlayer.Name} can't jump");
-            //}
-
-
         }         // прыжок
         else if (Input.GetKeyDown(KeyCode.E))
         {
@@ -185,6 +173,8 @@ public class PlayerMovement : MonoBehaviour
             //Только баеалог может мечом рубануть ког-ото
             if (transform.gameObject.name == "Hero-Baealog")
             {
+                animator.SetBool("IsAttack", true);
+
                 //активировать триггер боя
                 var attackTrigger = transform.GetChild(1);
 
@@ -196,7 +186,6 @@ public class PlayerMovement : MonoBehaviour
                     _baealogAttackCollider = attackTrigger.GetComponent<BoxCollider2D>();
 
                     _baealogAttackCollider.enabled = true;
-
                 }
             }
         }   // атаковать мечом
@@ -253,6 +242,17 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }             // применить активный элемент в инвентаре
+    }
+
+    /// <summary>
+    /// Прекратить анимацию атаки после первого отображения
+    /// </summary>
+    public void StopBaealogAttackAnimation()
+    {
+        if (animator.GetBool("IsAttack"))
+        {
+            animator.SetBool("IsAttack", false);
+        }
     }
 
     void FixedUpdate()

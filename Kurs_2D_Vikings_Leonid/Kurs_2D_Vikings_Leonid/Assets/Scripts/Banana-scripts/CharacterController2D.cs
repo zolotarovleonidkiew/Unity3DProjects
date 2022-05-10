@@ -215,13 +215,13 @@ public class CharacterController2D : MonoBehaviour
 
     #region Inventory operations
 
-    ////public void CreateEmptyInventory()
-    ////{
-    ////    if (Inventory == null)
-    ////    {
-    ////        Inventory = new Item[4] { null, null, null, null };
-    ////    }
-    ////}
+    public void CreateEmptyInventory()
+    {
+        if (Inventory == null)
+        {
+            Inventory = new Item[4] { null, null, null, null };
+        }
+    }
 
     /// <summary>
     /// Получить итем по indexSelectedInventoryItem
