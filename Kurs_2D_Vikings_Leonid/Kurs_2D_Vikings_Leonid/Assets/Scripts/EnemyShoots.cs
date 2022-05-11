@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,18 +7,34 @@ using UnityEngine;
 /// </summary>
 public class EnemyShoots : MonoBehaviour
 {
-    [SerializeField] private int _delay = 3;
+    [SerializeField] private int _delay = 1;
     [SerializeField] private float speed = 20;
     [SerializeField] private Sprite _bulletSprite;
     private DateTime _lastShotTime;
 
-    private GameObject _createdBullet = null;
+    private List<GameObject> _bullets = new List<GameObject>();
+
+    private Vector3 _target;
+
+    private void Start()
+    {
+        _target = this.transform.GetChild(0).position;
+    }
 
     void FixedUpdate()
     {
-        if (_createdBullet != null)
+        foreach (var b in _bullets)
         {
-            _createdBullet.transform.position += Vector3.left * speed * Time.deltaTime;
+            if (b.transform.position.x > _target.x)
+            {
+                b.transform.position += Vector3.left * speed * Time.deltaTime;
+            }
+            else
+            {
+                Destroy(b.GetComponent<SpriteRenderer>());
+                Destroy(b.GetComponent<BoxCollider2D>());
+            }
+            
         }
     }
 
@@ -25,8 +42,8 @@ public class EnemyShoots : MonoBehaviour
     {
         if (_lastShotTime == default(DateTime) || DateTime.Now >= _lastShotTime.AddSeconds(_delay))
         {
-            Destroy(_createdBullet);
-            _createdBullet = null;
+           // Destroy(_createdBullet);
+           // _createdBullet = null;
 
             //Добавить звук
 
@@ -39,18 +56,28 @@ public class EnemyShoots : MonoBehaviour
     private void Shoot()
     {
         //Create bullet
-        _createdBullet = new GameObject($"bullet_{DateTime.Now}");
+        var _createdBullet = new GameObject($"bullet_{DateTime.Now}");
 
         SpriteRenderer sr = _createdBullet.AddComponent<SpriteRenderer>();
 
         sr.sprite = _bulletSprite;
         sr.sortingOrder = 5;
 
-        BoxCollider2D collider = _createdBullet.AddComponent<BoxCollider2D>(); //TO DO add attack !!!! Или перемемстить в коллайдер викинга
-        collider.size = new Vector2(1, 1);
+        //BoxCollider2D collider = _createdBullet.AddComponent<BoxCollider2D>(); //TO DO add attack !!!! Или перемемстить в коллайдер викинга
+        //collider.size = new Vector2(1, 1);
 
         _createdBullet.AddComponent<Transform>();
 
         _createdBullet.transform.position = this.transform.position - Vector3.left - Vector3.left;
+
+        var killCollider = _createdBullet.AddComponent<BoxCollider2D>();
+        killCollider.size = new Vector2(2, 1);
+        killCollider.isTrigger = true;
+
+        var script = _createdBullet.AddComponent<EnemyShot>();
+        script.Damage = 1;
+        script.Bullet = _createdBullet;
+
+        _bullets.Add(_createdBullet);
     }
 }
