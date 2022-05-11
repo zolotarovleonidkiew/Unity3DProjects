@@ -24,7 +24,7 @@ public class LiftMovement : MonoBehaviour
         }
     }
 
-    private bool _liftOnStartPoint = true;  //лифт на пункте А и готов ехать
+    private bool _liftOnStartPoint = true;           //лифт на пункте А и готов ехать
     private bool _liftCanReturnToStartPoint = false; //лифт на пункте Б и готов ехать
 
     //промежуточные этапы пути туда и обратно
@@ -67,9 +67,6 @@ public class LiftMovement : MonoBehaviour
                     _liftIsMovingUp = true;
                     //move to point B 
 
-                    //1. Y = -25.7
-                    //2. X = 125.8
-                    //3. Y = -12.28
                     MovingUp();
                 }
                 else
@@ -96,10 +93,7 @@ public class LiftMovement : MonoBehaviour
         {
             if (currentPosition.y <= -25.7)
             {
-                //var y = currentPosition.y + 1;
-
                 transform.position += Vector3.up * _speed * Time.deltaTime;
-                //(new Vector3(0, y, 0)) * _speed * Time.deltaTime;
 
                 MovePlayersOnThePlatform(Vector3.up);
             }
@@ -110,12 +104,9 @@ public class LiftMovement : MonoBehaviour
         }
         if (pointA_reached && !pointB_reached)
         {
-            if (currentPosition.x >= 125.92)//221.6729)
+            if (currentPosition.x >= 125.92)
             {
-                //var x = currentPosition.x + 1;
-
                 transform.position += Vector3.left * _speed * Time.deltaTime;
-                //(new Vector3(x, 0, 0)) * _speed * Time.deltaTime;
 
                 MovePlayersOnThePlatform(Vector3.left);
             }
@@ -126,12 +117,9 @@ public class LiftMovement : MonoBehaviour
         }
         if (pointB_reached && !pointC_reached)
         {
-            if (currentPosition.y <= -12)//-73.3013)
+            if (currentPosition.y <= -12)
             {
-                //var y = currentPosition.y + 1;
-
                 transform.position += Vector3.up * _speed * Time.deltaTime;
-                //(new Vector3(0, y, 0)) * _speed * Time.deltaTime;
 
                 MovePlayersOnThePlatform(Vector3.up);
             }
@@ -173,12 +161,9 @@ public class LiftMovement : MonoBehaviour
         }
         if (pointA_reached && !pointB_reached)
         {
-            if (currentPosition.x <= 221.6729)//221.6729)
+            if (currentPosition.x <= 221.6729)
             {
-                //var x = currentPosition.x + 1;
-
                 transform.position += Vector3.right * _speed * Time.deltaTime;
-                //(new Vector3(x, 0, 0)) * _speed * Time.deltaTime;
 
                 MovePlayersOnThePlatform(Vector3.right);
             }
@@ -189,12 +174,9 @@ public class LiftMovement : MonoBehaviour
         }
         if (pointB_reached && !pointC_reached)
         {
-            if (currentPosition.y >= -73.3013)//-73.3013)
+            if (currentPosition.y >= -73.3013)
             {
-                //var y = currentPosition.y + 1;
-
                 transform.position += Vector3.down * _speed * Time.deltaTime;
-                //(new Vector3(0, y, 0)) * _speed * Time.deltaTime;
 
                 MovePlayersOnThePlatform(Vector3.down);
             }
@@ -218,7 +200,7 @@ public class LiftMovement : MonoBehaviour
     /// </summary>
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //здесь - коллекция плееров, которые на платформе, зашли и вышли учесть
+        //здесь - коллекция игроков, которые на платформе, зашли и вышли учесть
 
         if (collision.gameObject.tag == "Player")
         {
@@ -227,12 +209,6 @@ public class LiftMovement : MonoBehaviour
             if (player != null)
             {
                 playersOnThePlatform.Add(player);
-
-                /*
-                 * утснвоить переменные у плеера:
-                 * player.playerOnLiftPlatforfmFlag = true;
-                 * 
-                 */
 
                 var pmControl = player.GetComponent<PlayerMovement>();
                 pmControl.playerOnLiftPlatforfmFlag = true;
@@ -262,7 +238,7 @@ public class LiftMovement : MonoBehaviour
     {
         foreach (var pl in playersOnThePlatform)
         {
-            pl.transform.position += v * _speed * Time.deltaTime; 
+            pl.transform.position += v * _speed * Time.deltaTime;
         }
     }
 }

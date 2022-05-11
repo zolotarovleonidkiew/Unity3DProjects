@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Плазма-ган стреляет каждые 3 секунды
+/// Плазма-ган стреляет каждые {_delay} секунд/ы
 /// </summary>
 public class EnemyShoots : MonoBehaviour
 {
@@ -42,7 +42,6 @@ public class EnemyShoots : MonoBehaviour
     {
         if (_lastShotTime == default(DateTime) || DateTime.Now >= _lastShotTime.AddSeconds(_delay))
         {
-           // Destroy(_createdBullet);
            // _createdBullet = null;
 
             //Добавить звук
@@ -55,16 +54,12 @@ public class EnemyShoots : MonoBehaviour
 
     private void Shoot()
     {
-        //Create bullet
         var _createdBullet = new GameObject($"bullet_{DateTime.Now}");
 
         SpriteRenderer sr = _createdBullet.AddComponent<SpriteRenderer>();
 
         sr.sprite = _bulletSprite;
         sr.sortingOrder = 5;
-
-        //BoxCollider2D collider = _createdBullet.AddComponent<BoxCollider2D>(); //TO DO add attack !!!! Или перемемстить в коллайдер викинга
-        //collider.size = new Vector2(1, 1);
 
         _createdBullet.AddComponent<Transform>();
 

@@ -6,10 +6,7 @@ using UnityEngine;
 /// </summary>
 public class PlayerSwap : MonoBehaviour
 {
-    [SerializeField] private GameObject[] Vikings;
-
-    //remove??
-    public Character[] PlayerCharacters; // list of characters
+    [SerializeField] private GameObject[] _vikings;
 
     [SerializeField] int selectedUserId = 0;
     PlayerMovement pmUlrick;
@@ -22,13 +19,13 @@ public class PlayerSwap : MonoBehaviour
 
     void Start()
     {
-        pmUlrick = Vikings[1].GetComponent<PlayerMovement>();
-        pmOlaf = Vikings[0].GetComponent<PlayerMovement>();
-        pmBaelog = Vikings[2].GetComponent<PlayerMovement>();
+        pmUlrick = _vikings[1].GetComponent<PlayerMovement>();
+        pmOlaf = _vikings[0].GetComponent<PlayerMovement>();
+        pmBaelog = _vikings[2].GetComponent<PlayerMovement>();
 
-        cnUlrick = Vikings[1].GetComponent<CharacterController2D>();
-        cnOlaf = Vikings[0].GetComponent<CharacterController2D>();
-        cnBaelog = Vikings[2].GetComponent<CharacterController2D>();
+        cnUlrick = _vikings[1].GetComponent<CharacterController2D>();
+        cnOlaf = _vikings[0].GetComponent<CharacterController2D>();
+        cnBaelog = _vikings[2].GetComponent<CharacterController2D>();
 
         ModifyAcceptance(0);
     }
@@ -37,12 +34,12 @@ public class PlayerSwap : MonoBehaviour
     {
         var inextI = currentIndex + 1;
 
-        if (inextI > Vikings.Length - 1)
+        if (inextI > _vikings.Length - 1)
         {
             inextI = 0;
         }
 
-        if (Vikings[inextI] == null)
+        if (_vikings[inextI] == null)
         {
            return GetNextActiveVikingIndex(inextI);
         }
@@ -55,12 +52,12 @@ public class PlayerSwap : MonoBehaviour
 
     void Update()
     {
-        if (Vikings.Count(x => x == null) == 3)
+        if (_vikings.Count(x => x == null) == 3)
         {
             return;
         }
 
-        if (Vikings[selectedUserId] == null)
+        if (_vikings[selectedUserId] == null)
         {
             selectedUserId = GetNextActiveVikingIndex(selectedUserId);
 

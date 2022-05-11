@@ -16,7 +16,7 @@ public enum ItemTypes
 /// <summary>
 /// Элемент инвентаря / валяется на полу
 /// </summary>
-public partial class Item
+public class Item
 {
     public ItemTypes Type { get; set; }
 }
@@ -32,18 +32,15 @@ public class FoodItem : Item
         Type = ItemTypes.Food;
     }
 
-    public int RestoreHealthpoints = 1;
+    public int RestoreHealthPoints = 1;
 
 }
 
 /// <summary>
-/// Бомба - уничтожает все в радиусе 3 клеток
+/// Бомба - уничтожает все в радиусе {DestroyRadius} клеток
 /// </summary>
 public class BombItem : Item
 {
-    /// <summary>
-    /// Куда установили бомбу
-    /// </summary>
     public BombItem()
     {
         Type = ItemTypes.Bomb;

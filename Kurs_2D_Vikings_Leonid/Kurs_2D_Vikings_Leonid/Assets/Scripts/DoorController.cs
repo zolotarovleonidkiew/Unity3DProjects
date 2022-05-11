@@ -13,7 +13,6 @@ public class DoorController : MonoBehaviour
 {
     private CharacterController2D controller;
 
-    //  public Animator animator;
     public AudioSource audioSource;
     public SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite OpenedDoor;
@@ -41,7 +40,7 @@ public class DoorController : MonoBehaviour
 
     void OpenDoor()
     {
-        //убрать child collision
+        //if open - remove child collider
         if (transform.childCount == 1)
         {
             var childTransform = transform.GetChild(0);
@@ -60,7 +59,6 @@ public class DoorController : MonoBehaviour
         audioSource.Play();
     }
 
-    //***************************************************************************************
 
     void SetFlagPlayerToOpenDoor(Collider2D collision)
     {

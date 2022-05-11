@@ -203,7 +203,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (controller.CurrentHealth <= CharacterController2D.MaxHealthPoint)
                     {
-                        controller.CurrentHealth += (selectedItem as FoodItem).RestoreHealthpoints;
+                        controller.CurrentHealth += (selectedItem as FoodItem).RestoreHealthPoints;
 
                         controller.RemoveItemFromInventory();
                     }

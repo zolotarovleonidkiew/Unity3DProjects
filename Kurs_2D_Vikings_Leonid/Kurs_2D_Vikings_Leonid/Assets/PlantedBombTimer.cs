@@ -19,20 +19,19 @@ public class PlantedBombTimer : MonoBehaviour
 
     private bool _explotionShouldStop = false;
 
-    List<PlayerMovement>HeroesInExplodedZone = new List<PlayerMovement>();
-    List<Enemy> EnemiesInExplodedZone = new List<Enemy>();
+    private List<PlayerMovement> HeroesInExplodedZone = new List<PlayerMovement>();
+    private List<Enemy> EnemiesInExplodedZone = new List<Enemy>();
 
     private DateTime _explotionShoulEndAt;
 
-    GameObject explotion;
+    private GameObject explotion;
 
-    void Start()
+    private void Start()
     {
         _bombShouldExplodeAt = DateTime.Now.AddSeconds(_timer);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (DateTime.Now >= _bombShouldExplodeAt && !_bombExploded)
         {
@@ -45,7 +44,7 @@ public class PlantedBombTimer : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         //Animation
         if (_bombShouldExplode)
@@ -56,7 +55,7 @@ public class PlantedBombTimer : MonoBehaviour
 
             _bombExploded = true;
 
-           var sr =  this.gameObject.GetComponent<SpriteRenderer>();
+            var sr = this.gameObject.GetComponent<SpriteRenderer>();
             sr.enabled = false;
             //Destroy(this.gameObject);
 
@@ -129,7 +128,6 @@ public class PlantedBombTimer : MonoBehaviour
             explotion.AddComponent<SpriteRenderer>();
             explotion.AddComponent<BoxCollider2D>();
             explotion.AddComponent<Transform>();
-            //explotion.AddComponent<Rigidbody2D>();
 
             var tc = explotion.GetComponent<Transform>();
             tc.position = transform.position + Vector3.up * 3;
@@ -140,7 +138,6 @@ public class PlantedBombTimer : MonoBehaviour
             sr.sortingOrder = 5;
 
             var bc = explotion.GetComponent<BoxCollider2D>();
-            //  bc.isTrigger = true;
             bc.size = new Vector2(1, 7);
 
             _explotionShoulEndAt = DateTime.Now.AddSeconds(2);

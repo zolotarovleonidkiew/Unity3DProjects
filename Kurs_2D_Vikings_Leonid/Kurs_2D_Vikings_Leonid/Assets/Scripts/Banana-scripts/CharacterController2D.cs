@@ -58,9 +58,25 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, float targetXcoord = 0)
     {
+        if (this.VikingName == "Olaf")
+        {
+            if (this.transform.position.x < targetXcoord && playerIconDirectionToRight)
+            {
+                //shield blocks attack from right
+                damage = 0;
+            }
+            else if (this.transform.position.x > targetXcoord && !playerIconDirectionToRight)
+            {
+                //shield blocks attack from left
+                damage = 0;
+            }
+        }
+
         CurrentHealth -= damage;
+
+        Debug.LogError($"Damage: {damage}");
     }
 
     private void UpdateUIHealth(int health)

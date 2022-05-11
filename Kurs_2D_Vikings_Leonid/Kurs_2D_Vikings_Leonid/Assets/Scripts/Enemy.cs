@@ -53,16 +53,6 @@ public class Enemy : MonoBehaviour
         _animator = this.GetComponent<Animator>();
     }
 
-    //private void Update()
-    //{
-    //    if (shouldDie)
-    //    {
-    //        shouldDie = false;
-
-    //        Destroy(this.gameObject);
-    //    }
-    //}
-
     private void FixedUpdate()
     {
         bool shoudAttack = AlienDecidedToAttack();
@@ -142,11 +132,8 @@ public class Enemy : MonoBehaviour
 
         if (pmController != null)
         {
-            pmController.TakeDamage(Attack);
-
-            Debug.LogError($"Damage: {Attack}");
+            pmController.TakeDamage(Attack,  transform.position.x);
         }
-
     }
 
     public void TakeDamage(int damage)
