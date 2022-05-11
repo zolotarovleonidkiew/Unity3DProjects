@@ -39,25 +39,49 @@ public class CameraFollowPlayer : MonoBehaviour
 
     void LateUpdate()
     {
+        if (VikingTransforms.Count(v => v == null) == 3)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            //var oldName = CurrentPlayer.Name;
-
-            selectedUserId =
-                selectedUserId + 1 > 2 ?
-                selectedUserId = 0 :
-                selectedUserId + 1;
+            selectedUserId = GetNextActiveVikingIndex(selectedUserId);
 
             CurrentPlayer = PlayerCharacters[selectedUserId];
         }
 
-        //TO DO:  check viking was dead
+        //check viking was dead
+        if (VikingTransforms[selectedUserId] == null)
+        {
+            selectedUserId = GetNextActiveVikingIndex(selectedUserId);
+        }
 
         //move camera
         UpdateCameraPosition(VikingTransforms[selectedUserId]);
 
         //move upper panel
         UpdateUpperPanelPosition(VikingTransforms[selectedUserId]);
+    }
+
+    private int GetNextActiveVikingIndex(int currentIndex)
+    {
+        var inextI = currentIndex + 1;
+
+        if (inextI > VikingTransforms.Length - 1)
+        {
+            inextI = 0;
+        }
+
+        if (VikingTransforms[inextI] == null)
+        {
+            return GetNextActiveVikingIndex(inextI);
+        }
+        else
+        {
+            selectedUserId = inextI;
+            return inextI;
+        }
     }
 
     private void UpdateCameraPosition(Transform currentVikingTransform)
@@ -110,10 +134,5 @@ public class CameraFollowPlayer : MonoBehaviour
         UlrichIcoTransform.x += 16-3;
 
         UlrichIco.transform.position = UlrichIcoTransform;
-
-
-        // TODO:
-        // update inventary positions
-
     }
 }

@@ -4933,9 +4933,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b18adc8f5c35c48853248221214896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Olaf: {fileID: 1567401348}
-  Ulrick: {fileID: 604186524}
-  Baelog: {fileID: 835524304}
+  Vikings:
+  - {fileID: 1567401348}
+  - {fileID: 604186524}
+  - {fileID: 835524304}
   PlayerCharacters: []
 --- !u!1 &629051061
 GameObject:
@@ -6635,9 +6636,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b18adc8f5c35c48853248221214896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Olaf: {fileID: 1567401348}
-  Ulrick: {fileID: 604186524}
-  Baelog: {fileID: 835524304}
+  Vikings:
+  - {fileID: 1567401348}
+  - {fileID: 604186524}
+  - {fileID: 835524304}
   PlayerCharacters: []
 --- !u!114 &835524311
 MonoBehaviour:
@@ -12488,9 +12490,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b18adc8f5c35c48853248221214896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Olaf: {fileID: 1567401348}
-  Ulrick: {fileID: 604186524}
-  Baelog: {fileID: 835524304}
+  Vikings:
+  - {fileID: 1567401348}
+  - {fileID: 604186524}
+  - {fileID: 835524304}
   PlayerCharacters: []
 --- !u!1 &1577747067
 GameObject:
