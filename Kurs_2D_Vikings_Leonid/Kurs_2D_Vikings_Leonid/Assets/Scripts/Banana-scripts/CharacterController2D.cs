@@ -6,6 +6,10 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
+    #region Menu's 
+    [SerializeField] private LoseEndGameMenu loseMenu;
+    #endregion
+
     #region Planting Bombs
     [SerializeField] public Sprite _bombHasBeenPlanted;
     [SerializeField] public Sprite _explotionSprite;
@@ -19,6 +23,8 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] private Sprite _health_2_points;
     [SerializeField] private Sprite _health_1_points;
     [SerializeField] private Sprite _health_0_points;
+
+    [SerializeField] private Sprite _deadHeroStatusBar;
 
     //ְּÊׁ חהמנמגüÿ
     public const int MaxHealthPoint = 3;
@@ -55,6 +61,30 @@ public class CharacterController2D : MonoBehaviour
         set
         {
             _isDead = value;
+
+            var UpperPanelObjects = GameObject.FindGameObjectsWithTag("UpperPanelTag");
+
+            var heroId = "";
+
+            //update status sprite
+            if (this.VikingName == "Olaf")
+            {
+                heroId = "OlafStatusBar";
+            }
+            else if (this.VikingName == "Ulrick")
+            {
+                heroId = "UlrichStatusBar";
+            }
+            else
+            {
+                heroId = "BaleogStatusBar";
+            }
+
+            var icoObject =  UpperPanelObjects.Where(u => u.name == heroId).First();
+
+            var ico = icoObject.GetComponent<SpriteRenderer>();
+
+            ico.sprite = _deadHeroStatusBar;
         }
     }
 
@@ -134,6 +164,7 @@ public class CharacterController2D : MonoBehaviour
 
     private Rigidbody2D m_Rigidbody2D;
 
+    public bool PlayerIconDirectionToRight => playerIconDirectionToRight;
     private bool playerIconDirectionToRight = true;
     private bool playerOnTheFloor = true;
 
@@ -147,19 +178,36 @@ public class CharacterController2D : MonoBehaviour
     private void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+
+        //var l  = new LoseEndGameMenu();
+
+        //l.Hide();
     }
 
     void Start()
     {       
         Inventory = new Item[4] { null, null, null, null };
 
-        CurrentHealth = 3;
+        CurrentHealth = MaxHealthPoint;
 
         UpdateUISelectedItem();
     }
 
     private void Update()
     {
+        //check all vikings are dead
+        var olaf = GameObject.Find("Hero-Olaf");
+        var ulrich = GameObject.Find("Hero-Erik");
+        var baealog = GameObject.Find("Hero-Baealog");
+
+        if (olaf == null && ulrich == null && baealog == null)
+        {
+            loseMenu.Show();
+        }
+        else
+        {
+            loseMenu.Hide();
+        }
     }
 
     void FixedUpdate()

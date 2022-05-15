@@ -80,9 +80,11 @@ public class PlantedBombTimer : MonoBehaviour
             p.controller.CurrentHealth -= bombDamage;
         }
 
-        foreach (Enemy e in EnemiesInExplodedZone)
+        //fix collection currepted exception (can't use foreach here)
+        for (int i = 0; i < EnemiesInExplodedZone.Count; i++)
         {
-            e.TakeDamage(bombDamage);
+            var enemy = EnemiesInExplodedZone[i];
+            enemy.TakeDamage(bombDamage);
         }
     }
 

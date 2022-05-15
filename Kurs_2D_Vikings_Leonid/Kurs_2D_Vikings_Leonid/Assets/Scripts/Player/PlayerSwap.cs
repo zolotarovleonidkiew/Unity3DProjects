@@ -54,7 +54,7 @@ public class PlayerSwap : MonoBehaviour
     {
         if (_vikings.Count(x => x == null) == 3)
         {
-            return;
+             return;
         }
 
         if (_vikings[selectedUserId] == null)

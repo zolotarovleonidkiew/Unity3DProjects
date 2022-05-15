@@ -14,7 +14,23 @@ public class EnemyShot : MonoBehaviour
 
             if (pmController != null)
             {
-                pmController.CurrentHealth -= Damage;
+                var damage = Damage;
+
+                if (pmController.VikingName == "Olaf")
+                {
+                    if (pmController.transform.position.x < this.transform.position.x && pmController.PlayerIconDirectionToRight)
+                    {
+                        //shield blocks attack from right
+                        damage = 0;
+                    }
+                    else if (pmController.transform.position.x > this.transform.position.x && !pmController.PlayerIconDirectionToRight)
+                    {
+                        //shield blocks attack from left
+                        damage = 0;
+                    }
+                }
+             
+                pmController.CurrentHealth -= damage;
             }
         }
 

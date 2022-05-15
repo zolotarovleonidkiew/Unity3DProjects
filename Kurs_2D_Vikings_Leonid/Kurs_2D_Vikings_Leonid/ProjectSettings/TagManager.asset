@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UpperPanelTag
   - Enemies
+  - EndGamePanel
   layers:
   - Default
   - TransparentFX
