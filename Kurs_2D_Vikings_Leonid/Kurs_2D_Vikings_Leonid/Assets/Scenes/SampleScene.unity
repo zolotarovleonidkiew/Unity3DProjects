@@ -870,6 +870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loseMenu: {fileID: 1888343279}
+  levelFinisgingObject: {fileID: 1534253877}
 --- !u!1 &100125371
 GameObject:
   m_ObjectHideFlags: 0

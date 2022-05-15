@@ -6,10 +6,12 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class LevelFinishingScript : MonoBehaviour
 {
-
     [SerializeField] public bool UlrichReachedFlag = false;
     [SerializeField] public bool BaelogReachedFlag = false;
     [SerializeField] public bool OlafReachedFlag = false;
+
+    public bool LevelFinished => _levelFinished;
+    private bool _levelFinished;
 
     /// <summary>
     /// Игрок зашел в зону выхода
@@ -30,15 +32,15 @@ public class LevelFinishingScript : MonoBehaviour
             {
                 OlafReachedFlag = true;
             }
-            else if (vikingName == "Baelog")
+            else if (vikingName == "Baealog")
             {
                 BaelogReachedFlag = true;
             }
 
+            //Exit level
             if (UlrichReachedFlag && BaelogReachedFlag && OlafReachedFlag)
             {
-                //Load New level !!!
-                LoadNewLevel();
+                _levelFinished = true;
             }
 
         }
@@ -49,10 +51,6 @@ public class LevelFinishingScript : MonoBehaviour
     }
 
 
-    private void LoadNewLevel()
-    {
-        SceneManager.LoadScene("Level2");
-    }
 
     /// <summary>
     /// Игрок вышел из зоны выхода
