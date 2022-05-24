@@ -3,12 +3,15 @@ using UnityEngine.SceneManagement;
 
 public class SuperGameController : MonoBehaviour
 {
-    [SerializeField] private LoseEndGameMenu loseMenu;
+    [SerializeField] private bool _killThemAll;
+    [SerializeField] private bool _showStartMenu;
+    [SerializeField] private LoseEndGameMenu menuController;
     [SerializeField] LevelFinishingScript levelFinisgingObject;
 
     void Start()
     {
-        loseMenu.Hide();
+        menuController.MenuType = Assets.Scripts.MenuStateEnum.StartGame;
+        menuController.Show();
     }
 
     void Update()
@@ -19,14 +22,35 @@ public class SuperGameController : MonoBehaviour
         }
         else
         {
-            var olaf = GameObject.Find("Hero-Olaf");
-            var ulrich = GameObject.Find("Hero-Erik");
-            var baealog = GameObject.Find("Hero-Baealog");
+            ShowEndGameMenu();
+        }
+    }
 
-            if (olaf == null && ulrich == null && baealog == null)
+    private void ShowEndGameMenu()
+    {
+        var olaf = GameObject.Find("Hero-Olaf");
+        var ulrich = GameObject.Find("Hero-Erik");
+        var baealog = GameObject.Find("Hero-Baealog");
+
+        if ((_killThemAll) || (olaf == null && ulrich == null && baealog == null))
+        {
+            menuController.MenuType = Assets.Scripts.MenuStateEnum.FailedGame;
+
+            //DEBUG +
+            if (_killThemAll)
             {
-                loseMenu.Show();
+                menuController.OlafWasDead = true;
+                menuController.UlrichWasDead = true;
+                menuController.BaealogWasDead = true;
             }
+            //DEBUG -
+            else
+            {
+                menuController.OlafWasDead = olaf == null;
+                menuController.UlrichWasDead = ulrich == null;
+                menuController.BaealogWasDead = baealog == null;
+            }
+            menuController.Show();
         }
     }
 }

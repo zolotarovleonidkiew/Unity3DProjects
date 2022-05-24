@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ѕроверка выполнени€ услови€ завершени€ уровна€ - все 3 викинда должнвы потревожить коллайдер

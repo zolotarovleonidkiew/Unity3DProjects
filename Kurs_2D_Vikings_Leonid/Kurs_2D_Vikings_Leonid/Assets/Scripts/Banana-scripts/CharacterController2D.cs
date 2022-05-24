@@ -204,10 +204,6 @@ public class CharacterController2D : MonoBehaviour
         {
             loseMenu.Show();
         }
-        else
-        {
-            loseMenu.Hide();
-        }
     }
 
     void FixedUpdate()
