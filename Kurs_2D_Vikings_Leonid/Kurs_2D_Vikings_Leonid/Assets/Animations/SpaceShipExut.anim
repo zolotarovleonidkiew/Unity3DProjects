@@ -568,7 +568,7 @@ AnimationClip:
   - time: 2.2
     functionName: DestroyAfterPlay
     data: 
-    objectReferenceParameter: {fileID: 11500000, guid: 00c8ab4db8f75d54ba08fe213c1a9f3a, type: 3}
+    objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

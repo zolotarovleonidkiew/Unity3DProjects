@@ -14,16 +14,18 @@ public class SuperGameController : MonoBehaviour
     /// <summary>
     /// De/Activate heroes on Menu
     /// </summary>
-    /// <param name="undoDisable"></param>
     private void DisableHeroes(bool undoDisable = false)
     {
         var olaf = GameObject.Find("Hero-Olaf");
         var ulrich = GameObject.Find("Hero-Erik");
         var baealog = GameObject.Find("Hero-Baealog");
 
-        olaf.GetComponent<PlayerMovement>().AllowMovement = undoDisable;
-        ulrich.GetComponent<PlayerMovement>().AllowMovement = undoDisable;
-        baealog.GetComponent<PlayerMovement>().AllowMovement = undoDisable;
+        if (olaf != null && ulrich != null && baealog != null)
+        {
+            olaf.GetComponent<PlayerMovement>().AllowMovement = undoDisable;
+            ulrich.GetComponent<PlayerMovement>().AllowMovement = undoDisable;
+            baealog.GetComponent<PlayerMovement>().AllowMovement = undoDisable;
+        }
     }
 
     void Start()
