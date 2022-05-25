@@ -25,18 +25,22 @@ public class EnemyShoots : MonoBehaviour
 
     void FixedUpdate()
     {
-        foreach (var b in _bullets)
+        //fixed - bullets destroyed after reaching target
+        for (int i = 0; i < _bullets.Count; i++)
         {
-            if (b.transform.position.x > _target.x)
+            var b = _bullets[i];
+
+            if (b != null)
             {
-                b.transform.position += Vector3.left * speed * Time.deltaTime;
+                if (b.transform.position.x > _target.x)
+                {
+                    b.transform.position += Vector3.left * speed * Time.deltaTime;
+                }
+                else
+                {
+                    Destroy(b.gameObject);
+                }
             }
-            else
-            {
-                Destroy(b.GetComponent<SpriteRenderer>());
-                Destroy(b.GetComponent<BoxCollider2D>());
-            }
-            
         }
     }
 
