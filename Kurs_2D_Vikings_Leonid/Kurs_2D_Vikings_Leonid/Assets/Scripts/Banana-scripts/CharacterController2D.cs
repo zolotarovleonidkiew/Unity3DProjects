@@ -111,7 +111,7 @@ public class CharacterController2D : MonoBehaviour
 
         CurrentHealth -= damage;
 
-        Debug.LogError($"Damage: {damage}");
+        Debug.LogError($"{VikingName} took damage: {damage}");
     }
 
     private void UpdateUIHealth(int health)
