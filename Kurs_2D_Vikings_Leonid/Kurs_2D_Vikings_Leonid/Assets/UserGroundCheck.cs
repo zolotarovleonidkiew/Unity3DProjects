@@ -1,6 +1,8 @@
 using UnityEngine;
 
 /// <summary>
+/// Ulrich's grounded handler.
+/// 
 /// Отслежтивание приземления Улрика
 /// </summary>
 public class UserGroundCheck : MonoBehaviour

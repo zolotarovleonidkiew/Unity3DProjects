@@ -2,6 +2,9 @@
 
 namespace Assets.Scripts
 {
+    /// <summary>
+    /// Types of menu in this game
+    /// </summary>
     [Serializable]
     public enum MenuStateEnum
     {

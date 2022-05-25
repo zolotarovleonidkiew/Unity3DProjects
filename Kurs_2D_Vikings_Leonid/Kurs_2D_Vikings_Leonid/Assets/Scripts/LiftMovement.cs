@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Лифт курсирует между точками А и Б по нажатию на кнопку "Е".
+/// Elevator controller
+/// 
+/// Лифт курсирует между точками А и Б по нажатию на кнопку "UP".
 /// Если кто-то упал в шахту лифта, то ему труба, когда лифт раздавит его
 /// </summary>
 public class LiftMovement : MonoBehaviour
 {
     [SerializeField] private float _speed = 10f;
-    [SerializeField] public bool _playerLaunchedLiftMovement; //уже нажал кнопку лифтаи должен поехать вместе с ним
+    [SerializeField] public bool _playerLaunchedLiftMovement; //уже нажал кнопку лифта, и должен поехать вместе с ним
 
     private bool _liftIsMovingUp = false;
     private bool _liftIsMovingDown = false;
+
     /// <summary>
     /// Лифт может изменить направление движения только в начальной и конечной точке
     /// </summary>

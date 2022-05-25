@@ -1,29 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// Script schene - vikings leave with spaceship
+/// 
 /// Скриптовая сцена - викинги валят с корабля
 /// </summary>
 public class ScriptScheneGoodBy : MonoBehaviour
 {
     [SerializeField] LevelFinishingScript GameWinnerScript;
-
-    private bool _vikingsPrepeared;
-
-    private void PrepareVikings(GameObject olaf, GameObject ulrich, GameObject baealog)
-    {
-        //Destroy(olaf.GetComponent<Rigidbody2D>());
-        //Destroy(olaf.GetComponent<Collider2D>());
-
-        //Destroy(ulrich.GetComponent<Rigidbody2D>());
-        //Destroy(ulrich.GetComponent<Collider2D>());
-
-        //Destroy(baealog.GetComponent<Rigidbody2D>());
-        //Destroy(baealog.GetComponent<Collider2D>());
-
-        _vikingsPrepeared = true;
-    }
 
     void FixedUpdate()
     {
@@ -32,11 +16,6 @@ public class ScriptScheneGoodBy : MonoBehaviour
             var olaf = GameObject.Find("Hero-Olaf");
             var ulrich = GameObject.Find("Hero-Erik");
             var baealog = GameObject.Find("Hero-Baealog");
-
-            if (!_vikingsPrepeared)
-            {
-                PrepareVikings(olaf, ulrich, baealog);
-            }
 
             if (olaf != null)
             {

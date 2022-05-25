@@ -1,10 +1,10 @@
 using Assets.Scripts.Banana_scripts;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// Switch controller
+/// 
 /// Переключатель на стене
 /// </summary>
 public class SwitchHandler : MonoBehaviour

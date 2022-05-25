@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Menu on Start/Failed/Pause
+/// Menu on Start/Failed/Pause/Win the Game
 /// </summary>
 public class LoseEndGameMenu : MonoBehaviour
 {

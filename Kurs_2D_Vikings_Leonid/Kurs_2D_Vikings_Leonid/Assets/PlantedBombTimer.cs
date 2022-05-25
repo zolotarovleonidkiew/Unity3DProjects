@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// TO DO: display explosion animation
+/// Planted bomb controller - timer andf explosion were  set here
+/// 
+/// TO DO: display explosion animation on bomb's sprite
 /// </summary>
 public class PlantedBombTimer : MonoBehaviour
 {

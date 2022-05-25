@@ -1,6 +1,8 @@
 using UnityEngine;
 
 /// <summary>
+/// Inventory item's type
+/// 
 /// “ип элемента, который может поместить викинг в инвентарь
 /// </summary>
 public enum ItemTypes
@@ -14,6 +16,8 @@ public enum ItemTypes
 }
 
 /// <summary>
+/// Element of viking's inventory
+/// 
 /// Ёлемент инвентар€ / вал€етс€ на полу
 /// </summary>
 public class Item

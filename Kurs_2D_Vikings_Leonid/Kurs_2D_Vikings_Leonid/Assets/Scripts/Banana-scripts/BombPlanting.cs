@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts.Banana_scripts
 {
+    /// <summary>
+    /// Generate BOMB and place it near the parent.
+    /// Timer automatically strarted.
+    /// </summary>
     public class BombPlanting
     {
         public void Plant(Vector3 targetPosition, Sprite explotionSprite, Sprite bombHasBeenPlanted)

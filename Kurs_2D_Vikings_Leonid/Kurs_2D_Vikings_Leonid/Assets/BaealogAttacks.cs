@@ -1,14 +1,14 @@
 using UnityEngine;
 
 /// <summary>
+/// Baealog attacks melee weapon
+/// 
 /// Баелог кого-то рубанул мечом
 /// </summary>
 public class BaealogAttacks : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Baealog attacks collision hit detected");
-
         var enemyController = collision.GetComponent<Enemy>();
 
         if (enemyController != null)

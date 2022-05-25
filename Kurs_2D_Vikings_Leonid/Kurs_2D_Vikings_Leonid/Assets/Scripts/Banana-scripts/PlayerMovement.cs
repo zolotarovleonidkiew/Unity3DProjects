@@ -1,9 +1,10 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// User movementsa and actings
+/// 
+/// Used:
 /// https://www.youtube.com/watch?v=64ka8KsUnQc
 /// </summary>
 
@@ -35,12 +36,10 @@ public class PlayerMovement : MonoBehaviour
 
     float horizontalMove = 0f;
     bool jump = false;
-    // bool crouch = false;
 
     //game logic
-    public Character[] PlayerCharacters; // list of characters
+    public Character[] PlayerCharacters;
 
-    //выбранный персонаж
     int selectedUserId = 0;
     
     public Character CurrentPlayer;
@@ -280,24 +279,15 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        //no use
         var crouch = false;
 
-        // Move our character (go, jump)
         controller.Move(CurrentPlayer, horizontalMove * Time.fixedDeltaTime, crouch, jump);
         jump = false;
-
-        //jump = Physics2D.OverlapCircle(groundCheck.position, k_GroundedRadius, GroundLayer);
-
-        //if (!jump)
-        //{
-        //     animator.SetBool("IsJumping", false);
-        //}
     }
 
     public void DestoyPlayerObjectAfterDeathAnimFinished()
     {
         Destroy(this.gameObject);
-
-        //Удалить этого викинга из всех списков, чтоб не упоминался в списках
     }
 }

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// TODO: try to remove code duplication
+/// </summary>
 public partial class Character : MonoBehaviour
 {
     /// <summary>

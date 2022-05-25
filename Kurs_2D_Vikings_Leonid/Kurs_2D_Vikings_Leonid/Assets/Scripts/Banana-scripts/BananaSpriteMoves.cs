@@ -1,7 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 2D Demo
+/// </summary>
+[Obsolete]
 public class BananaSpriteMoves : MonoBehaviour
 {
     [SerializeField] private Transform _target;

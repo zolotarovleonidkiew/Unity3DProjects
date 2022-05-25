@@ -1,5 +1,8 @@
 ﻿using System;
 
+/// <summary>
+/// Inventory exception - ItemDoesNotExistsException
+/// </summary>
 public class ItemDoesNotExistsException : Exception
 {
     public ItemDoesNotExistsException() : base()

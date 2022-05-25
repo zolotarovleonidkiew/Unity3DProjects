@@ -4,6 +4,11 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// 2D Controller
+/// 
+/// TO DO: clean code, add constants, renaming
+/// </summary>
 public class CharacterController2D : MonoBehaviour
 {
     #region Menu's 

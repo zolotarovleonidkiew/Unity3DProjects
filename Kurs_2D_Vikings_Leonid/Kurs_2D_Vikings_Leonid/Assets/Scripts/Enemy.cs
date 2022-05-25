@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Enemy controller
+/// </summary>
 public class Enemy : MonoBehaviour
 {
     /// <summary>
@@ -9,6 +12,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     [SerializeField] private int Health = 1;
 
+    /// <summary>
+    /// External use only
+    /// </summary>
     public int GetEnemyHealth => Health;
 
     /// <summary>

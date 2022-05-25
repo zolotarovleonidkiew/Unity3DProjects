@@ -1,6 +1,8 @@
 using UnityEngine;
 
 /// <summary>
+/// Represents any item to be picked
+/// 
 /// Подбираем ключи/бомбу и пр. с пола прямо в инвентарь
 /// 
 /// https://www.youtube.com/watch?v=12AbcoLrYKM

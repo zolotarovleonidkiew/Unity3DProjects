@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
+/// Change active viking;
 /// Swap player by [TAB] or atomatically after viking's death
 /// </summary>
 public class PlayerSwap : MonoBehaviour

@@ -2,6 +2,9 @@ using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Game controller
+/// </summary>
 public class SuperGameController : MonoBehaviour
 {
     [SerializeField] private bool _killThemAll;

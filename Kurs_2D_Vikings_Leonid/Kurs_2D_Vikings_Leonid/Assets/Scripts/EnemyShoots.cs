@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// Plasma-Gun controller
+/// 
 /// Плазма-ган стреляет каждые {_delay} секунд/ы
 /// </summary>
 public class EnemyShoots : MonoBehaviour

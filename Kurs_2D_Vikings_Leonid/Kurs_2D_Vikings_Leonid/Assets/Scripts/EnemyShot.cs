@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Vikings take damage from distance weapon(plasma shots)
+/// </summary>
 public class EnemyShot : MonoBehaviour
 {
     [SerializeField] private bool _playerTakeDamageOnCollision = true;

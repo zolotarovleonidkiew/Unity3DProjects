@@ -2,6 +2,8 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
+/// Camera supports swapping user and follows to active viking
+/// 
 /// Камера и верхняя панель двигается вместе с выбранным персонажем
 /// </summary>
 public class CameraFollowPlayer : MonoBehaviour

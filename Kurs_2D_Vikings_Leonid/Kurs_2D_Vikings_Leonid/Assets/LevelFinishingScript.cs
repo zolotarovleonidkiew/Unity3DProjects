@@ -1,6 +1,8 @@
 using UnityEngine;
 
 /// <summary>
+/// Checks level was succeeded.
+/// 
 /// ѕроверка выполнени€ услови€ завершени€ уровна€ - все 3 викинга должнвы потревожить коллайдер
 /// </summary>
 public class LevelFinishingScript : MonoBehaviour

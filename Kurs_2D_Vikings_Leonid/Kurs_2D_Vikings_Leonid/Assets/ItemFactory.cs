@@ -1,6 +1,8 @@
 ﻿public class ItemFactory
 {
     /// <summary>
+    /// Create item by it's type
+    /// 
     /// Создаем предмет инвентаря по его типу
     /// </summary>
     public Item CreateItemByType(ItemTypes type)
