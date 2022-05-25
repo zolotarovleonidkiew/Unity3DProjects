@@ -87,7 +87,7 @@ AnimationClip:
   - time: 1.9833333
     functionName: DestoyPlayerObjectAfterDeathAnimFinished
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 9100000, guid: c1f838304ff17644db8d14fe8158efd4, type: 2}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

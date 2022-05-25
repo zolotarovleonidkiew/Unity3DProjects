@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 /// </summary>
 public class LoseEndGameMenu : MonoBehaviour
 {
+    #region Fields
     [SerializeField] private Text TitleWindow;
     [SerializeField] private Image _deadPicture1;
     [SerializeField] private bool _OlafWasDead = false;
@@ -25,10 +27,17 @@ public class LoseEndGameMenu : MonoBehaviour
 
     [SerializeField] private Button _saveSettingsButton;
     [SerializeField] private Button _closeSettingsButton;
+
+    [SerializeField] private LevelsEnum _currentLevel;
+    #endregion
+
     #region Properties
+
+    public Action DisableHeroes;
 
     public MenuStateEnum MenuType
     {
+        get { return _menuType; }
         set { _menuType = value; }
     }
 
@@ -61,17 +70,22 @@ public class LoseEndGameMenu : MonoBehaviour
 
     public void Hide()
     {
+        DisableHeroes.Invoke();
+
         gameObject.SetActive(false);
     }
 
     public void Exit()
     {
-        Application.Quit();
+        Hide();
     }
 
     public void Restart()
     {
-        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+        if (_menuType != MenuStateEnum.PauseGame)
+        {
+            SceneManager.LoadScene(_currentLevel.ToString(), LoadSceneMode.Single);
+        }
     }
 
     public void ShowSettings()
@@ -99,6 +113,12 @@ public class LoseEndGameMenu : MonoBehaviour
 
             UpdateDeadIcons();
         }
+        else if (_menuType == MenuStateEnum.WinTheGame)
+        {
+            TitleWindow.text = "YOU ARE WINNER !!!";
+            _restartButton.onClick.AddListener(Restart);
+            UpdateDeadIcons();
+        }
         else
         {
             TitleWindow.text = "Pause";
@@ -106,7 +126,9 @@ public class LoseEndGameMenu : MonoBehaviour
 
             UpdateDeadIcons();
         }
+
     }
+
 
     private void UpdateDeadIcons()
     {

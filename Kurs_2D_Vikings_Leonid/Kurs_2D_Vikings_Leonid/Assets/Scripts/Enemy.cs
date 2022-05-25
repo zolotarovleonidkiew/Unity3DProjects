@@ -9,6 +9,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     [SerializeField] private int Health = 1;
 
+    public int GetEnemyHealth => Health;
+
     /// <summary>
     /// Сила атаки
     /// </summary>

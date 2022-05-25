@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// ѕроверка выполнени€ услови€ завершени€ уровна€ - все 3 викинда должнвы потревожить коллайдер
+/// ѕроверка выполнени€ услови€ завершени€ уровна€ - все 3 викинга должнвы потревожить коллайдер
 /// </summary>
 public class LevelFinishingScript : MonoBehaviour
 {
@@ -9,6 +9,9 @@ public class LevelFinishingScript : MonoBehaviour
     [SerializeField] public bool BaelogReachedFlag = false;
     [SerializeField] public bool OlafReachedFlag = false;
 
+    /// <summary>
+    /// ‘лад дл€ GameController
+    /// </summary>
     public bool LevelFinished => _levelFinished;
     private bool _levelFinished;
 
@@ -43,13 +46,7 @@ public class LevelFinishingScript : MonoBehaviour
             }
 
         }
-        else
-        {
-            Debug.LogError("LevelFinishingScript=>[TriggerEnter]=>controller is null");
-        }
     }
-
-
 
     /// <summary>
     /// »грок вышел из зоны выхода
@@ -74,10 +71,6 @@ public class LevelFinishingScript : MonoBehaviour
             {
                 BaelogReachedFlag = false;
             }
-        }
-        else
-        {
-            Debug.LogError("LevelFinishingScript=>[TriggerExit]=>controller is null");
         }
     }
 }

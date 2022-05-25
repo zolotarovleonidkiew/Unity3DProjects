@@ -15,6 +15,7 @@ public class DoorController : MonoBehaviour
 
     public AudioSource audioSource;
     public SpriteRenderer spriteRenderer;
+
     [SerializeField] private Sprite OpenedDoor;
     [SerializeField] private Sprite ClosedDoor;
     [SerializeField] bool NoKeyNeeded;
@@ -24,11 +25,8 @@ public class DoorController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collision hit detected");
-
         if (!NoKeyNeeded)
         {
-            // nothing
             SetFlagPlayerToOpenDoor(collision);
         }
         else
@@ -36,6 +34,16 @@ public class DoorController : MonoBehaviour
             OpenDoor();
         }
 
+    }
+
+    /// <summary>
+    /// Used in scripted schemas
+    /// </summary>
+    public void HardwareOpenDoor()
+    {
+        GetComponent<BoxCollider2D>().enabled = false;
+
+        OpenDoor();
     }
 
     void OpenDoor()

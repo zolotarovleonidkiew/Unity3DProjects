@@ -7,6 +7,7 @@ namespace Assets.Scripts
     {
         StartGame,
         FailedGame,
-        PauseGame
+        PauseGame,
+        WinTheGame
     }
 }
