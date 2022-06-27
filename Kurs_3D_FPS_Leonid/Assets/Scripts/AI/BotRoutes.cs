@@ -4,10 +4,11 @@ using UnityEngine;
 public class BotRoutes
 {
     /// <summary>
-    /// waypoint reached - bool
-    /// waypoint coord - GameObject
+    /// Создает маршрут по точкам
     /// </summary>
     public List<Waypoint> WalkRoute { get; set; }
+
+    private float _y = 1.57282f;
 
     public BotRoutes(GameObject waypointsCollection)
     {
@@ -19,7 +20,7 @@ public class BotRoutes
         {
             var child = waypointsCollection.transform.GetChild(i).gameObject;
 
-            child.transform.position = new Vector3(child.transform.position.x, 1.57282f, child.transform.position.z);
+            child.transform.position = new Vector3(child.transform.position.x, _y, child.transform.position.z);
 
             var wp = new Waypoint(i, child);
 

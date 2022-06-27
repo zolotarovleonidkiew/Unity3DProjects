@@ -1,8 +1,8 @@
 ﻿public enum PickableItemTypes
 {
     WeaponSlot1_Grenade,
-    WeaponSlop2_Pistol,
-    WeaponSlot3_MachineGun,
+    WeaponSlop2_Revolver,
+    WeaponSlot3_TommyGun,
     Ammo,
     Health
 }

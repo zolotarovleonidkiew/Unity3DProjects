@@ -27,7 +27,13 @@ public class Healthitem : MonoBehaviour
         {
             if (playerController.Health < 100)
             {
-                playerController.OnTakeDamageHandler(_healPoints * -1);
+                bool needToUpdateHUD = false;
+                if (playerController.gameObject.tag == "Player")
+                {
+                    needToUpdateHUD = true;
+                }
+
+                playerController.OnTakeDamageHandler(_healPoints * -1, needToUpdateHUD);
 
                 _respawnDt = DateTime.Now.AddSeconds(_respawnSeconds);
 

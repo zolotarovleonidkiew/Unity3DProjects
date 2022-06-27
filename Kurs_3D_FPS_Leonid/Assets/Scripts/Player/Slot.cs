@@ -1,17 +1,42 @@
 ﻿using System;
+using UnityEngine;
 
-[Serializable]
 public class Slot
 {
+    public PickableItemTypes ItemType { get; private set; }
     public int index { get; private set; }
     public bool isActive;
-    public int ammo;
+   
+    public int Ammo
+    {
+        get { return ammo; }
+        set
+        {
+            if (value < 0)
+            {
+                ammo = 0;
+                Debug.LogWarning($"Out of ammo ({ItemType})");
+            }
+            else
+            {
+                ammo = value;
+            }
+            //if (ammo >1)
+            //    ammo = value;
+            //else
+            //{
+            //    Debug.LogWarning($"Out of ammo ({ItemType})");
+            //}
+        }
+    }
+    private int ammo;
 
-    public Slot(int i)
+    public Slot(int i, PickableItemTypes itemType)
     {
         isActive = false;
         ammo = 0;
         index = i;
+        ItemType = itemType;
     }
 
     public bool GetSlotActive()
@@ -26,6 +51,6 @@ public class Slot
 
     public void AddAmmo(int ammo)
     {
-        this.ammo += ammo;
+        Ammo += ammo;
     }
 }

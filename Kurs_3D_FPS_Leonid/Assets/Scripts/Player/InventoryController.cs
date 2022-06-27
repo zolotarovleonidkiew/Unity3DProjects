@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InventoryController : MonoBehaviour
 {
+    [SerializeField] private HUDMenu _hud;
+
     [SerializeField] private bool _isBot;
     public bool IsBot => _isBot;
 
@@ -30,14 +30,14 @@ public class InventoryController : MonoBehaviour
     public Slot Slot2 { get; set; }
     public Slot Slot3 { get; set; }
 
-   // int? _currentWeaponIndex = null;
+    int? _currentWeaponIndex = null;
     bool _handsWithWeaponDisplayed = false;
 
     private void Awake()
     {
-        Slot1 = new Slot(0);
-        Slot2 = new Slot(1);
-        Slot3 = new Slot(2);
+        Slot1 = new Slot(0, PickableItemTypes.WeaponSlot1_Grenade);
+        Slot2 = new Slot(1, PickableItemTypes.WeaponSlop2_Revolver);
+        Slot3 = new Slot(2, PickableItemTypes.WeaponSlot3_TommyGun);
     }
 
     void Start()
@@ -48,17 +48,26 @@ public class InventoryController : MonoBehaviour
     void Update()
     {
         //Select weapon
-        if (Input.GetKey(KeyCode.Alpha1) && Slot1.isActive)
+        if (Input.GetKey(KeyCode.Alpha1) && Slot1 != null && Slot1.isActive)
         {
             ChangeSelectedWeapon(_handsWithGrenade);
+            _currentWeaponIndex = 0;
+
+            UpdateHUD(Slot1);
         }
-        else if (Input.GetKey(KeyCode.Alpha2) && Slot2.isActive)
+        else if (Input.GetKey(KeyCode.Alpha2) && Slot2 != null && Slot2.isActive)
         {
             ChangeSelectedWeapon(_handsWithPistole);
+            _currentWeaponIndex = 1;
+
+            UpdateHUD(Slot2);
         }
-        else if (Input.GetKey(KeyCode.Alpha3) && Slot3.isActive)
+        else if (Input.GetKey(KeyCode.Alpha3) && Slot3 != null && Slot3.isActive)
         {
             ChangeSelectedWeapon(_handsWithTommyGun);
+            _currentWeaponIndex = 2;
+
+            UpdateHUD(Slot3);
         }
     }
 
@@ -67,11 +76,16 @@ public class InventoryController : MonoBehaviour
     /// </summary>
     public void OnPickupItemHandler(PickableItemTypes type, int ammo)
     {
-        Slot slot;
+        Slot slot = default;
 
         if (type == PickableItemTypes.WeaponSlot1_Grenade && !Slot1.isActive)
         {
             slot = Slot1;
+
+            if (_currentWeaponIndex == null)
+            {
+                _currentWeaponIndex = 0;
+            }
 
             DisplayHands(_handsWithGrenade);
 
@@ -81,9 +95,14 @@ public class InventoryController : MonoBehaviour
                 Debug.Log("Grenade hands appeared");
 
         }
-        else if (type == PickableItemTypes.WeaponSlop2_Pistol && !Slot2.isActive)
+        else if (type == PickableItemTypes.WeaponSlop2_Revolver && !Slot2.isActive)
         {
             slot = Slot2;
+
+            if (_currentWeaponIndex == null)
+            {
+                _currentWeaponIndex = 1;
+            }
 
             DisplayHands(_handsWithPistole);
 
@@ -92,9 +111,14 @@ public class InventoryController : MonoBehaviour
             else
                 Debug.Log("Revolver hands appeared");
         }
-        else //Tommy Gun
+        else if (type == PickableItemTypes.WeaponSlot3_TommyGun && !Slot3.isActive)
         {
             slot = Slot3;
+
+            if (_currentWeaponIndex == null)
+            {
+                _currentWeaponIndex = 2;
+            }
 
             if (!Slot3.isActive)
             {
@@ -106,9 +130,40 @@ public class InventoryController : MonoBehaviour
                     Debug.Log("TommyGun hands appeared");
             }
         }
+        else
+        {
+            // слот уже активирован, просто добавить патроны
 
-        slot.SetSlotActive();
-        slot.AddAmmo(ammo);
+            //update ammo
+            if (type == PickableItemTypes.WeaponSlot1_Grenade)
+            {
+                Slot1?.AddAmmo(1);
+            }
+            else if (type == PickableItemTypes.WeaponSlop2_Revolver)
+            {
+                Slot2?.AddAmmo(6);
+            }
+            else
+            {
+                Slot3?.AddAmmo(30);
+            }
+        }
+        
+        slot?.SetSlotActive();
+        slot?.AddAmmo(ammo);
+
+        //update strategy if it's a BOT
+        if (_isBot)
+        {
+            var aiNavigation = GetComponent<AI_Navigation>();
+
+            aiNavigation.NeedCheckStrategy = true;
+        }
+        else
+        {
+            UpdateHUD();
+        }
+
     }
 
     private void DisplayHands(GameObject handObject)
@@ -120,9 +175,8 @@ public class InventoryController : MonoBehaviour
             var lookPos = transform.position - _targetPosition.transform.position;
             var rotation = Quaternion.LookRotation(lookPos);
 
-           // _playerWeaponPlaceHolder =
-           Instantiate(handObject, _playerWeaponPlaceHolder.transform.position, rotation,
-                parent: _playerWeaponPlaceHolder.transform);
+            Instantiate(handObject, _playerWeaponPlaceHolder.transform.position, rotation,
+                 parent: _playerWeaponPlaceHolder.transform);
         }
     }
 
@@ -136,4 +190,80 @@ public class InventoryController : MonoBehaviour
 
         DisplayHands(handsWithWeaponObject);
     }
+
+    /// <summary>
+    /// Определяет, достаточно ли у бота вооружения, чтобы идти воевать
+    /// </summary>
+    public bool BotReadyToKill()
+    {
+        //граната
+        //if (Slot1 != null && Slot1.GetSlotActive() && Slot1.ammo > 0)
+        //{
+        //    return true;
+        //}
+        if (Slot2 != null && Slot2.GetSlotActive() && Slot2.Ammo > 10)
+        {
+            return true;
+        }
+        else if (Slot3 != null && Slot3.GetSlotActive() && Slot3.Ammo > 10)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public Slot GetCurrentWeapon()
+    {
+        if (_currentWeaponIndex.HasValue)
+        {
+            int i = _currentWeaponIndex.Value;
+
+            if (i == 0)
+                return Slot1;
+            else if (i == 1)
+                return Slot2;
+            if (i == 2)
+                return Slot3;
+        }
+
+        return null;
+    }
+
+    #region HUD
+    private void UpdateHUD(Slot weaponSlot)
+    {
+        if (gameObject.tag == "Player")
+        {
+            _hud.UpdateAmmo(weaponSlot.Ammo);
+        }
+    }
+
+    private void UpdateHUD()
+    {
+        if (_currentWeaponIndex.HasValue)
+        {
+            if (_currentWeaponIndex.Value == 0)
+            {
+                UpdateHUD(Slot1);
+            }
+            if (_currentWeaponIndex.Value == 1)
+            {
+                UpdateHUD(Slot2);
+            }
+            if (_currentWeaponIndex.Value ==2)
+            {
+                UpdateHUD(Slot3);
+            }
+        }
+    }
+
+    public void ProcessShot(Slot slot, int val = 1)
+    {
+        slot.AddAmmo(-val);
+
+        UpdateHUD(slot);
+    }
+
+    #endregion
 }

@@ -6,29 +6,55 @@ using UnityEngine.AI;
 
 public class AI_Navigation : MonoBehaviour
 {
-    [SerializeField] private GameObject _waypointsCollection;
-    [SerializeField] private float _distance = 0.1f;
-    [SerializeField] private GameObject _player;
+    //waypoint routes
+    [SerializeField] private GameObject _patrolRouteWP;
+    [SerializeField] private GameObject _pickWeaponRouteWP;
+    [SerializeField] private GameObject _healRouteWP;
 
-    [SerializeField] private bool _moveToPlayer = false;
+    [SerializeField] private GameObject _player;
+    [SerializeField] private bool _botSeePlayer = false;
+    [SerializeField] private AI_state AI_state;
+
+    /// <summary>
+    /// Если да, до вызов CheckUpdateCurrentStrategy()
+    /// </summary>
+    public bool NeedCheckStrategy = false;
+
+    //misc
+    [SerializeField] private float _minDistanceToWayPoint = 2f;
+
+    private InventoryController _inventory;
+    private HeroController _health;
 
     /// <summary>
     /// Коллекция вейпоинтов маршрута
     /// </summary>
-    private BotRoutes _botRoutes;
+    private BotRoutes _patrolRoute;
+    private BotRoutes _pickWeaponRoute;
+    private BotRoutes _healRoute;
 
-    private int? _lastWPIndex = null;
+    private int? _lastWPPatrolIndex = null;
+    private int? _lastWPPickWeaponIndex = null;
+    private int? _lastWPHealIndex = null;
 
     public float _speed = 5;
     public float _rotationSpeed = 5;
 
     private NavMeshAgent _agent;
 
+
     void Start()
     {
-        _botRoutes = new BotRoutes(_waypointsCollection);
-        _agent = GetComponent<NavMeshAgent>();
+        _patrolRoute = new BotRoutes(_patrolRouteWP);
+        _pickWeaponRoute = new BotRoutes(_pickWeaponRouteWP);
+        _healRoute = new BotRoutes(_healRouteWP);
 
+        _agent = GetComponent<NavMeshAgent>();
+        _inventory = GetComponent<InventoryController>();
+        _health = GetComponent<HeroController>();
+
+        //обновляем стратегию
+        CheckUpdateCurrentStrategy();
     }
 
     void Update()
@@ -37,41 +63,59 @@ public class AI_Navigation : MonoBehaviour
           transform.position,
           _player.transform.position,
           Color.yellow);
+
+        //Update strategy
+        if (NeedCheckStrategy)
+        {
+            CheckUpdateCurrentStrategy();
+
+            NeedCheckStrategy = false;
+        }
     }
 
     private void FixedUpdate()
     {
-        if (_moveToPlayer)
+        Waypoint nextWP = default;
+
+        if (AI_state == AI_state.Chase)
         {
-            var go = new GameObject();
-            var transform = go.GetComponent<Transform>();
-            transform.position = new Vector3(
-                _player.transform.position.x,
-                _player.transform.position.y,
-                _player.transform.position.z);
-
-            var w = new Waypoint(0, go);
-
-            MoveToNextWaypoint(w);
+            //преследование
         }
         else
         {
-            var nextWP = GetNextWaypoint();
+            if (AI_state == AI_state.Heal)
+            {
+                nextWP = GetNextWaypoint(_healRoute, _lastWPHealIndex);
+            }
+            else if (AI_state == AI_state.PickWeapon)
+            {
+                nextWP = GetNextWaypoint(_pickWeaponRoute, _lastWPPickWeaponIndex);
+            }
+            else if (AI_state == AI_state.Patrol)
+            {
+                if (_patrolRoute == null)
+                {
+                    _patrolRoute = new BotRoutes(_patrolRouteWP);
+                }
+                nextWP = GetNextWaypoint(_patrolRoute, _lastWPPatrolIndex);
+            }
 
             MoveToNextWaypoint(nextWP);
 
             var distance = Vector3.Distance(transform.position, nextWP.WaypointObject.transform.position);
-            if (distance <= _distance)
+            if (distance <= _minDistanceToWayPoint)
             {
                 nextWP.SetWaypointReached(true);
 
-                _lastWPIndex = nextWP.Index;
+                _lastWPPatrolIndex = nextWP.Index;
             }
         }
     }
 
+    #region Waypoint and routes walkthrough
+
     /// <summary>
-    /// Двигатсья к следующему вейпоинту
+    /// Двигаться к следующему вейпоинту
     /// </summary>
     private void MoveToNextWaypoint(Waypoint nextWP)
     {
@@ -79,8 +123,6 @@ public class AI_Navigation : MonoBehaviour
 
         var direction = nextWP.WaypointObject.transform.position - transform.position;
         direction = direction.normalized;
-
-       // transform.position += direction * _speed * Time.deltaTime;
 
         _agent.destination += direction * _speed * Time.deltaTime;
 
@@ -90,15 +132,70 @@ public class AI_Navigation : MonoBehaviour
         //   Debug.Log($"MoveToNextWaypoint. direction: {direction}");
     }
 
-    private Waypoint GetNextWaypoint()
+    /// <summary>
+    /// Получить следуюбщийендпоинт из маршрута
+    /// </summary>
+    /// <param name="route">Роут, зависит от AI_state</param>
+    /// <param name="_lastWPIndex">Индпекс текущего/последнего посещенного вейпоинта</param>
+    private Waypoint GetNextWaypoint(BotRoutes route, int? _lastWPIndex)
     {
         int nextWeypointIndex = _lastWPIndex == null ? 0 : _lastWPIndex.Value + 1;
 
-        if (nextWeypointIndex >= _botRoutes.WalkRoute.Count)
+        if (nextWeypointIndex >= route.WalkRoute.Count)
         {
             nextWeypointIndex = 0;
         }
 
-        return _botRoutes.WalkRoute.First(wp => wp.Index == nextWeypointIndex);
+        return route.WalkRoute.First(wp => wp.Index == nextWeypointIndex);
     }
+
+    /// <summary>
+    /// Получить ближайший ендпоинт из маршрута
+    /// </summary>
+    //private Waypoint GetNearestWaypointByAIState(AI_state state)
+    //{
+    //    var route = state == AI_state.PickWeapon ? _pickWeaponRoute : _healRoute;
+
+    //    var distances = new Dictionary<float, Waypoint>();
+
+    //    foreach (Waypoint wp in route.WalkRoute)
+    //    {
+    //        distances.Add(Vector3.Distance(transform.position, wp.WaypointObject.transform.position), wp);
+    //    }
+
+    //    var minDistance = distances.Min(x=>x.Key);
+
+    //    return distances[minDistance];
+    //}
+    #endregion
+
+
+    #region AI strategy
+
+    /// <summary>
+    /// Проверяем соответсвие выбранной стратегии (AI_state) текущему положению вещей
+    /// </summary>
+    private void CheckUpdateCurrentStrategy()
+    {
+        if (_health.Health > 25 && _inventory.BotReadyToKill() && _botSeePlayer)
+        {
+            AI_state = AI_state.Chase;
+        }
+        else if (_health.Health < 25)
+        {
+            AI_state = AI_state.Heal;
+        }
+        else if (_inventory.BotReadyToKill())
+        {
+            AI_state = AI_state.Patrol;
+        }
+        else if (_inventory.BotReadyToKill() == false)
+        {
+            AI_state = AI_state.PickWeapon;
+        }
+
+        Debug.Log($"Хорошо подумав, я решил что моя стратегия - {AI_state}");
+    }
+
+    #endregion
 }

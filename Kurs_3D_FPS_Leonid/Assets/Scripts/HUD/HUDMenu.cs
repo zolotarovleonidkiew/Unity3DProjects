@@ -5,10 +5,11 @@ public class HUDMenu : MonoBehaviour
 {
     [SerializeField] private Text _hpText;
     [SerializeField] private Text _hpAmmo;
+    [SerializeField] private Text _temporaryMessage;
 
     void Start()
     {
-        
+        _temporaryMessage.text = "";
     }
 
 
@@ -41,5 +42,10 @@ public class HUDMenu : MonoBehaviour
     public void UpdateAmmo(int ammo)
     {
         _hpAmmo.text = ammo.ToString();
+    }
+
+    public void UpdateTemporaryMessage(string msg)
+    {
+        _temporaryMessage.text = msg;
     }
 }
