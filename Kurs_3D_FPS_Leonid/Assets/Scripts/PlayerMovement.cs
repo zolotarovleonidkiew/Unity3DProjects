@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
     //    PlayerMovementLogic();
     //}
 
-    void PlayerMovementLogic()
+    public void PlayerMovementLogic(Vector3? joystickPosition = null)
 	{
         float k = 8000;//800
 
@@ -82,23 +82,39 @@ public class PlayerMovement : MonoBehaviour
                 deaccelerationSpeed);
         }
 
+        var axeHorizontal = Input.GetAxis("Horizontal");
+        var axeVertical = Input.GetAxis("Vertical");
+
+        if (axeHorizontal > 0 || axeVertical > 0)
+        {
+            int g = 5;
+        }
+
+        if (joystickPosition != null)
+        {
+            axeHorizontal = joystickPosition.Value.x;
+            axeVertical = joystickPosition.Value.y;
+        }
+
         if (grounded)
         {
-            rb.AddRelativeForce(Input.GetAxis("Horizontal")
+            rb.AddRelativeForce(axeHorizontal//Input.GetAxis("Horizontal")
                 * accelerationSpeed
                 * Time.deltaTime 
                 * k,
                 0,
-                Input.GetAxis("Vertical") * accelerationSpeed * Time.deltaTime * k);
+                axeVertical //Input.GetAxis("Vertical")
+                * accelerationSpeed * Time.deltaTime * k);
         }
         else
         {
             rb.AddRelativeForce(
-                Input.GetAxis("Horizontal") * accelerationSpeed / 2 * Time.deltaTime * k, 
-                0, 
-                Input.GetAxis("Vertical") * accelerationSpeed / 2 * Time.deltaTime * k);
+                axeHorizontal * accelerationSpeed / 2 * Time.deltaTime * k, //Input.GetAxis("Horizontal")
+                0,
+                axeVertical * accelerationSpeed / 2 * Time.deltaTime * k); //Input.GetAxis("Vertical")
 
         }
+
         /*
          * Slippery issues fixed here
          */

@@ -7,8 +7,21 @@ public class HUDMenu : MonoBehaviour
     [SerializeField] private Text _hpAmmo;
     [SerializeField] private Text _temporaryMessage;
 
+    [SerializeField] private Button _slot1;
+    [SerializeField] private Button _slot2;
+    [SerializeField] private Button _slot3;
+    [SerializeField] private Button _fire;
+
+    [SerializeField] private InventoryController _inventory;
+    [SerializeField] private WeaponShoot _weapon;
+
     void Start()
     {
+        _slot1.onClick.AddListener(SelecttWeapon1);
+        _slot2.onClick.AddListener(SelecttWeapon2);
+        _slot3.onClick.AddListener(SelecttWeapon3);
+        _fire.onClick.AddListener(Fire);
+
         _temporaryMessage.text = "";
     }
 
@@ -47,5 +60,25 @@ public class HUDMenu : MonoBehaviour
     public void UpdateTemporaryMessage(string msg)
     {
         _temporaryMessage.text = msg;
+    }
+
+    private void SelecttWeapon1()
+    {
+        _inventory.ChangeSelectedWeapon(0);
+    }
+
+    private void SelecttWeapon2()
+    {
+        _inventory.ChangeSelectedWeapon(1);
+    }
+
+    private void SelecttWeapon3()
+    {
+        _inventory.ChangeSelectedWeapon(2);
+    }
+
+    private void Fire()
+    {
+        _weapon.TryShoot();
     }
 }

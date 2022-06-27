@@ -42,6 +42,8 @@ public class AI_Navigation : MonoBehaviour
 
     private NavMeshAgent _agent;
 
+    private AI_BotSeePlayer _aimController;
+    private WeaponShoot _weaponController;
 
     void Start()
     {
@@ -52,6 +54,8 @@ public class AI_Navigation : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _inventory = GetComponent<InventoryController>();
         _health = GetComponent<HeroController>();
+        _aimController = GetComponent<AI_BotSeePlayer>();
+        _weaponController = GetComponent<WeaponShoot>();
 
         //обновляем стратегию
         CheckUpdateCurrentStrategy();
@@ -71,6 +75,14 @@ public class AI_Navigation : MonoBehaviour
 
             NeedCheckStrategy = false;
         }
+
+        //БОТ УВИДЕЛ ИГРОКА
+        if (_aimController.TARGET_AIMED)
+        {
+            _weaponController.TryShoot();
+
+            Debug.LogError("AI SHOOTED");
+        }
     }
 
     private void FixedUpdate()
@@ -79,7 +91,8 @@ public class AI_Navigation : MonoBehaviour
 
         if (AI_state == AI_state.Chase)
         {
-            //преследование
+            //преследование - это  TODO
+            // а пока только стреляем в игрока
         }
         else
         {

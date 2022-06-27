@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// Почему нет звука ??????????????????????
@@ -8,7 +10,7 @@ public class WeaponShoot : MonoBehaviour
     //перезарядка
     [SerializeField] public int GreneReloadTimeSeconds = 4;
     [SerializeField] public int RevilverReloadTimeSeconds = 3;
-    [SerializeField] public int TommyGunTimeSeconds = 0;
+    [SerializeField] public int TommyGunReloadTimeSeconds = 0;
 
     //вероятность попадания
     [SerializeField] public int GrenedeHitProbability = 100;
@@ -34,6 +36,11 @@ public class WeaponShoot : MonoBehaviour
     private AI_BotSeePlayer _aimController;
     private HeroController _targetHealthController;
 
+    //время, когда оружие снова будет готово после перезарядки
+    private DateTime? _dtGrenadeReloaded = null;
+    private DateTime? _dtRevolverReloaded = null;
+    private DateTime? _dtTommyGunReloaded = null;
+
     private Slot _currentWeaponSlot;
 
     void Start()
@@ -48,6 +55,7 @@ public class WeaponShoot : MonoBehaviour
         //Стрелять из любого оружия
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            //проверим, что время перезарядки уже прошло
             _currentWeaponSlot = _inventory.GetCurrentWeapon();
 
             TryShoot();
@@ -61,21 +69,71 @@ public class WeaponShoot : MonoBehaviour
         }
     }
 
+    private void UpdateReloadDateTime(Slot slot)
+    {
+        if (slot.ItemType == PickableItemTypes.WeaponSlot1_Grenade)
+        {
+            _dtGrenadeReloaded = DateTime.Now.AddSeconds(GreneReloadTimeSeconds);
+        }
+        else if (slot.ItemType == PickableItemTypes.WeaponSlop2_Revolver)
+        {
+            _dtRevolverReloaded = DateTime.Now.AddSeconds(RevilverReloadTimeSeconds);
+        }
+        else if (slot.ItemType == PickableItemTypes.WeaponSlot3_TommyGun)
+        {
+            _dtTommyGunReloaded = DateTime.Now.AddSeconds(TommyGunReloadTimeSeconds);
+        }
+    }
+
+    private bool CheckReloadTimeExpired(Slot slot)
+    {
+        DateTime? dt = null;
+
+        if (slot.ItemType == PickableItemTypes.WeaponSlot1_Grenade)
+        {
+            dt = _dtGrenadeReloaded;
+        }
+        else if (slot.ItemType == PickableItemTypes.WeaponSlop2_Revolver)
+        {
+            dt = _dtRevolverReloaded;
+        }
+        else if (slot.ItemType == PickableItemTypes.WeaponSlot3_TommyGun)
+        {
+            dt = _dtTommyGunReloaded;
+        }
+
+        if (dt == null)
+            return true;
+        else if (DateTime.Now >= dt)
+            return true;
+        else
+            return false;
+
+    }
+
     public void TryShoot()
     {
+        _currentWeaponSlot = _inventory.GetCurrentWeapon();
+
         if (_currentWeaponSlot != null)
         {
-            if (_currentWeaponSlot.GetSlotActive() || _currentWeaponSlot.Ammo > 0)
+            if (CheckReloadTimeExpired(_currentWeaponSlot)) // проверка не Релоад тайм
             {
-                Shoot(_currentWeaponSlot);
 
-                _inventory.ProcessShot(_currentWeaponSlot);
+                if (_currentWeaponSlot.GetSlotActive() || _currentWeaponSlot.Ammo > 0)
+                {
+                    Shoot(_currentWeaponSlot);
 
-                Debug.Log($" {_currentWeaponSlot.Ammo} left.");
-            }
-            else
-            {
-                Debug.LogError("Can't shoot without weapon or ammo");
+                    _inventory.ProcessShot(_currentWeaponSlot);
+
+                    Debug.Log($" {_currentWeaponSlot.Ammo} left.");
+
+                    UpdateReloadDateTime(_currentWeaponSlot); // UPDATE DT
+                }
+                else
+                {
+                    Debug.LogError("Can't shoot without weapon or ammo");
+                }
             }
         }
         else

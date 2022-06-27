@@ -18,7 +18,7 @@ public class InventoryController : MonoBehaviour
     /// </summary>
     [SerializeField] private GameObject _handsWithPistole;
     [SerializeField] private GameObject _handsWithTommyGun;
-    [SerializeField] private GameObject _handsWithGrenade;
+    [SerializeField] private GameObject _handsWithGrenade; // TODO: сделать руку с гранатой
 
     public delegate void PickupItem(PickableItemTypes type, int ammo);
     public event PickupItem OnPickupItem;
@@ -189,6 +189,31 @@ public class InventoryController : MonoBehaviour
         _handsWithWeaponDisplayed = false;
 
         DisplayHands(handsWithWeaponObject);
+    }
+
+    public void ChangeSelectedWeapon(int index)
+    {
+        if (_currentWeaponIndex != null)
+        {
+            GameObject go = default;
+
+            if (index == 0)
+            {
+                go = _handsWithGrenade;
+            }
+            else if (index == 1)
+            {
+                go = _handsWithPistole;
+            }
+            else if (index == 2)
+            {
+                go = _handsWithTommyGun;
+            }
+
+            ChangeSelectedWeapon(go);
+
+            UpdateHUD();
+        }
     }
 
     /// <summary>
