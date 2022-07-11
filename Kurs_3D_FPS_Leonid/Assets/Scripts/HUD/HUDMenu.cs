@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class HUDMenu : MonoBehaviour
@@ -6,6 +8,7 @@ public class HUDMenu : MonoBehaviour
     [SerializeField] private Text _hpText;
     [SerializeField] private Text _hpAmmo;
     [SerializeField] private Text _temporaryMessage;
+    [SerializeField] private Text _headerMessage;
 
     [SerializeField] private Button _slot1;
     [SerializeField] private Button _slot2;
@@ -23,12 +26,13 @@ public class HUDMenu : MonoBehaviour
         _fire.onClick.AddListener(Fire);
 
         _temporaryMessage.text = "";
+        _headerMessage.text = "";
     }
 
 
     void Update()
     {
-        
+
     }
 
     public void Hide()
@@ -47,6 +51,8 @@ public class HUDMenu : MonoBehaviour
     public void UpdateHP(int hp)
     {
         _hpText.text = hp.ToString();
+
+        UpdateHeader($"HP updated [{hp}]");
     }
 
     /// <summary>
@@ -55,11 +61,25 @@ public class HUDMenu : MonoBehaviour
     public void UpdateAmmo(int ammo)
     {
         _hpAmmo.text = ammo.ToString();
+
+        UpdateHeader($"Ammo updated [{ammo}]");
     }
 
     public void UpdateTemporaryMessage(string msg)
     {
         _temporaryMessage.text = msg;
+    }
+
+    public void UpdateHeader(string msg)
+    {
+        _headerMessage.text = msg;
+
+        float _timeCounter = 0;
+        float _duration = 5;
+
+        DOTween.To(() => _timeCounter, x => _timeCounter = x, _duration, _duration)
+         .OnComplete( ()=> UpdateHeader(""))
+         .SetEase(Ease.Linear);
     }
 
     private void SelecttWeapon1()
@@ -79,6 +99,8 @@ public class HUDMenu : MonoBehaviour
 
     private void Fire()
     {
+     //   var animator = _inventory.PlayerWeaponPlaceHolder.transform.GetChild(0).GetComponent<Animator>();
+ 
         _weapon.TryShoot();
     }
 }

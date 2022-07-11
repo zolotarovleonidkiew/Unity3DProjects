@@ -64,7 +64,7 @@ public class HeroController : MonoBehaviour
     void Start()
     {
         //Start health = 100;
-        _health = 100;
+        _health = 50;
 
         OnTakeDamage += OnTakeDamageHandler;
     }

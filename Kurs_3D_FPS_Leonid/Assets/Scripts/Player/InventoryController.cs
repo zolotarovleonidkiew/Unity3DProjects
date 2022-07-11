@@ -2,6 +2,9 @@
 
 public class InventoryController : MonoBehaviour
 {
+    /// <summary>
+    /// ссылка на  HUD
+    /// </summary>
     [SerializeField] private HUDMenu _hud;
 
     [SerializeField] private bool _isBot;
@@ -12,6 +15,8 @@ public class InventoryController : MonoBehaviour
     /// </summary>
     [SerializeField] private GameObject _playerWeaponPlaceHolder;
     [SerializeField] private GameObject _targetPosition;
+
+    public GameObject PlayerWeaponPlaceHolder => _playerWeaponPlaceHolder;
 
     /// <summary>
     /// Prefab - руки с револьвером, ТГ и гранатой
@@ -45,6 +50,9 @@ public class InventoryController : MonoBehaviour
         OnPickupItem += OnPickupItemHandler;
     }
 
+    /// <summary>
+    /// Выбор оружия
+    /// </summary>
     void Update()
     {
         //Select weapon
@@ -175,8 +183,12 @@ public class InventoryController : MonoBehaviour
             var lookPos = transform.position - _targetPosition.transform.position;
             var rotation = Quaternion.LookRotation(lookPos);
 
-            Instantiate(handObject, _playerWeaponPlaceHolder.transform.position, rotation,
+            var hands = Instantiate(handObject, _playerWeaponPlaceHolder.transform.position, rotation,
                  parent: _playerWeaponPlaceHolder.transform);
+
+            hands.AddComponent<Animator>(); //!!!
+
+            hands.AddComponent<WeaponToCenterScreen>();
         }
     }
 

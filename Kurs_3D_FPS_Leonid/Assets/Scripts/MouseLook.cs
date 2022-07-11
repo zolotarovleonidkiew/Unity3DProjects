@@ -5,6 +5,7 @@ using UnityEngine;
 public class MouseLook : MonoBehaviour
 {
     [SerializeField] private Transform _myCamera;
+    [SerializeField] private Transform _weaponPlaceHolder;
 
     [Tooltip("Current mouse sensivity, changes in the weapon properties")]
     private float mouseSensitvity = 5;//0;
@@ -13,9 +14,14 @@ public class MouseLook : MonoBehaviour
     [Tooltip("Minimum camera angle.")]
     public float bottomAngleView = -45;
 
-    private float wantedYRotation;
-    private float currentYRotation;
-    private float wantedCameraXRotation;
+    /// <summary>
+    /// Определяем, что оружие есть в руках
+    /// </summary>
+    private bool _weaponWasPicked => _weaponPlaceHolder?.childCount == 3;
+
+    public float wantedYRotation;
+    public float currentYRotation;
+    public float wantedCameraXRotation;
 
     private float deltaTime = 0.0f;
     private float zRotation;
@@ -27,14 +33,14 @@ public class MouseLook : MonoBehaviour
     private float mouseSensitvity_notAiming =  1;// 300;
     private float mouseSensitvity_aiming = 10; //50;
     private float rotationYVelocity, cameraXVelocity;
-    private float yRotationSpeed = 0;
+    [SerializeField]  private float yRotationSpeed = 0;
     private float xCameraSpeed = 0;
-    private float currentCameraXRotation;
+    public float currentCameraXRotation;
 
     private void Awake()
     {
         //курсор по центру экрана заморозить
-       // Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -62,6 +68,7 @@ public class MouseLook : MonoBehaviour
             mouseSensitvity = mouseSensitvity_notAiming;
         }
 
+        //вращение головой
         HeadMovement();
     }
 

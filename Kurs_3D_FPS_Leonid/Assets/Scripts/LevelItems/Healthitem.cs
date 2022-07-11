@@ -1,23 +1,12 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using UnityEngine;
 
 public class Healthitem : MonoBehaviour
 {
-    [SerializeField] private int _healPoints = 20;
-    [SerializeField] private int _respawnSeconds = 30;
-    
-    private DateTime? _respawnDt;
+    [SerializeField] private AllItemsController _itemsController;
 
-    void Update()
-    {
-        if (_respawnDt.HasValue)
-        {
-            if (DateTime.Now >= _respawnDt.Value)
-            {
-                enabled = true;
-            }
-        }
-    }
+    [SerializeField] private int _healPoints = 20;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -35,9 +24,17 @@ public class Healthitem : MonoBehaviour
 
                 playerController.OnTakeDamageHandler(_healPoints * -1, needToUpdateHUD);
 
-                _respawnDt = DateTime.Now.AddSeconds(_respawnSeconds);
+                _itemsController.DisableItem(gameObject);
 
-                enabled = false;
+                float _timeCounter = 0;
+                float _duration = _itemsController.MedKitRespawnSecons;
+                
+                DOTween.To(() => _timeCounter, x => _timeCounter = x, _duration, _duration)
+                 .OnComplete(() =>
+                 {
+                     _itemsController.EnbleItem(gameObject);
+                 })
+                 .SetEase(Ease.Linear);
             }
         }
     }

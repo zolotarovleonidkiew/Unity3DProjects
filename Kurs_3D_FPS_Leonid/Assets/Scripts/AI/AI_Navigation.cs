@@ -79,6 +79,8 @@ public class AI_Navigation : MonoBehaviour
         //БОТ УВИДЕЛ ИГРОКА
         if (_aimController.TARGET_AIMED)
         {
+            var animator = _inventory.PlayerWeaponPlaceHolder.transform.GetChild(0).GetComponent<Animator>();
+
             _weaponController.TryShoot();
 
             Debug.LogError("AI SHOOTED");

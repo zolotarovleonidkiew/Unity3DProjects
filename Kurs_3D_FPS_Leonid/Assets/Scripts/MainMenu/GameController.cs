@@ -10,13 +10,18 @@ public class GameController : MonoBehaviour
     [SerializeField] private MainMenu mainMenu;
     [SerializeField] private HUDMenu hudMenu;
 
-    List<GameObject> GreenTeam;
-    List<GameObject> RedTeam;
+    //List<GameObject> GreenTeam;
+    //List<GameObject> RedTeam;
 
     void Start()
     {
         //TODO : uncomment 
         //  mainMenu.Show();
+
+        playerHealthController.Health = 50;
+        targetHealthController.Health = 50;
+
+        hudMenu.UpdateHP(playerHealthController.Health);
     }
 
     // Update is called once per frame
