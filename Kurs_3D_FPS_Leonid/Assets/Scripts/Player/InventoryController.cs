@@ -116,8 +116,8 @@ public class InventoryController : MonoBehaviour
 
             if (_isBot)
                 Debug.LogWarning("[AI]: Revolver hands appeared");
-            else
-                Debug.Log("Revolver hands appeared");
+            //else
+            //    Debug.Log("Revolver hands appeared");
         }
         else if (type == PickableItemTypes.WeaponSlot3_TommyGun && !Slot3.isActive)
         {
@@ -134,8 +134,8 @@ public class InventoryController : MonoBehaviour
 
                 if (_isBot)
                     Debug.LogWarning("[AI]: TommyGun hands appeared");
-                else
-                    Debug.Log("TommyGun hands appeared");
+                //else
+                //    Debug.Log("TommyGun hands appeared");
             }
         }
         else
@@ -186,9 +186,8 @@ public class InventoryController : MonoBehaviour
             var hands = Instantiate(handObject, _playerWeaponPlaceHolder.transform.position, rotation,
                  parent: _playerWeaponPlaceHolder.transform);
 
-            hands.AddComponent<Animator>(); //!!!
-
-            hands.AddComponent<WeaponToCenterScreen>();
+            var c = hands.AddComponent<WeaponToCenterScreen>();
+           
         }
     }
 

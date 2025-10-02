@@ -26,8 +26,8 @@ public class WeaponItem : MonoBehaviour
 
             if (inventory.IsBot)
                 Debug.LogWarning($"[AI] Pick-uped {_slotType}");
-            else
-                Debug.Log($"Pick-uped {_slotType}");
+            //else
+            //    Debug.Log($"Pick-uped {_slotType}");
 
             _triggerCollider.enabled = false;
 

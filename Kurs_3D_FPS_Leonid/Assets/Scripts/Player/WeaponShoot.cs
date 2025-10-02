@@ -33,10 +33,12 @@ public class WeaponShoot : MonoBehaviour
     [SerializeField] public AudioClip TommyGunEndLoopShots;
 
     [SerializeField] public GameObject _blood;
+    [SerializeField] private BulletBehaviour _bulletPrefab;
 
     private InventoryController _inventory;
     private AI_BotSeePlayer _aimController;
     private HeroController _targetHealthController;
+    private WeaponToCenterScreen _wtc;
 
     //время, когда оружие снова будет готово после перезарядки
     private DateTime? _dtGrenadeReloaded = null;
@@ -54,7 +56,8 @@ public class WeaponShoot : MonoBehaviour
         _inventory = GetComponent<InventoryController>();
         _aimController = GetComponent<AI_BotSeePlayer>();
         _targetHealthController = _aimController.target.GetComponent<HeroController>();
-        _isAI = GetComponent<AI_Navigation>() != null; 
+        _isAI = GetComponent<AI_Navigation>() != null;
+        _animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -62,10 +65,14 @@ public class WeaponShoot : MonoBehaviour
         //Стрелять из любого оружия
         if (Input.GetKeyDown(KeyCode.Mouse0) && !_isAI)
         {
+            _wtc = transform.GetChild(1).GetChild(1).GetComponent<WeaponToCenterScreen>();
+            _wtc.StopPointingToCenter = true;
+
             //проверим, что время перезарядки уже прошло
             _currentWeaponSlot = _inventory.GetCurrentWeapon();
 
             TryShoot();
+
         }
 
         //если мы отпустили кнопку стрелять, и стреляли мы из Пулемета, то запустим звук окончания стрельбы
@@ -135,18 +142,9 @@ public class WeaponShoot : MonoBehaviour
 
                 if (_currentWeaponSlot.GetSlotActive() || _currentWeaponSlot.Ammo > 0)
                 {
-                     var animator = _inventory.PlayerWeaponPlaceHolder.transform.GetChild(1).GetComponent<Animator>();
-                    //_animator = GetComponent<Animator>();
-                    //GetComponentInChildren<Animator>();
-
-                    //_animator.SetBool("RevolverShooted", true);
-                    animator.Play("Base Layer.SHOOT");
-
                     Shoot(_currentWeaponSlot, _animator);
 
                     _inventory.ProcessShot(_currentWeaponSlot);
-
-                   // Debug.Log($" {_currentWeaponSlot.Ammo} left.");
 
                     UpdateReloadDateTime(_currentWeaponSlot); // UPDATE DT
                 }
@@ -156,16 +154,10 @@ public class WeaponShoot : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            Debug.LogError("Can't shoot without weapon");
-        }
     }
 
     private void Shoot(Slot weapon, Animator animator)
     {
-        _animator?.SetBool("RevolverShooted", true);
-
         if (AimAndShoot()) //прицелиться и выстрелить
         {
             //отнять жизни у противника при поадании
@@ -174,6 +166,51 @@ public class WeaponShoot : MonoBehaviour
 
         //звук после выстрела
         GetSXPSoundAndPlay(weapon.ItemType);
+    }
+
+    /// <summary>
+    /// Создать и выпустить пулю
+    /// </summary>
+    private void InstantiateBullet()
+    {
+        var mousePosition = Input.mousePosition;
+        mousePosition.z = Camera.main.transform.position.z;
+
+        _ray = Camera.main.ScreenPointToRay(mousePosition);
+
+        var children = transform.GetChild(1).GetChild(1).childCount;
+        var startPosition = transform.GetChild(1).GetChild(1).GetChild(children - 1);
+
+        if (Physics.Raycast(_ray, out _raycastHit))
+        {
+            Debug.DrawLine(startPosition.position, _raycastHit.point, Color.red);
+        }
+
+        var bullet = Instantiate(_bulletPrefab);
+
+        _bulletPrefab._speed = 200f;
+
+        bullet.transform.position = startPosition.position;
+        //bullet.transform.rotation = startPosition.rotation;
+
+        bullet.transform.SetParent(startPosition);
+        bullet.transform.localPosition = Vector3.zero;
+
+        bullet.transform.parent = GameObject.Find("GOD_OBJECT").transform;
+
+        //var bullet = Instantiate(
+        //    _bulletPrefab,
+        //    startPosition.position,
+        //    Quaternion.identity, //rotation, //startPosition.transform.rotation,
+        //    startPosition);
+
+        //bullet.Direction = _raycastHit.point;
+
+        ////bullet.transform.position = startPosition.position;
+        ////bullet.transform.rotation = startPosition.transform.rotation;
+
+        //// bullet.transform.SetParent(transform);
+        //bullet.transform.localPosition = Vector3.zero;
     }
 
     #region SFX Sounds
@@ -203,6 +240,9 @@ public class WeaponShoot : MonoBehaviour
 
     private bool AimAndShoot()
     {
+        //нарисовать пулю
+        InstantiateBullet();
+
         // AI целится
         if (_isAI && _aimController.TARGET_AIMED)
         {
@@ -265,7 +305,7 @@ public class WeaponShoot : MonoBehaviour
             return true;
         }
 
-        Debug.Log($"Мы стрельнули в никуда :(");
+      //  Debug.Log($"Мы стрельнули в никуда :(");
 
         return false;
     }
@@ -372,12 +412,4 @@ public class WeaponShoot : MonoBehaviour
 
     #endregion
 
-    /// <summary>
-    /// Используется в анимации префаба
-    /// </summary>
-    public void StopShootAnimation()
-    {
-        Debug.LogWarning("StopShootAnimation() called");
-        _animator?.SetBool("RevolverShooted", false);
-    }
 }

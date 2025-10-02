@@ -7,6 +7,11 @@ public class WeaponToCenterScreen : MonoBehaviour
 {
     private bool _isPlayer;
 
+    /// <summary>
+    /// Для манипуляции с руками иногда нужно, чтобы они перестали показывать на центр экрана
+    /// </summary>
+    public bool StopPointingToCenter = false;
+
     private void Awake()
     {
         _isPlayer = transform.parent.parent.name == "Player";
@@ -14,9 +19,13 @@ public class WeaponToCenterScreen : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_isPlayer)
+        if (!StopPointingToCenter)
         {
-            PointWeaponToCenterScreen();
+            if (_isPlayer)
+            {
+                PointWeaponToCenterScreen();
+            }
+
         }
     }
 

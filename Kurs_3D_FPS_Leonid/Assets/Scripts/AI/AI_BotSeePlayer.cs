@@ -33,12 +33,12 @@ public class AI_BotSeePlayer : MonoBehaviour
             Debug.Log("Hello there");
             TARGET_AIMED = true;
 
-            Debug.LogWarning("TARGET_AIMED = true");
+          //  Debug.LogWarning("TARGET_AIMED = true");
         }
         else
         {
             TARGET_AIMED = false;
-            Debug.LogWarning("TARGET_AIMED = false");
+          //  Debug.LogWarning("TARGET_AIMED = false");
         }
         
     }

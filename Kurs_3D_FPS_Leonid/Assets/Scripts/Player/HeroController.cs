@@ -27,19 +27,6 @@ public class HeroController : MonoBehaviour
             {
                 _health = 100;
             }
-            //if (_health - value >= 100)
-            //{
-            //    _health = 100;
-            //}
-            //else if (_health - value <= 0)
-            //{
-            //    _health = 0;
-            //    //  OnDie.Invoke(); //уведомить gameController через событие, что игроку крышка
-            //}
-            //else
-            //{
-            //    _health -= value;
-            //}
         }
     }
     private int _health;
