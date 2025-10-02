@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c356e56c447c1dc44a1a945b58df97f7, type: 3}
+  m_Name: BlasterRifle
+  m_EditorClassIdentifier: 
+  weaponType: 9
+  owner: 2
+  maxAmmoPerMagazine: 6
+  maxMagazines: 3
+  currentAmmo: 6
+  currentMagazines: 3
+  prefab: {fileID: 0}
+  fireAnimation: {fileID: 0}
+  fireSound: {fileID: 0}
