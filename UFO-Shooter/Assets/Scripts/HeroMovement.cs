@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using UnityEngine;
 
 [RequireComponent(typeof(Hero))]
 public class HeroMovement : MonoBehaviour
@@ -24,6 +27,10 @@ public class HeroMovement : MonoBehaviour
     private bool isMoving = false;
     private Vector3 targetPos;
     private int targetI, targetJ;
+
+    //Необхідна при заході на Преешкоду (схил та інші), бо
+    // заходимо через Ramp
+    private Queue<Vector3> currentPath = new Queue<Vector3>();
 
     private void Start()
     {
@@ -63,9 +70,6 @@ public class HeroMovement : MonoBehaviour
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         int mask = ~LayerMask.GetMask("LiftTrigger");
 
-        //old
-        //if (!Physics.Raycast(ray, out RaycastHit hit))        
-        //new
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, mask))
             return;
 
@@ -75,44 +79,125 @@ public class HeroMovement : MonoBehaviour
         if (!clicked.CompareTag(Constants.TagConstans.FloorGridTag))
             return;
 
-        // витягуємо індекси клітинки
         if (!ground.GetGridCoordsFromWorld(clicked.transform.position, out int i, out int j))
             return;
-
+        
         // перевірка доступності саме для цього героя
         if (!hero.IsCellAvailable(i, j))
             return;
 
         // встановлюємо ціль і починаємо рух
-        targetPos = new Vector3(clicked.transform.position.x, transform.position.y, clicked.transform.position.z);
+        //targetPos = new Vector3(clicked.transform.position.x, transform.position.y, clicked.transform.position.z);
         targetI = i;
         targetJ = j;
 
+        //перевірка що герой та ціль пеерміщення на одній ПРЕГРАДІ
+        var heroCoords = hero.GetHeroCoords();
+        var heroObstacle = ground.GetGridGenerator.GetObstacleAt(heroCoords.x, heroCoords.y);
+
+        var obstacle = ground.GetGridGenerator.GetObstacleAt(i, j);
+
+        if ((obstacle != null) && (heroObstacle != obstacle)) // це перешкода
+        {
+            // шукаємо рампу, яка веде на цю клітинку
+            GameObject ramp = FindRampForObstacle(obstacle);//FindRampForObstacle(i, j);
+            if (ramp == null) return;
+
+            currentPath.Clear();
+            currentPath.Enqueue(ramp.transform.position);       // крок 1 → на рампу
+            currentPath.Enqueue(clicked.transform.position);    // крок 2 → у ціль на obstacle
+        }
+        else
+        {
+            // звичайний рух
+            currentPath.Clear();
+            currentPath.Enqueue(clicked.transform.position);
+        }
         // під час руху прибираємо підсвітку
         hero.ClearHighlights();
 
         isMoving = true;
     }
 
+    private GameObject FindRampForObstacle(ObstacleOnTheMap obstacle)
+    {
+        var rampsCollection = obstacle.RampsCollection;
+
+        if (!rampsCollection.Any())
+        {
+            Debug.LogError("Нема заїзду на цю перешкоду()");
+            return null;
+        }
+
+        //проверить длинну и маршрут до рампы
+        //брать ближайший
+
+        return rampsCollection.First();
+
+        //delete RampOwner ????
+    }
+
+    // DEPRECATED
+    private GameObject FindRampForObstacle(int i, int j)
+    {
+        GameObject[] ramps = GameObject.FindGameObjectsWithTag("RampTopBox");
+
+        foreach (var ramp in ramps)
+        {
+            RampMarker marker = ramp.GetComponent<RampMarker>();
+
+            //TO DO
+            //нужно брать или ближайший, или тот ramp, который рпинадлежит обстеклу из всех что ему принадлежит
+
+            // if (marker != null && marker.targetCell == new Vector2Int(i, j))
+
+            //RampOwner ro = ramp.transform.parent.gameObject.GetComponent<RampOwner>();
+
+            //var rampsCollection = ro.obstacleOwner.RampsCollection;
+
+            return ramp;
+        }
+        return null;
+    }
+
     private void MoveTowardsTarget()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+        if (!isMoving || currentPath.Count == 0) return;
 
-        if (Vector3.Distance(transform.position, targetPos) < 0.01f)
+        Vector3 targetPos = currentPath.Peek();
+
+        // фіксуємо Y, щоб герой не коливався по вертикалі
+        targetPos.y = transform.position.y;
+
+        float step = moveSpeed * Time.deltaTime;
+
+        // рухаємо героя гарантовано до точки
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
+
+        // якщо вже дійшли
+        if (Vector3.Distance(transform.position, targetPos) < 0.05f)
         {
-            isMoving = false;
+            currentPath.Dequeue();
 
-            // оновлюємо координати героя
-            hero.UpdateHeroCoords(targetI, targetJ);
+            if (currentPath.Count == 0)
+            {
+                isMoving = false;
 
-            // витрачаємо 1 хід
-            hero.UseActionPoint();
+                // тут можна викликати "кінець ходу героя"
+                // hero.mov OnMoveFinished();
 
-            // після завершення руху — або показуємо нову підсвітку, або ховаємо
-            if (hero.CanMoving)
-                hero.ShowAvailableMoves();
-            else
-                hero.HideAvailableMoves();
+                // оновлюємо координати героя
+                hero.UpdateHeroCoords(targetI, targetJ);
+
+                // витрачаємо 1 хід
+                hero.UseActionPoint();
+
+                // після завершення руху — або показуємо нову підсвітку, або ховаємо
+                if (hero.CanMoving)
+                    hero.ShowAvailableMoves();
+                else
+                    hero.HideAvailableMoves();
+            }
         }
     }
 }

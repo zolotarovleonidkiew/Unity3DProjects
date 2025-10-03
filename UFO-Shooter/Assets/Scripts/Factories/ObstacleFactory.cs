@@ -28,14 +28,15 @@ public class ObstacleFactory
         {
             if (obstacle.BuildingWidth <= 0 || obstacle.BuildingLength <= 0) continue;
 
-            CreateSingleObstacle(obstacle, totalWidth, totalLength, _bigHeight, _parent);
+            var obstacleGO = CreateSingleObstacle(obstacle, totalWidth, totalLength, _bigHeight, _parent);
+            obstacle.gameObject = obstacleGO;
         }
     }
 
     /// <summary>
     /// Створює один obstacle + його вкладені (NestedObstacle)
     /// </summary>
-    private void CreateSingleObstacle(ObstacleOnTheMap obstacle, int totalWidth, int totalLength, float baseY, Transform parent)
+    private GameObject CreateSingleObstacle(ObstacleOnTheMap obstacle, int totalWidth, int totalLength, float baseY, Transform parent)
     {
         var gridPos = obstacle.BuildingGridPos;
         var width = obstacle.BuildingWidth;
@@ -80,5 +81,7 @@ public class ObstacleFactory
             // базова висота зсунулась вгору на висоту цього obstacle
             CreateSingleObstacle(obstacle.NestedObstacle, totalWidth, totalLength, baseY + height, building.transform);
         }
+
+        return building;
     }
 }

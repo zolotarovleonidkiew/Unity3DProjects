@@ -11,17 +11,30 @@ public class Ramp
     public int j;
     public RampDirection direction;
     public Material material;
+    public Vector2Int targetCell;
+
+    ///// <summary>
+    ///// Треба для звязку рампи і обстекла для ЗАХОДУ на нього
+    ///// </summary>
+    //public ObstacleOnTheMap RampLeadsToThisObstacle { get; set; }
+
+    public int obstacleIndex = 0;
+    public GameObject GO;
+
 
     [HideInInspector]
     public Transform parent;
 
-    public Ramp(int i, int j, RampDirection direction, Transform parent, Material material)
+
+
+    public Ramp(int i, int j, RampDirection direction, Transform parent, Material material, Vector2Int targetCell)
     {
         this.i = i;
         this.j = j;
         this.direction = direction;
         this.parent = parent;
         this.material = material;
+        this.targetCell = targetCell;
     }
 }
 

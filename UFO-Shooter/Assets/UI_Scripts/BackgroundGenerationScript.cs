@@ -37,11 +37,6 @@ public class BackgroundGenerationScript : MonoBehaviour
     [SerializeField] private GameController gameController;
 
     [Header("Obstacles (Buildings)")]
-    //[SerializeField] private Vector2Int buildingGridPos = new(16, 10);
-    //[SerializeField] private int buildingWidth = 3;   // у клітинках
-    //[SerializeField] private int buildingLength = 2;  // у клітинках
-    //[SerializeField] private float buildingHeight = 2f;
-    //[SerializeField] private Material buildingMaterial;
     [SerializeField] private Material Level1_ObstacleMaterial;
     [SerializeField] private Material Level2_ObstacleMaterial;
     [SerializeField] private Material Level3_ObstacleMaterial;
@@ -66,9 +61,11 @@ public class BackgroundGenerationScript : MonoBehaviour
 
     public GameObject parent;
     public Material gridBoxMaterial;
+    public Material gridBoxMaterialHighlited;
 
     private GameObject[,] smallCubes;
     private GridGenerator _gridGenerator;
+    public GridGenerator GetGridGenerator => _gridGenerator;
 
     /// <summary>
     /// TO CLOSE CANVAS ONLY
@@ -80,6 +77,14 @@ public class BackgroundGenerationScript : MonoBehaviour
     public Canvas canvasGUI;
 
     private void Start()
+    {
+        _btnGenerate.onClick.AddListener(() => CreateBoxAndSubBoxes(width, length));
+    }
+
+    /// <summary>
+    /// MAIN EVENT
+    /// </summary>
+    public void CreateBoxAndSubBoxes(int cellsX, int cellsZ)
     {
         liftFactory = new LiftFactory(HeroesCollectionGUI, liftMaterial);
 
@@ -96,22 +101,23 @@ public class BackgroundGenerationScript : MonoBehaviour
             liftGridPos: liftGridPos,
             liftFactory: liftFactory
         );
+        //---------------------
 
-        _btnGenerate.onClick.AddListener(() => CreateBoxAndSubBoxes(width, length));
-    }
-
-    /// <summary>
-    /// MAIN EVENT
-    /// </summary>
-    public void CreateBoxAndSubBoxes(int cellsX, int cellsZ)
-    {
         //створюємо ландшафт
         smallCubes = _gridGenerator.GenerateGrid(_RampsCollection);
+
+        //привязка пандусов к преградам (использ в HeroMovemnt)
+        var flatternObstacles = _obstacles.FlatternNestedObstacles();
+        foreach (Ramp r in _RampsCollection)
+        {
+            var obst = flatternObstacles[r.obstacleIndex];
+            obst.RampsCollection.Add(r.GO);
+        }
 
         //додаємо ліфт та другий поверх
         CreateLiftAndSecondFloor();
 
-        var heroFactory = new HeroFactory(playerSize, heroBoxMaterial, heroStartingWeapons, bulletPrefab, this, HeroesCollectionGUI);
+        var heroFactory = new HeroFactory(playerSize, heroBoxMaterial, heroStartingWeapons, bulletPrefab, this, HeroesCollectionGUI, gridBoxMaterialHighlited);
         var alienFactory = new AlienFactory(alienSize, alienBoxMaterial, this, AlienCollectionGUI);
         var obstacleFactory = new ObstacleFactory(cellSize, bigHeight, parent.transform, obstacles: _obstacles);
 

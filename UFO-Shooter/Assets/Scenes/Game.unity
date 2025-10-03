@@ -941,10 +941,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroGridPositions:
-  - {x: 2, y: 22}
+  - {x: 7, y: 12}
   - {x: 3, y: 3}
   - {x: 6, y: 6}
-  - {x: 5, y: 6}
+  - {x: 2, y: 22}
   playerSize: 1
   heroBoxMaterial: {fileID: 2100000, guid: 5e964e2fefdd3e840adc9a3ddeb1d201, type: 2}
   heroStartingWeapons:
@@ -974,17 +974,40 @@ MonoBehaviour:
     BuildingHeight: 2
     NeedToCreateSmallBoxOnTheTop: 0
     Material: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
+    RampsCollection: []
+    gameObject: {fileID: 0}
   - BuildingGridPos: {x: 23, y: 23}
     BuildingWidth: 2
     BuildingLength: 2
     BuildingHeight: 1
     NeedToCreateSmallBoxOnTheTop: 1
-    Material: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
+    Material: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
+    RampsCollection: []
+    gameObject: {fileID: 0}
   _RampsCollection:
   - i: 9
     j: 12
     direction: 2
     material: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
+    targetCell: {x: 10, y: 12}
+    obstacleIndex: 2
+    GO: {fileID: 0}
+    parent: {fileID: 0}
+  - i: 12
+    j: 12
+    direction: 1
+    material: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
+    targetCell: {x: 11, y: 12}
+    obstacleIndex: 3
+    GO: {fileID: 0}
+    parent: {fileID: 0}
+  - i: 11
+    j: 10
+    direction: 3
+    material: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
+    targetCell: {x: 10, y: 11}
+    obstacleIndex: 4
+    GO: {fileID: 0}
     parent: {fileID: 0}
   width: 25
   length: 25
@@ -997,6 +1020,7 @@ MonoBehaviour:
   liftMaterial: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
   parent: {fileID: 2143390969}
   gridBoxMaterial: {fileID: 2100000, guid: e05eb3679baf74b4bb276572cab13d1d, type: 2}
+  gridBoxMaterialHighlited: {fileID: 2100000, guid: d5f8f35f4fdadc740b879ea04ae6b1d3, type: 2}
   canvas: {fileID: 814385210}
   canvasGUI: {fileID: 240690389}
 --- !u!1 &808505385

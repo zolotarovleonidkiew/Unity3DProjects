@@ -27,6 +27,7 @@ public static class Constants
         public static string FloorGridTag = "FloorGridTag";
         public static string AlienTag = "Alien";
         public static string HeroTag = "Player";
+        public static string RampTopBox = "RampTopBox";
     }
 
     /// <summary>

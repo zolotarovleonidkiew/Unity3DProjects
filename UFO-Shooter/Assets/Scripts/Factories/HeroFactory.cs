@@ -12,6 +12,7 @@ public class HeroFactory : MonoBehaviour
     private GameObject _bulletPrefab;
     private BackgroundGenerationScript _ground;
     private GameObject _HeroesCollectionGUI;
+    private Material _gridMaterialHighlited;
 
     public HeroFactory(
         float playerSize,
@@ -19,7 +20,8 @@ public class HeroFactory : MonoBehaviour
         List<WeaponData> startingWeapons,
         GameObject bulletPrefab,
         BackgroundGenerationScript ground,
-        GameObject heroesCollectionGUI
+        GameObject heroesCollectionGUI,
+        Material gridMaterialHighlited
     )
     {
         _playerSize = playerSize;
@@ -28,6 +30,7 @@ public class HeroFactory : MonoBehaviour
         _bulletPrefab = bulletPrefab;
         _ground = ground;
         _HeroesCollectionGUI = heroesCollectionGUI;
+        _gridMaterialHighlited = gridMaterialHighlited;
     }
 
     public Hero CreateHero(GameObject targetCell, int index)
@@ -41,7 +44,6 @@ public class HeroFactory : MonoBehaviour
         player.name = $"Hero_{index}";
         player.transform.localScale = new Vector3(_playerSize, _playerSize, _playerSize);
         player.transform.position = new Vector3(pos.x, playerY, pos.z);
-        //player.GetComponent<Renderer>().material = _heroMaterial;
         player.tag = Constants.TagConstans.HeroTag;
         var rend = player.GetComponent<Renderer>();
         if (_heroMaterial != null)
@@ -58,6 +60,7 @@ public class HeroFactory : MonoBehaviour
         sh.SetGroundObject(_ground);
         sh.SetStartingWeapons(_startingWeapons);
         sh.SetBulletPrefab(_bulletPrefab);
+        sh.SetHighlightMaterial(_gridMaterialHighlited);
 
         GameObject shootPoint = new GameObject("ShootPoint");
         shootPoint.transform.SetParent(player.transform);

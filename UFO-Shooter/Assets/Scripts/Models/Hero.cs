@@ -86,6 +86,10 @@ public class Hero : MonoBehaviour
     {
         toShowAvailableMovementSquares = true;
     }
+    public void SetHighlightMaterial(Material m)
+    {
+        highlightMaterial = m;
+    }
     #endregion
 
     #region Events
@@ -156,7 +160,7 @@ public class Hero : MonoBehaviour
                 {
                     // ця клітинка доступна
                     if (cellRenderers[i, j] != null)
-                        cellRenderers[i, j].material = highlightMaterial;
+                        cellRenderers[i, j].material = highlightMaterial; // !!!
                 }
             }
         }

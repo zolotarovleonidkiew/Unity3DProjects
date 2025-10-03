@@ -12,7 +12,7 @@ public class GridGenerator
     private float _bigHeight;
     private float _smallHeight;
     private float _liftAboveBig;
-    private Material _gridMaterial;
+    private Material _gridMaterial;    
     private Material _groundMaterial;
     private Transform _parent;
 
@@ -117,6 +117,7 @@ public class GridGenerator
                     topBox.GetComponent<BoxCollider>().isTrigger = true;
 
                     //додаємо створений смол-бокс в колекцію (ObstacleOnTheMap), щоб потім паретна переасаайнити конкретному обстеклу
+                    //видалити???
                     if (obstacle.SmallBoxes is null)
                     {
                         obstacle.SmallBoxes = new();
@@ -157,10 +158,11 @@ public class GridGenerator
         if (RampsCollection != null)
         {
             //створити пандуси для холмів тут 
-            //TO DO
-            foreach (var ramp in RampsCollection)
+            foreach (Ramp ramp in RampsCollection)
             {
-                CreateRamp(ramp.i, ramp.j, ramp.direction, ramp.parent, ramp.material);
+                //далі привяжем пандус по obstacle
+                ramp.GO = 
+                    CreateRamp(ramp.i, ramp.j, ramp.direction, ramp.parent, ramp.material, ramp.targetCell);
             }
         }
 
@@ -199,7 +201,7 @@ public class GridGenerator
         return (i >= 0 && j >= 0);
     }
 
-    private ObstacleOnTheMap GetObstacleAt(int i, int j)
+    public ObstacleOnTheMap GetObstacleAt(int i, int j)
     {
         if (_obstacles == null) return null;
 
@@ -212,7 +214,7 @@ public class GridGenerator
         return null;
     }
 
-    private ObstacleOnTheMap GetObstacleAtRecursive(ObstacleOnTheMap obs, int i, int j)
+    public ObstacleOnTheMap GetObstacleAtRecursive(ObstacleOnTheMap obs, int i, int j)
     {
         int startX = obs.BuildingGridPos.x;
         int startZ = obs.BuildingGridPos.y;
@@ -274,73 +276,166 @@ public class GridGenerator
         return null;
     }
 
-    /// <summary>
-    /// TO DO: задавати їх в інвпекторі
-    /// </summary>
-    private void CreateRamp(int i, int j, RampDirection direction, Transform parent, Material material)
+    private GameObject CreateRamp(int i, int j, RampDirection direction, Transform parent, Material material, Vector2Int targetCell)
     {
-        float bigWidth = _width * _cellSize;
-        float bigLength = _length * _cellSize;
+        // розміри
+        float w = _cellSize;         // ширина по X
+        float l = _cellSize;         // довжина по Z (похилу беремо по цій осі)
+        float h;                     // висота пандуса
+
+        // Центр великого боксу
         Vector3 center = _bigBox.transform.position;
 
-        // центр клітинки
+        // світова позиція клітинки (центр)
+        float bigWidth = _width * _cellSize;
+        float bigLength = _length * _cellSize;
         float x = -bigWidth / 2f + (i + 0.5f) * _cellSize;
         float z = -bigLength / 2f + (j + 0.5f) * _cellSize;
 
-        // шукаємо obstacle
+        // знаходимо перешкоду під цією клітинкою (якщо є)
         ObstacleOnTheMap obstacle = GetObstacleAt(i, j);
-        float baseY = obstacle != null ? GetTotalHeight(obstacle) : 0.03f; //OLD: _bigHeight / 2f;
 
-        // позиція пандуса
-        Vector3 rampPos = new Vector3(center.x + x, baseY, center.z + z);
+        // базовий Y: якщо є obstacle — ставимо пандус НА її верх (GetTotalHeight дає сумарну висоту над землею)
+        // Якщо obstacle == null — пандус починається з поверхні мапи
+        float baseSurfaceY;
+        if (obstacle != null)
+        {
+            // GetTotalHeight(obs) дає сумарну висоту над землею до верхньої поверхні цієї перешкоди
+            // Ми розташовуємо нижню грань пандуса саме на цій поверхні (щоб пандус "лежав" на перешкоді)
+            baseSurfaceY = center.y + GetTotalHeight(obstacle) + 0.2f;
+            h = obstacle.BuildingHeight; // висота підйому пандуса — висота цієї перешкоди
+        }
+        else
+        {
+            // якщо немає перешкоди — ставимо пандус з нульовим підйомом (або невеликим)
+            baseSurfaceY = center.y + _liftAboveBig; // використаємо рівень small-box
+            h = _cellSize * 0.5f; // невеликий підйом, можна налаштувати
+        }
 
-        // створюємо пандус
-        GameObject ramp = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        ramp.name = $"Ramp_{i}_{j}";
-        ramp.transform.localScale = new Vector3(2, 3, 2);
-        ramp.transform.position = rampPos;
-        ramp.transform.SetParent(parent);
-        ramp.GetComponent<Renderer>().material = material;
-        ramp.GetComponent<BoxCollider>().isTrigger = false;
+        // створюємо об'єкт рами (буде містити mesh, renderer та коллайдер)
+        GameObject ramp = new GameObject($"Ramp_{i}_{j}");
+        ramp.transform.SetParent(parent, true);
+        ramp.transform.position = new Vector3(center.x + x, baseSurfaceY, center.z + z);
+        ramp.transform.rotation = Quaternion.identity;
 
-        var angle = 69.549f; //OLD: 45
+        // *** Створюємо mesh клину (wedge) орієнтований вздовж +Z (тобто "вищий кінець" буде по +Z) ***
+        Mesh mesh = new Mesh();
+        float halfW = w * 0.5f;
+        float halfL = l * 0.5f;
 
-        // орієнтація за напрямком
+        // Вершини (локальні)
+        Vector3[] verts = new Vector3[]
+        {
+        // нижній прямокутник (низ)
+        new Vector3(-halfW, 0f, -halfL), // 0 back-left bottom
+        new Vector3( halfW, 0f, -halfL), // 1 back-right bottom
+        new Vector3(-halfW, 0f,  halfL), // 2 front-left bottom
+        new Vector3( halfW, 0f,  halfL), // 3 front-right bottom
+
+        // верхні вершини на "фронті" (top edge)
+        new Vector3(-halfW, h,  halfL),  // 4 front-left top
+        new Vector3( halfW, h,  halfL)   // 5 front-right top
+        };
+
+        // Трикутники: нижня грань, боки, нахилена верхня грань і закриття "задньої" сторони
+        int[] tris = new int[]
+        {
+        // bottom
+        0,1,3,
+        0,3,2,
+
+        // left side
+        0,2,4,
+
+        // right side
+        1,5,3,
+
+        // sloped (front) face (quad 2,3,5,4)
+        2,3,5,
+        2,5,4,
+
+        // back face (закриваємо форму)
+        0,4,1,
+        1,4,5
+        };
+
+        mesh.vertices = verts;
+        mesh.triangles = tris;
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+
+        // додаємо компонент MeshFilter/Renderer/Collider
+        var mf = ramp.AddComponent<MeshFilter>();
+        mf.mesh = mesh;
+        var mr = ramp.AddComponent<MeshRenderer>();
+        mr.material = material != null ? material : _gridMaterial;
+
+        var mc = ramp.AddComponent<MeshCollider>();
+        mc.sharedMesh = mesh;
+        mc.convex = false;    // статична перешкода — залишаємо false
+        mc.isTrigger = false; // важливо: щоб герой НЕ проходив наскрізь
+
+        // Тепер повертаємо раму відповідно до direction (за замовчуванням — підйом у +Z)
         switch (direction)
         {
-            case RampDirection.North: // "піднімаємось на північ"
-                ramp.transform.rotation = Quaternion.Euler(angle, 0f, 0f);
+            case RampDirection.North: // підйом у +Z — нічого не робимо
+                ramp.transform.Rotate(0f, 0f, 0f);
                 break;
-            case RampDirection.South:
-                ramp.transform.rotation = Quaternion.Euler(-angle, 0f, 0f);
+            case RampDirection.South: // перевернути на 180°
+                ramp.transform.Rotate(0f, 180f, 0f);
                 break;
-            case RampDirection.East:
-                ramp.transform.rotation = Quaternion.Euler(0f, 0f, -angle);
+            case RampDirection.East: // повернути праворуч (+X)
+                ramp.transform.Rotate(0f, 90f, 0f);
                 break;
-            case RampDirection.West:
-                ramp.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            case RampDirection.West: // повернути ліворуч (-X)
+                ramp.transform.Rotate(0f, -90f, 0f);
                 break;
         }
 
-        // створюємо small-box зверху пандуса
-        Vector3 topBoxPos = ramp.transform.position + new Vector3(0, _smallHeight / 2f + _cellSize / 2f, 0);
+        // *** Створюємо горизонтальний small-box зверху пандуса ***
+        // ставимо його як дочірній об'єкт ramp і позиціонуємо локально на "фронті" (верхній край пандуса)
         GameObject topBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        topBox.name = $"RampSmallBox_{i}_{j}";
-        topBox.transform.SetParent(ramp.transform);
+        topBox.name = $"RampTopBox_{i}_{j}";
+        topBox.transform.SetParent(ramp.transform, false);
 
-        // локальна позиція (поверхня пандуса)
-        topBox.transform.localPosition = new Vector3(0, ramp.transform.localScale.y / 2f, 0);
-
+        // розмір і матеріал для small-box
         topBox.transform.localScale = new Vector3(_cellSize, _smallHeight, _cellSize);
-        //topBox.transform.position = topBoxPos;
-        //topBox.transform.SetParent(parent);
         topBox.tag = Constants.TagConstans.FloorGridTag;
         topBox.GetComponent<Renderer>().material = _gridMaterial;
-        topBox.GetComponent<BoxCollider>().isTrigger = true;
 
-        ///!!!
-        //TO DO; смол-бокс повернутий наче правлиьно, але він зїхав в сторону і ДУЖЕ великий
+        // Локальна позиція: вперед на половину довжини + невеликий зміщ, вгору на (h + smallHeight/2)
+        float forwardOffset = halfL; // front most position
+        float verticalOffset = h + (_smallHeight / 2f);
+
+        // Т.к. ramp є повернутий відповідно до direction, встановимо localPosition у локальних координатах ramp:
+        topBox.transform.localPosition = new Vector3(0f, verticalOffset, forwardOffset);
+
+        // зробимо small-box тригером (щоб він був "пішохідною клітинкою")
+        var topBoxCollider = topBox.GetComponent<BoxCollider>();
+        topBoxCollider.isTrigger = true;
+
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        var marker = topBox.AddComponent<RampMarker>();
+        marker.targetCell = targetCell;//new Vector2Int(i, j);
+        topBox.tag = Constants.TagConstans.RampTopBox; // новий тег
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        // зберігаємо у відповідній перешкоді (якщо є), щоб потім пересунути його в парент-перешкоду
+        if (obstacle != null)
+        {
+            if (obstacle.SmallBoxes == null) obstacle.SmallBoxes = new List<GameObject>();
+            obstacle.SmallBoxes.Add(topBox);
+        }
+
+        // запис у загальний масив _smallCubes, щоб GetSmallCube повертав цей topBox (замість пустоти)
+        if (_smallCubes != null && i >= 0 && i < _smallCubes.GetLength(0) && j >= 0 && j < _smallCubes.GetLength(1))
+        {
+            _smallCubes[i, j] = topBox;
+        }
+
+        return ramp;
     }
+
 
 
 }

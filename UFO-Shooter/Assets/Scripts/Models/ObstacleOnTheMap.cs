@@ -17,6 +17,7 @@ public class ObstacleOnTheMap
     public float BuildingHeight;                // висота
     public bool NeedToCreateSmallBoxOnTheTop;   // чи треба робити смол-бокси зверху
     public Material Material;
+    public List<GameObject> RampsCollection; //Added ramp
 
     /// <summary>
     /// Дочірній obstacle (може бути null)
@@ -27,6 +28,11 @@ public class ObstacleOnTheMap
     /// Смол-бокси, згенеровані в GridGenerator для конкретного Obstacl'а
     /// </summary>
     public List<GameObject> SmallBoxes { get; set; }
+
+    /// <summary>
+    /// Represents GO of model
+    /// </summary>
+    public GameObject gameObject;
 
     public ObstacleOnTheMap(Vector2Int pos, int width, int length, float height, bool needSmallBoxOnTop, 
         Material material, ObstacleOnTheMap nestedObstacle = null)
@@ -40,5 +46,7 @@ public class ObstacleOnTheMap
         NestedObstacle = nestedObstacle;
         //obstacles only
         SmallBoxes = new List<GameObject>();
+
+        RampsCollection = new List<GameObject>();
     }
 }

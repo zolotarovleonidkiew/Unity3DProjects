@@ -205,17 +205,17 @@ public class GameController : MonoBehaviour
     //check fow win/lose conditions
     private void CheckForWinLoseConditions()
     {
-        if ((SquadReputation < 0) || (heroes.All(h => !h.isAlive)))
-        {
-            Debug.LogError($">>> TACTICAL MAP LOSE. Repuation = {SquadReputation}");
-            //stop control
-        }
-        else if ((SquadReputation > 0) && (heroes.Any(h => h.isAlive)) && (aliens.All(a=>!a.isAlive)) )
-        {
-            SquadReputation++;
-            Debug.LogError($">>> TACTICAL MAP WON. Repuation = {SquadReputation}");
-            //stop control
-        }
+        //if ((SquadReputation < 0) || (heroes.All(h => !h.isAlive)))
+        //{
+        //    Debug.LogError($">>> TACTICAL MAP LOSE. Repuation = {SquadReputation}");
+        //    //stop control
+        //}
+        //else if ((SquadReputation > 0) && (heroes.Any(h => h.isAlive)) && (aliens.All(a=>!a.isAlive)) )
+        //{
+        //    SquadReputation++;
+        //    Debug.LogError($">>> TACTICAL MAP WON. Repuation = {SquadReputation}");
+        //    //stop control
+        //}
     }
 
 }

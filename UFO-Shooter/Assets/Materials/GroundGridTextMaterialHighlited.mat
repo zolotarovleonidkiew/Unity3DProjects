@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GroundGridTextMaterial
+  m_Name: GroundGridTextMaterialHighlited
   m_Shader: {fileID: 4800000, guid: cafb395ec744b5946a68c7e3d5a0d0f7, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -83,7 +83,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EdgeColor: {r: 0.9719956, g: 1, b: 0, a: 1}
+    - _EdgeColor: {r: 0, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _TopGlowColor: {r: 0.28648987, g: 0.6981132, b: 0.29026625, a: 1}
   m_BuildTextureStacks: []
