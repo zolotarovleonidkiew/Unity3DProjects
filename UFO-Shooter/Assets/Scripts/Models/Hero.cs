@@ -152,15 +152,22 @@ public class Hero : MonoBehaviour
         {
             for (int j = 0; j < l; j++)
             {
+                var rend = cellRenderers[i, j];
+                if (rend == null) continue;
+
                 float dx = i - heroI;
                 float dz = j - heroJ;
                 float distance = Mathf.Sqrt(dx * dx + dz * dz);
 
                 if (distance > 0f && distance <= MovementPointsPerRound)
                 {
-                    // ця клітинка доступна
-                    if (cellRenderers[i, j] != null)
-                        cellRenderers[i, j].material = highlightMaterial; // !!!
+                    rend.enabled = true;
+                    if (highlightMaterial != null)
+                        rend.material = highlightMaterial; // опційно змінюємо матеріал підсвітки
+                }
+                else
+                {
+                    rend.enabled = false;
                 }
             }
         }
@@ -198,8 +205,11 @@ public class Hero : MonoBehaviour
         {
             for (int j = 0; j < l; j++)
             {
-                if (cellRenderers[i, j] != null)
-                    cellRenderers[i, j].material = groundObject.gridBoxMaterial;
+                var rend = cellRenderers[i, j];
+                if (rend != null)
+                {
+                    rend.enabled = false;
+                }
             }
         }
     }
@@ -375,7 +385,18 @@ public class Hero : MonoBehaviour
             {
                 var cube = groundObject.GetSmallCube(i, j);
                 if (cube != null)
-                    cellRenderers[i, j] = cube.GetComponent<Renderer>();
+                {
+                    var rend = cube.GetComponent<Renderer>();
+                    cellRenderers[i, j] = rend;
+                    if (rend != null)
+                    {
+                        rend.enabled = false; // ховаємо за замовчуванням
+                    }
+                }
+                else
+                {
+                    cellRenderers[i, j] = null;
+                }
             }
         }
     }

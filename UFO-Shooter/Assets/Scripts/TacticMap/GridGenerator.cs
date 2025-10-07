@@ -113,7 +113,10 @@ public class GridGenerator
                     topBox.transform.position = topPos;
                     topBox.transform.SetParent(_bigBox.transform);
                     topBox.tag = Constants.TagConstans.FloorGridTag;
-                    topBox.GetComponent<Renderer>().material = _gridMaterial;
+                    //topBox.GetComponent<Renderer>().material = _gridMaterial;
+                    var topRend = topBox.GetComponent<Renderer>();
+                    topRend.material = _gridMaterial;
+                    topRend.enabled = false; // ховаємо візуал, залишаємо колайдер
                     topBox.GetComponent<BoxCollider>().isTrigger = true;
 
                     //додаємо створений смол-бокс в колекцію (ObstacleOnTheMap), щоб потім паретна переасаайнити конкретному обстеклу
@@ -148,7 +151,10 @@ public class GridGenerator
                 smallBox.transform.position = smallPos;
                 smallBox.transform.SetParent(_bigBox.transform);
                 smallBox.tag = Constants.TagConstans.FloorGridTag;
-                smallBox.GetComponent<Renderer>().material = _gridMaterial;
+                var smallRend = smallBox.GetComponent<Renderer>();
+                smallRend.material = _gridMaterial;
+                smallRend.enabled = false; // ховаємо візуал, залишаємо колайдер
+                //smallBox.GetComponent<Renderer>().material = _gridMaterial;
                 smallBox.GetComponent<BoxCollider>().isTrigger = true;
 
                 _smallCubes[i, j] = smallBox;
@@ -435,7 +441,4 @@ public class GridGenerator
 
         return ramp;
     }
-
-
-
 }
