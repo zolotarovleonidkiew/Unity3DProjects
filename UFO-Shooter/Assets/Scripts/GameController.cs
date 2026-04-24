@@ -116,6 +116,22 @@ public class GameController : MonoBehaviour
             {
                 EndHeroTurn();
             }
+
+            //автоматичний перехід хода до наступного героя, який має move point
+            if (AnyHeroWithActiveMovePoints && !ActiveHero.CanMoving)
+            {
+                int? nextHeroIndex = default;
+
+                for (int i = 0; i < heroes.Count; i++)
+                {
+                    if (heroes[i].CanMoving)
+                    {
+                        nextHeroIndex = i;
+                    }
+                }
+                SwitchToNextHero(nextHeroIndex);
+            }
+
         }
         else
         {
@@ -124,7 +140,7 @@ public class GameController : MonoBehaviour
         }
 
         //to do
-        CheckForWinLoseConditions();
+        //CheckForWinLoseConditions();
     }
 
     public void StartHeroTurn()
@@ -183,14 +199,21 @@ public class GameController : MonoBehaviour
         Debug.Log($"[GameController] Хід прибульців завершено. Починається новий раунд: {CurrentRound}");
     }
 
-    private void SwitchToNextHero()
+    private void SwitchToNextHero(int? heroIndex = null)
     {
         if (heroes.Count <= 1) return;
 
         // приховуємо підсвітку попереднього героя
         ActiveHero?.HideAvailableMoves();
 
-        activeHeroIndex = (activeHeroIndex + 1) % heroes.Count;
+        if (heroIndex is null)
+        {
+            activeHeroIndex = (activeHeroIndex + 1) % heroes.Count;
+        }
+        else
+        {
+            activeHeroIndex = heroIndex.Value;
+        }
 
         // не даємо нових ходів при простому переключенні, просто показуємо підсвітку нового активного героя
         ActiveHero?.ShowAvailableMoves();
@@ -205,17 +228,17 @@ public class GameController : MonoBehaviour
     //check fow win/lose conditions
     private void CheckForWinLoseConditions()
     {
-        //if ((SquadReputation < 0) || (heroes.All(h => !h.isAlive)))
-        //{
-        //    Debug.LogError($">>> TACTICAL MAP LOSE. Repuation = {SquadReputation}");
-        //    //stop control
-        //}
-        //else if ((SquadReputation > 0) && (heroes.Any(h => h.isAlive)) && (aliens.All(a=>!a.isAlive)) )
-        //{
-        //    SquadReputation++;
-        //    Debug.LogError($">>> TACTICAL MAP WON. Repuation = {SquadReputation}");
-        //    //stop control
-        //}
+        if ((SquadReputation < 0) || (heroes.All(h => !h.isAlive)))
+        {
+            Debug.LogError($">>> TACTICAL MAP LOSE. Repuation = {SquadReputation}");
+            //stop control
+        }
+        else if ((SquadReputation > 0) && (heroes.Any(h => h.isAlive)) && (aliens.All(a => !a.isAlive)))
+        {
+            SquadReputation++;
+            Debug.LogError($">>> TACTICAL MAP WON. Repuation = {SquadReputation}");
+            //stop control
+        }
     }
 
 }
