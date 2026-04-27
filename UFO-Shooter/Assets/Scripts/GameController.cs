@@ -95,6 +95,7 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private float lastManualSwitchTime;
     private void Update()
     {
         if (heroes.Count == 0) return;
@@ -104,6 +105,7 @@ public class GameController : MonoBehaviour
             // Переключення між героями (Tab)
             if (Input.GetKeyDown(KeyCode.Tab))
             {
+                lastManualSwitchTime = Time.time;
                 SwitchToNextHero();
             }
 
@@ -118,18 +120,22 @@ public class GameController : MonoBehaviour
             }
 
             //автоматичний перехід хода до наступного героя, який має move point
-            if (AnyHeroWithActiveMovePoints && !ActiveHero.CanMoving)
+            if (Time.time - lastManualSwitchTime > 0.1f)
             {
-                int? nextHeroIndex = default;
-
-                for (int i = 0; i < heroes.Count; i++)
+                if (AnyHeroWithActiveMovePoints && !ActiveHero.CanMoving)
                 {
-                    if (heroes[i].CanMoving)
+                    int? nextHeroIndex = default;
+
+                    for (int i = 0; i < heroes.Count; i++)
                     {
-                        nextHeroIndex = i;
+                        if (heroes[i].CanMoving)
+                        {
+                            nextHeroIndex = i;
+                            break;
+                        }
                     }
+                    SwitchToNextHero(nextHeroIndex);
                 }
-                SwitchToNextHero(nextHeroIndex);
             }
 
         }
@@ -208,7 +214,17 @@ public class GameController : MonoBehaviour
 
         if (heroIndex is null)
         {
-            activeHeroIndex = (activeHeroIndex + 1) % heroes.Count;
+            int startIndex = activeHeroIndex;
+
+            do
+            {
+                activeHeroIndex = (activeHeroIndex + 1) % heroes.Count;
+
+                // якщо знайшли героя з ходами — виходимо
+                if (heroes[activeHeroIndex].CanMoving)
+                    break;
+
+            } while (activeHeroIndex != startIndex);
         }
         else
         {
