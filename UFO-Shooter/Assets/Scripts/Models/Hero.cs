@@ -142,6 +142,10 @@ public class Hero : MonoBehaviour
     /// </summary>
     public void HighlightAvailableMoves()
     {
+        // Ensure we have cached grid renderers (lazy init if needed)
+        if (groundObject == null) return;
+        EnsureGridCached();
+
         //temp
         if (cellRenderers == null) return;
 
@@ -195,6 +199,9 @@ public class Hero : MonoBehaviour
     /// </summary>
     public void ClearHighlights()
     {
+        if (groundObject == null) return;
+        EnsureGridCached();
+
         //temp
         if (cellRenderers == null) return;
 
@@ -360,6 +367,18 @@ public class Hero : MonoBehaviour
     }
 
     /// <summary>
+    /// Ensure grid renderers and hero coords are available (lazy init)
+    /// </summary>
+    private void EnsureGridCached()
+    {
+        if (cellRenderers != null) return;
+        if (groundObject == null) return;
+
+        CacheGridRenderers();
+        FindHeroGridCoords();
+    }
+
+    /// <summary>
     /// Визначаємо координати героя в матриці
     /// </summary>
     private void FindHeroGridCoords()
@@ -372,7 +391,8 @@ public class Hero : MonoBehaviour
         {
             for (int j = 0; j < groundObject.length; j++)
             {
-                var cube = GridGenerator_05.GetSmallCube(i, j,  null); // TO DO
+                // Use overload that searches registered layers so we find the actual small box instance
+                var cube = GridGenerator_05.GetSmallCube(i, j);
                 if (cube == null) continue;
 
                 float dist = Vector3.Distance(heroPos, cube.transform.position);
