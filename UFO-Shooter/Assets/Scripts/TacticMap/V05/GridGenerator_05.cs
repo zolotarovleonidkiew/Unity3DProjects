@@ -158,4 +158,83 @@ public class GridGenerator_05 : IGridGenerator
 
         return result;
     }
+
+    // -------------------------------------------------------------------------
+    // Static grid helpers moved here (used by runtime code: HeroMovement, BackgroundGenerationScript etc.)
+    // -------------------------------------------------------------------------
+    public static bool GetGridCoordsFromWorld(Vector3 worldPos, GameObject[,] smallBoxed, out int i, out int j)
+    {
+        i = -1;
+        j = -1;
+
+        if (smallBoxed == null) return false;
+
+        float minDist = float.MaxValue;
+        int width = smallBoxed.GetLength(0);
+        int length = smallBoxed.GetLength(1);
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < length; z++)
+            {
+                var cube = GetSmallCube(x, z, smallBoxed);
+                if (cube == null) continue;
+
+                float dist = Vector3.Distance(worldPos, cube.transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    i = x;
+                    j = z;
+                }
+            }
+        }
+
+        return (i >= 0 && j >= 0);
+    }
+
+    public static GameObject GetSmallCube(int i, int j, GameObject[,] smallBoxed)
+    {
+        if (smallBoxed == null) return null;
+        if (i < 0 || j < 0 || i >= smallBoxed.GetLength(0) || j >= smallBoxed.GetLength(1)) return null;
+        return smallBoxed[i, j];
+    }
+
+    public static GameObject FindNearestValidCell(int wantI, int wantJ, GameObject[,] smallBoxed, float cellSize, float bigHeight, float liftAboveBig)
+    {
+        if (smallBoxed == null) return null;
+
+        int width = smallBoxed.GetLength(0);
+        int length = smallBoxed.GetLength(1);
+
+        // target world pos (approximate)
+        float bigWidth = width * cellSize;
+        float bigLength = length * cellSize;
+        Vector3 center = new Vector3(0f, bigHeight / 2f, 0f);
+        Vector3 wantedWorld = new Vector3(
+            center.x + (-bigWidth / 2f + (wantI + 0.5f) * cellSize),
+            bigHeight + liftAboveBig,
+            center.z + (-bigLength / 2f + (wantJ + 0.5f) * cellSize)
+        );
+
+        float bestDist = float.MaxValue;
+        GameObject best = null;
+
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < length; j++)
+            {
+                var c = GetSmallCube(i, j, smallBoxed);
+                if (c == null) continue;
+                float d = Vector3.Distance(wantedWorld, c.transform.position);
+                if (d < bestDist)
+                {
+                    bestDist = d;
+                    best = c;
+                }
+            }
+        }
+
+        return best;
+    }
 }

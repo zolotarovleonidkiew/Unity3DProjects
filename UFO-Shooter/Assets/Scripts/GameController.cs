@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private List<Hero> heroes = new();
     [SerializeField] private int heroMovesPerTurn = Constants.GlobalLivingConstans.MaxActionRounds;
 
-    //to do
+    //to do later...
     [SerializeField] private TacticalMapTargetsEnum MapTarget = TacticalMapTargetsEnum.AlienAnnihilation;
     [SerializeField] private float SquadReputation = 50;
 
@@ -240,21 +240,20 @@ public class GameController : MonoBehaviour
         Debug.Log($"[GameController] Активний герой змінено на: {ActiveHero?.name} (index {activeHeroIndex})");
     }
 
-    //to do
-    //check fow win/lose conditions
-    private void CheckForWinLoseConditions()
-    {
-        if ((SquadReputation < 0) || (heroes.All(h => !h.isAlive)))
-        {
-            Debug.LogError($">>> TACTICAL MAP LOSE. Repuation = {SquadReputation}");
-            //stop control
-        }
-        else if ((SquadReputation > 0) && (heroes.Any(h => h.isAlive)) && (aliens.All(a => !a.isAlive)))
-        {
-            SquadReputation++;
-            Debug.LogError($">>> TACTICAL MAP WON. Repuation = {SquadReputation}");
-            //stop control
-        }
-    }
+    //WIN/LOOSE conditions
+    //private void CheckForWinLoseConditions()
+    //{
+    //    if ((SquadReputation < 0) || (heroes.All(h => !h.isAlive)))
+    //    {
+    //        Debug.LogError($">>> TACTICAL MAP LOSE. Repuation = {SquadReputation}");
+    //        //stop control
+    //    }
+    //    else if ((SquadReputation > 0) && (heroes.Any(h => h.isAlive)) && (aliens.All(a => !a.isAlive)))
+    //    {
+    //        SquadReputation++;
+    //        Debug.LogError($">>> TACTICAL MAP WON. Repuation = {SquadReputation}");
+    //        //stop control
+    //    }
+    //}
 
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,8 +8,29 @@ using UnityEngine;
 public class GroundHierarchy
 {
     public List<GroundLayer> GroudLayers { get; set; }
+
+    /// <summary>
+    /// Returns the GroundLayer matching the provided GroundHierarchyLevel.
+    /// </summary>
+    /// <param name="GroundLevel">The target ground hierarchy level to find.</param>
+    /// <returns>The matching GroundLayer or null if not found.</returns>
+    public GroundLayer GetGroundLayer(GroundHierarchyLevel GroundLevel)
+    {
+        if (GroudLayers == null || GroudLayers.Count == 0) return null;
+
+        foreach (var layer in GroudLayers)
+        {
+            if (layer != null && layer.GroundLevel == GroundLevel)
+            {
+                return layer;
+            }
+        }
+
+        return null;
+    }
 }
 
+[Serializable]
 public enum GroundHierarchyLevel
 {
     /// <summary>
