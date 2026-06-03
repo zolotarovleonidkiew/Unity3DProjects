@@ -2,6 +2,6 @@
 {
     public interface ILandCreator
     {
-        public GroundHierarchy CreateLand(LandCreatorConfig landCreatorConfig);
+        public IGroundHierarchy CreateLand(LandCreatorConfig landCreatorConfig);
     }
 }

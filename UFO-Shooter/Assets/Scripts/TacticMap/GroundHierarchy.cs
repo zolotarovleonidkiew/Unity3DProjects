@@ -5,15 +5,10 @@ using UnityEngine;
 /// <summary>
 /// Represents all ground levels as Hierarchy structure with it's small boxes and Heroes on it
 /// </summary>
-public class GroundHierarchy
+public class GroundHierarchy : IGroundHierarchy
 {
     public List<GroundLayer> GroudLayers { get; set; }
 
-    /// <summary>
-    /// Returns the GroundLayer matching the provided GroundHierarchyLevel.
-    /// </summary>
-    /// <param name="GroundLevel">The target ground hierarchy level to find.</param>
-    /// <returns>The matching GroundLayer or null if not found.</returns>
     public GroundLayer GetGroundLayer(GroundHierarchyLevel GroundLevel)
     {
         if (GroudLayers == null || GroudLayers.Count == 0) return null;

@@ -19,7 +19,7 @@ public class LandCreator : ILandCreator
         LiftGenerator = liftGenerator;  
     }
 
-    public GroundHierarchy CreateLand(LandCreatorConfig landCreatorConfig)
+    public IGroundHierarchy CreateLand(LandCreatorConfig landCreatorConfig)
     {
         var hierarchy = new GroundHierarchy { GroudLayers = new List<GroundLayer>() };
 
