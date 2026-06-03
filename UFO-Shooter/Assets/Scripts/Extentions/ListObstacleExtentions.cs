@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 
-
 public static class ListObstacleExtentions
 {
     public static List<ObstacleOnTheMap> FlatternNestedObstacles(this List<ObstacleOnTheMap> obstacles)
@@ -10,7 +9,6 @@ public static class ListObstacleExtentions
         foreach (ObstacleOnTheMap obs in obstacles)
         {
             GetNestedObstacle(obs, result);
-
         }
 
         return result;

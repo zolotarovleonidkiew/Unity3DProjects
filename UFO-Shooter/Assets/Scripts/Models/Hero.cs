@@ -325,48 +325,6 @@ public class Hero : MonoBehaviour
         }
     }
 
-    //old
-    //private void ShootNearestAlien()
-    //{
-    //    // ЛКМ = стрільба (по найближчому ворогу)
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        Alien alien = FindClosestAlien();
-    //        if (alien != null)
-    //        {
-    //            Debug.LogWarning("[SHOOTNG] Alien found :)");
-    //            ShootAt(alien.transform);
-    //        }
-    //        else
-    //        {
-    //            Debug.LogWarning("[SHOOTNG] Alien not found :(");
-    //        }
-    //    }
-
-    //    // Перемикання зброї на цифри
-    //    if (Input.GetKeyDown(KeyCode.Alpha1)) SwitchWeapon(WeaponType.Pistol);
-    //    if (Input.GetKeyDown(KeyCode.Alpha2)) SwitchWeapon(WeaponType.Rifle);
-    //}
-
-    ////deprecated
-    //private Alien FindClosestAlien()
-    //{
-    //    Alien[] aliens = FindObjectsOfType<Alien>();
-    //    Alien closest = null;
-    //    float minDist = Mathf.Infinity;
-
-    //    foreach (var a in aliens)
-    //    {
-    //        float dist = Vector3.Distance(transform.position, a.transform.position);
-    //        if (dist < minDist)
-    //        {
-    //            minDist = dist;
-    //            closest = a;
-    //        }
-    //    }
-    //    return closest;
-    //}
-
     #region ######################################  Supplement
 
     /// <summary>

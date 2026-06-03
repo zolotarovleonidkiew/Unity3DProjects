@@ -137,29 +137,6 @@ public class HeroMovement : MonoBehaviour
         //delete RampOwner ????
     }
 
-    // DEPRECATED
-    private GameObject FindRampForObstacle(int i, int j)
-    {
-        GameObject[] ramps = GameObject.FindGameObjectsWithTag("RampTopBox");
-
-        foreach (var ramp in ramps)
-        {
-            RampMarker marker = ramp.GetComponent<RampMarker>();
-
-            //TO DO
-            //нужно брать или ближайший, или тот ramp, который рпинадлежит обстеклу из всех что ему принадлежит
-
-            // if (marker != null && marker.targetCell == new Vector2Int(i, j))
-
-            //RampOwner ro = ramp.transform.parent.gameObject.GetComponent<RampOwner>();
-
-            //var rampsCollection = ro.obstacleOwner.RampsCollection;
-
-            return ramp;
-        }
-        return null;
-    }
-
     private void MoveTowardsTarget()
     {
         if (!isMoving || currentPath.Count == 0) return;

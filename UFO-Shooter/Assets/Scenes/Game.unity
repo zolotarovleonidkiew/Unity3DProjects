@@ -1017,6 +1017,8 @@ MonoBehaviour:
   smallHeight: 0.5
   liftAboveBig: 0.3
   liftGridPos: {x: 1, y: 24}
+  liftGridPosCollection:
+  - {x: 2, y: 2}
   liftMaterial: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
   parent: {fileID: 2143390969}
   gridBoxMaterial: {fileID: 2100000, guid: e05eb3679baf74b4bb276572cab13d1d, type: 2}

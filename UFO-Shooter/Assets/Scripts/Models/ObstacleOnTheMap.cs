@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 /// <summary>
@@ -11,6 +10,11 @@ using UnityEngine;
 [Serializable]
 public class ObstacleOnTheMap
 {
+    /// <summary>
+    /// Editor only name for better readability in inspector; not used in code
+    /// </summary>
+    public string Name { get; set; }
+
     public Vector2Int BuildingGridPos;          // позиція початку будівлі
     public int BuildingWidth;                   // ширина
     public int BuildingLength;                  // довжина
@@ -34,9 +38,10 @@ public class ObstacleOnTheMap
     /// </summary>
     public GameObject gameObject;
 
-    public ObstacleOnTheMap(Vector2Int pos, int width, int length, float height, bool needSmallBoxOnTop, 
+    public ObstacleOnTheMap(string name, Vector2Int pos, int width, int length, float height, bool needSmallBoxOnTop, 
         Material material, ObstacleOnTheMap nestedObstacle = null)
     {
+        Name = name;
         BuildingGridPos = pos;
         BuildingWidth = width;
         BuildingLength = length;
