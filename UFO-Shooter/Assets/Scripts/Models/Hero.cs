@@ -341,7 +341,7 @@ public class Hero : MonoBehaviour
         {
             for (int j = 0; j < l; j++)
             {
-                var cube = groundObject.GetSmallCube(i, j);
+                var cube = GridGenerator_05.GetSmallCube(i, j);
                 if (cube != null)
                 {
                     var rend = cube.GetComponent<Renderer>();
@@ -372,7 +372,7 @@ public class Hero : MonoBehaviour
         {
             for (int j = 0; j < groundObject.length; j++)
             {
-                var cube = groundObject.GetSmallCube(i, j);
+                var cube = GridGenerator_05.GetSmallCube(i, j,  null); // TO DO
                 if (cube == null) continue;
 
                 float dist = Vector3.Distance(heroPos, cube.transform.position);

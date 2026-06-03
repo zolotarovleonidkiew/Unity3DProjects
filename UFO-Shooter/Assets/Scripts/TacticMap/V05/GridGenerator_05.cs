@@ -13,13 +13,29 @@ public class GridGenerator_05 : IGridGenerator
 
     private const float SmallBoxHeight = 0.5f;
     private const float LiftAboveGround = 0.3f;
-    
+
+    // registry of created layers (populated by CreatePlatorm / CreateUpperPlatform)
+    private static readonly List<GroundLayer> RegisteredLayers = new List<GroundLayer>();
+
+    private static void RegisterLayer(GroundLayer layer)
+    {
+        if (layer == null) return;
+        // avoid duplicates
+        if (!RegisteredLayers.Contains(layer))
+            RegisteredLayers.Add(layer);
+    }
+
     public GroundLayer CreatePlatorm(GridConfig config, GroundHierarchyLevel level, string name)
     {
         var platform = CreateEmptyPlatmorm(config, level, name);
         var smallBoxes = CreateSmallBoxes(platform, config);
 
-        return new GroundLayer(name, platform, smallBoxes, level);
+        var layer = new GroundLayer(name, platform, smallBoxes, level);
+
+        // register newly created layer so runtime lookups can use it
+        RegisterLayer(layer);
+
+        return layer;
     }
 
     private GameObject CreateEmptyPlatmorm(GridConfig config, GroundHierarchyLevel level, string name)
@@ -153,6 +169,10 @@ public class GridGenerator_05 : IGridGenerator
 
             // wrap in GroundLayer and store
             var gl = new GroundLayer($"LiftFloor_{liftPos.x}_{liftPos.y}", platform, smallBoxes, GroundHierarchyLevel.Level_2);
+
+            // register upper-floor layer for runtime lookups
+            RegisterLayer(gl);
+
             result[liftPos] = gl;
         }
 
@@ -177,7 +197,7 @@ public class GridGenerator_05 : IGridGenerator
         {
             for (int z = 0; z < length; z++)
             {
-                var cube = GetSmallCube(x, z, smallBoxed);
+                var cube = GridGenerator_05.GetSmallCube(x, z, null); // TO DO
                 if (cube == null) continue;
 
                 float dist = Vector3.Distance(worldPos, cube.transform.position);
@@ -193,11 +213,74 @@ public class GridGenerator_05 : IGridGenerator
         return (i >= 0 && j >= 0);
     }
 
+    // New overload: search all registered layers and return nearest cell indices
+    public static bool GetGridCoordsFromWorld(Vector3 worldPos, out int i, out int j)
+    {
+        i = -1;
+        j = -1;
+
+        if (RegisteredLayers.Count == 0) return false;
+
+        float minDist = float.MaxValue;
+        int bestI = -1, bestJ = -1;
+
+        foreach (var layer in RegisteredLayers)
+        {
+            var arr = layer.SmallBoxed;
+            if (arr == null) continue;
+
+            if (GetGridCoordsFromWorld(worldPos, arr, out int ti, out int tj))
+            {
+                var cube = GridGenerator_05.GetSmallCube(ti, tj);
+                if (cube == null) continue;
+
+                float dist = Vector3.Distance(worldPos, cube.transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    bestI = ti;
+                    bestJ = tj;
+                }
+            }
+        }
+
+        if (bestI >= 0 && bestJ >= 0)
+        {
+            i = bestI;
+            j = bestJ;
+            return true;
+        }
+
+        return false;
+    }
+
     public static GameObject GetSmallCube(int i, int j, GameObject[,] smallBoxed)
     {
         if (smallBoxed == null) return null;
         if (i < 0 || j < 0 || i >= smallBoxed.GetLength(0) || j >= smallBoxed.GetLength(1)) return null;
         return smallBoxed[i, j];
+    }
+
+    // Add this static method into GridGenerator_05 (next to the existing GetSmallCube/get helpers)
+    public static GameObject GetSmallCube(int i, int j)
+    {
+        // Safety
+        if (i < 0 || j < 0) return null;
+
+        // Search registered layers (first non-null cell wins)
+        foreach (var layer in RegisteredLayers)
+        {
+            var arr = layer?.SmallBoxed;
+            if (arr == null) continue;
+
+            if (i < arr.GetLength(0) && j < arr.GetLength(1))
+            {
+                var cube = arr[i, j];
+                if (cube != null) return cube;
+            }
+        }
+
+        return null;
     }
 
     public static GameObject FindNearestValidCell(int wantI, int wantJ, GameObject[,] smallBoxed, float cellSize, float bigHeight, float liftAboveBig)

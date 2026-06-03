@@ -79,7 +79,8 @@ public class HeroMovement : MonoBehaviour
         if (!clicked.CompareTag(Constants.TagConstans.FloorGridTag))
             return;
 
-        if (!ground.GetGridCoordsFromWorld(clicked.transform.position, out int i, out int j))
+        // Use overload that searches registered layers in GridGenerator_05
+        if (!GridGenerator_05.GetGridCoordsFromWorld(clicked.transform.position, out int i, out int j))
             return;
         
         // перевірка доступності саме для цього героя
