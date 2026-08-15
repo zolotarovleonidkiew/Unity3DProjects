@@ -104,15 +104,12 @@ public class HeroFactory : MonoBehaviour
         sh.SetBulletPrefab(_bulletPrefab);
         sh.SetHighlightMaterial(_gridMaterialHighlited);
 
-        // Ensure there is a ShootPoint child (prefab may include it)
-        Transform shootPointT = player.transform.Find("ShootPoint");
+        // Prefer existing FirePoint (common in prefab). Fallback to ShootPoint or create a new ShootPoint if none exist.
+        Transform shootPointT = player.transform.Find("FirePoint");
         if (shootPointT == null)
-        {
-            GameObject shootPoint = new GameObject("ShootPoint");
-            shootPoint.transform.SetParent(player.transform);
-            shootPoint.transform.localPosition = Vector3.up * 0.5f;
-            shootPointT = shootPoint.transform;
-        }
+            shootPointT = player.transform.Find("ShootPoint");
+
+        // do not create a ShootPoint here; prefer prefab's FirePoint or existing ShootPoint
         sh.SetShootPoint(shootPointT);
 
         var hms = player.AddComponent<HeroMovement>();
