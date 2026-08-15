@@ -21,6 +21,7 @@ public class BackgroundGenerationScript : MonoBehaviour
     public float playerSize = 1f;
     public Material heroBoxMaterial;
     [SerializeField] private List<WeaponData> heroStartingWeapons;
+    [SerializeField] private GameObject heroPrefab;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject HeroesCollectionGUI;
 
@@ -133,7 +134,7 @@ public class BackgroundGenerationScript : MonoBehaviour
         var platformLayersCollection = landReactor.CreateLand(landCreatorConfig);
 
         //live enities:
-        var heroFactory = new HeroFactory(playerSize, heroBoxMaterial, heroStartingWeapons, bulletPrefab, this, HeroesCollectionGUI, gridBoxMaterialHighlited);
+        var heroFactory = new HeroFactory(playerSize, heroBoxMaterial, heroStartingWeapons, bulletPrefab, heroPrefab, this, HeroesCollectionGUI, gridBoxMaterialHighlited);
         var alienFactory = new AlienFactory(alienSize, alienBoxMaterial, this, AlienCollectionGUI);
 
         // Герої    

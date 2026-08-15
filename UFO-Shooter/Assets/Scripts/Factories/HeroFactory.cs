@@ -10,6 +10,7 @@ public class HeroFactory : MonoBehaviour
     private Material _heroMaterial;
     private List<WeaponData> _startingWeapons;
     private GameObject _bulletPrefab;
+    private GameObject _heroPrefab;
     private BackgroundGenerationScript _ground;
     private GameObject _HeroesCollectionGUI;
     private Material _gridMaterialHighlited;
@@ -19,6 +20,7 @@ public class HeroFactory : MonoBehaviour
         Material heroMaterial,
         List<WeaponData> startingWeapons,
         GameObject bulletPrefab,
+        GameObject heroPrefab,
         BackgroundGenerationScript ground,
         GameObject heroesCollectionGUI,
         Material gridMaterialHighlited
@@ -28,6 +30,7 @@ public class HeroFactory : MonoBehaviour
         _heroMaterial = heroMaterial;
         _startingWeapons = startingWeapons;
         _bulletPrefab = bulletPrefab;
+        _heroPrefab = heroPrefab;
         _ground = ground;
         _HeroesCollectionGUI = heroesCollectionGUI;
         _gridMaterialHighlited = gridMaterialHighlited;
@@ -40,32 +43,77 @@ public class HeroFactory : MonoBehaviour
         Vector3 pos = targetCell.transform.position;
         float playerY = _ground.bigHeight + _playerSize / 2f;
 
-        GameObject player = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        player.name = $"Hero_{index}";
-        player.transform.localScale = new Vector3(_playerSize, _playerSize, _playerSize);
-        player.transform.position = new Vector3(pos.x, playerY, pos.z);
-        player.tag = Constants.TagConstans.HeroTag;
-        var rend = player.GetComponent<Renderer>();
-        if (_heroMaterial != null)
-            rend.material = new Material(_heroMaterial); // створюємо новий інстанс матеріалу, щоб не ділити його
+        GameObject player;
+
+        // If ground provides a hero prefab - instantiate it, otherwise fall back to a primitive
+        if (_ground != null && _heroPrefab != null)
+        {
+            player = Object.Instantiate(_heroPrefab);
+            player.name = $"Hero_{index}";
+            // place prefab at desired position (keep prefab rotation)
+            player.transform.position = new Vector3(pos.x, playerY, pos.z);
+        }
         else
-            rend.material = new Material(Shader.Find("Standard"));
+        {
+            player = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            player.name = $"Hero_{index}";
+            player.transform.localScale = new Vector3(_playerSize, _playerSize, _playerSize);
+            player.transform.position = new Vector3(pos.x, playerY, pos.z);
+        }
+        player.tag = Constants.TagConstans.HeroTag;
 
-        var rb = player.AddComponent<Rigidbody>();
-        rb.mass = 1f;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        // Ensure Collider exists so the hero won't fall through the floor
+        var col = player.GetComponent<Collider>();
+        if (col == null)
+        {
+            // add a capsule collider as a sensible default
+            var capsule = player.AddComponent<CapsuleCollider>();
+            capsule.height = _playerSize;
+            capsule.radius = _playerSize / 2f;
+            capsule.center = new Vector3(0f, _playerSize / 2f, 0f);
+            col = capsule;
+        }
 
-        var sh = player.AddComponent<Hero>();
+        // Make sure transforms are synced so bounds are correct, then align bottom of collider to desired ground Y
+        Physics.SyncTransforms();
+        float bottomY = col.bounds.min.y;
+        float deltaY = playerY - bottomY;
+        if (Mathf.Abs(deltaY) > 0.0001f)
+        {
+            player.transform.position += new Vector3(0f, deltaY + 0.001f, 0f);
+        }
+
+        // Ensure Rigidbody exists
+        var rb = player.GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = player.AddComponent<Rigidbody>();
+            rb.mass = 1f;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+
+        // Ensure Hero component exists (prefab might already have it)
+        var sh = player.GetComponent<Hero>();
+        if (sh == null)
+        {
+            sh = player.AddComponent<Hero>();
+        }
         sh.SettoShowAvailableMovementSquares();
         sh.SetGroundObject(_ground);
         sh.SetStartingWeapons(_startingWeapons);
         sh.SetBulletPrefab(_bulletPrefab);
         sh.SetHighlightMaterial(_gridMaterialHighlited);
 
-        GameObject shootPoint = new GameObject("ShootPoint");
-        shootPoint.transform.SetParent(player.transform);
-        shootPoint.transform.localPosition = Vector3.up * 0.5f;
-        sh.SetShootPoint(shootPoint.transform);
+        // Ensure there is a ShootPoint child (prefab may include it)
+        Transform shootPointT = player.transform.Find("ShootPoint");
+        if (shootPointT == null)
+        {
+            GameObject shootPoint = new GameObject("ShootPoint");
+            shootPoint.transform.SetParent(player.transform);
+            shootPoint.transform.localPosition = Vector3.up * 0.5f;
+            shootPointT = shootPoint.transform;
+        }
+        sh.SetShootPoint(shootPointT);
 
         var hms = player.AddComponent<HeroMovement>();
         hms.SetMoveSpeed(3);

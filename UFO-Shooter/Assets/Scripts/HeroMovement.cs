@@ -12,6 +12,7 @@ public class HeroMovement : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f; // швидкість героя
+    [SerializeField] private float rotationSpeed = 360f; // degrees per second, швидкість повороту героя
 
     /// <summary>
     /// Used in BackgroundGenerationScript
@@ -35,7 +36,7 @@ public class HeroMovement : MonoBehaviour
     private void Start()
     {
         hero = GetComponent<Hero>();
-        ground = FindObjectOfType<BackgroundGenerationScript>();
+        ground = FindAnyObjectByType<BackgroundGenerationScript>();
         mainCamera = Camera.main;
     }
 
@@ -157,6 +158,16 @@ public class HeroMovement : MonoBehaviour
 
         // фіксуємо Y, щоб герой не коливався по вертикалі
         targetPos.y = transform.position.y;
+
+        // Rotate towards movement direction (only on Y axis)
+        Vector3 lookDir = targetPos - transform.position;
+        lookDir.y = 0f;
+        if (lookDir.sqrMagnitude > 0.0001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(lookDir);
+            // RotateTowards uses a max degrees delta, avoiding fractional-slerp semantics that can "halve" the remaining angle
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+        }
 
         float step = moveSpeed * Time.deltaTime;
 
