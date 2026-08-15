@@ -79,9 +79,19 @@ public class HeroMovement : MonoBehaviour
         if (!clicked.CompareTag(Constants.TagConstans.FloorGridTag))
             return;
 
-        // Use overload that searches registered layers in GridGenerator_05
-        if (!GridGenerator_05.GetGridCoordsFromWorld(clicked.transform.position, out int i, out int j))
+        // Use the exact contact point (hit.point) instead of transform.position
+        Vector3 worldPoint = hit.point;
+
+        // Optional: if your grid is at a fixed Y, force that Y:
+        // worldPoint.y = clicked.transform.position.y;
+
+        Debug.Log($"Clicked: {clicked.name}, hit.point={worldPoint}, colliderCenter={hit.collider.bounds.center}");
+
+        if (!GridGenerator_05.GetGridCoordsFromWorld(worldPoint, out int i, out int j))
+        {
+            Debug.LogWarning($"GetGridCoordsFromWorld returned false for point {worldPoint}");
             return;
+        }
         
         // перевірка доступності саме для цього героя
         if (!hero.IsCellAvailable(i, j))
@@ -94,9 +104,10 @@ public class HeroMovement : MonoBehaviour
 
         //перевірка що герой та ціль пеерміщення на одній ПРЕГРАДІ
         var heroCoords = hero.GetHeroCoords();
-        var heroObstacle = ground.GetGridGenerator.GetObstacleAt(heroCoords.x, heroCoords.y);
+        // guard against missing ground or its grid generator to avoid NullReferenceException
+        var heroObstacle = ground?.GetGridGenerator?.GetObstacleAt(heroCoords.x, heroCoords.y);
 
-        var obstacle = ground.GetGridGenerator.GetObstacleAt(i, j);
+        var obstacle = ground?.GetGridGenerator?.GetObstacleAt(i, j);
 
         if ((obstacle != null) && (heroObstacle != obstacle)) // це перешкода
         {

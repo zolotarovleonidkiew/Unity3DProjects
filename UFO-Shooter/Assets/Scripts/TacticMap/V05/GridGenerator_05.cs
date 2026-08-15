@@ -197,7 +197,8 @@ public class GridGenerator_05 : IGridGenerator
         {
             for (int z = 0; z < length; z++)
             {
-                var cube = GridGenerator_05.GetSmallCube(x, z, null); // TO DO
+                // pass the actual smallBoxed array so we check the correct cells
+                var cube = GridGenerator_05.GetSmallCube(x, z, smallBoxed);
                 if (cube == null) continue;
 
                 float dist = Vector3.Distance(worldPos, cube.transform.position);
