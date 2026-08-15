@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Hero : MonoBehaviour
@@ -244,42 +245,6 @@ public class Hero : MonoBehaviour
     }
 
     /// <summary>
-    /// Виконати постріл в ціль
-    /// </summary>
-    public void ShootAt(Transform target)
-    {
-        if (activeWeapon == null) return;
-
-        if (!activeWeapon.CanShoot())
-        {
-            Debug.Log($"{name} — {activeWeapon.data.weaponName} нема патронів!");
-            return;
-        }
-
-        // Створюємо кулю
-        GameObject bulletObj = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
-        Bullet bullet = bulletObj.GetComponent<Bullet>();
-        bullet.speed = bulletSpeed;
-        bullet.SetTarget(target);
-
-        // Віднімаємо патрон
-        activeWeapon.Shoot();
-
-        //TODO : vosuals
-        // Відтворюємо звук/анімацію (якщо є)
-        //if (activeWeapon.fireSound != null)
-        //{
-        //    AudioSource.PlayClipAtPoint(activeWeapon.fireSound, transform.position);
-        //}
-        //if (activeWeapon.fireAnimation != null)
-        //{
-        //    // TODO: тут можна запустити анімацію героя
-        //}
-
-        Debug.Log($"[Hero] Стрельнув з {activeWeapon.data.weaponType} в {target.name}");
-    }
-
-    /// <summary>
     /// Повернути поточну зброю (HeroWeapon)
     /// </summary>
     public HeroWeapon GetActiveHeroWeapon()
@@ -420,6 +385,64 @@ public class Hero : MonoBehaviour
     public Transform GetShootPoint()
     {
         return shootPoint;
+    }
+
+    /// <summary>
+    /// Виконати постріл в ціль
+    /// Повернутися до цілі та створити префаб кулі у FirePoint (або shootPoint як запасний варіант)
+    /// </summary>
+    public void ShootAt(Transform target)
+    {
+        if (activeWeapon == null) return;
+
+        if (!activeWeapon.CanShoot())
+        {
+            Debug.Log($"{name} — {activeWeapon.data.weaponName} нема патронів!");
+            return;
+        }
+
+        if (target == null)
+        {
+            Debug.LogWarning("ShootAt: target is null");
+            return;
+        }
+
+        // Rotate instantly to face target on horizontal plane
+        Vector3 lookDir = target.position - transform.position;
+        lookDir.y = 0f;
+        if (lookDir.sqrMagnitude > 0.0001f)
+            transform.rotation = Quaternion.LookRotation(lookDir);
+
+        // Prefer child named "FirePoint" on the hero prefab
+        Transform firePoint = transform.Find("FirePoint");
+        if (firePoint == null && shootPoint != null)
+            firePoint = shootPoint;
+        if (firePoint == null)
+            firePoint = transform;
+
+        if (bulletPrefab == null)
+        {
+            Debug.LogWarning("ShootAt: bulletPrefab is not assigned");
+            return;
+        }
+
+        GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+        Bullet bullet = bulletObj.GetComponent<Bullet>();
+        bullet.speed = bulletSpeed;
+        bullet.SetTarget(target);
+
+        //TODO : visuals
+        // Відтворюємо звук/анімацію (якщо є)
+        //if (activeWeapon.fireSound != null)
+        //{
+        //    AudioSource.PlayClipAtPoint(activeWeapon.fireSound, transform.position);
+        //}
+        //if (activeWeapon.fireAnimation != null)
+        //{
+        //    // TODO: тут можна запустити анімацію героя
+        //}
+
+        Debug.Log($"[Hero] Стрельнув з {activeWeapon.data.weaponType} в {target.name}");
     }
     #endregion
 
