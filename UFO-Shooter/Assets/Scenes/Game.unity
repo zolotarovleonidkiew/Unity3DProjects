@@ -939,22 +939,21 @@ MonoBehaviour:
   heroesGridPositions:
   - GridPosition: {x: 7, y: 12}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 0}
+    CreaturePrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
   - GridPosition: {x: 3, y: 3}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 0}
+    CreaturePrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
   - GridPosition: {x: 6, y: 6}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 0}
+    CreaturePrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
   - GridPosition: {x: 2, y: 22}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 0}
+    CreaturePrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
   playerSize: 1
   heroBoxMaterial: {fileID: 2100000, guid: 5e964e2fefdd3e840adc9a3ddeb1d201, type: 2}
   heroStartingWeapons:
   - {fileID: 11400000, guid: 56762a9967137404da2e38aa8860d3a2, type: 2}
   - {fileID: 11400000, guid: 580f862de1c77694bb6b293fd4a5f8c9, type: 2}
-  heroPrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
   bulletPrefab: {fileID: 5924875826302583872, guid: a412393950bdb83428b02729608dd9b9, type: 3}
   HeroesCollectionGUI: {fileID: 1246712479}
   aliensGridPositions:
