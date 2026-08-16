@@ -201,7 +201,7 @@ public class BackgroundGenerationScript : MonoBehaviour
         gameController.BeginGame();
 
         //смикаємо "режим слідкування" камери за активним героєм
-        var cam = FindObjectOfType<CameraMovement>();
+        var cam = FindAnyObjectByType<CameraMovement>();
         if (cam != null)
             cam.FocusOnHero();     
 

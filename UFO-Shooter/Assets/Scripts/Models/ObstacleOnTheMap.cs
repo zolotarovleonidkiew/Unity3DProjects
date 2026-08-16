@@ -34,9 +34,14 @@ public class ObstacleOnTheMap
     public List<GameObject> SmallBoxes { get; set; }
 
     /// <summary>
-    /// Represents GO of model
+    /// Represents GO of model (INTERNAL)
     /// </summary>
-    public GameObject gameObject;
+    public GameObject inetrnalGameObjectObstacleInstance; //don't modify in editor
+
+    /// <summary>
+    /// Represents prefab of for the Building (instead of Cube by Default)
+    /// </summary>
+    public GameObject buildingPrefab = null;
 
     public ObstacleOnTheMap(string name, Vector2Int pos, int width, int length, float height, bool needSmallBoxOnTop, 
         Material material, ObstacleOnTheMap nestedObstacle = null)

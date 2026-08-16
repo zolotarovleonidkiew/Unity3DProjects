@@ -950,7 +950,7 @@ MonoBehaviour:
   heroStartingWeapons:
   - {fileID: 11400000, guid: 56762a9967137404da2e38aa8860d3a2, type: 2}
   - {fileID: 11400000, guid: 580f862de1c77694bb6b293fd4a5f8c9, type: 2}
-  heroPrefab: {fileID: 919132149155446097, guid: da43e2ffc9120a74482fee3a9cf5bad7, type: 3}
+  heroPrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
   bulletPrefab: {fileID: 5924875826302583872, guid: a412393950bdb83428b02729608dd9b9, type: 3}
   HeroesCollectionGUI: {fileID: 1246712479}
   aliensGridPositions:
@@ -982,7 +982,8 @@ MonoBehaviour:
     NeedToCreateSmallBoxOnTheTop: 0
     Material: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
     RampsCollection: []
-    gameObject: {fileID: 0}
+    inetrnalGameObjectObstacleInstance: {fileID: 0}
+    buildingPrefab: {fileID: 919132149155446097, guid: bf60d292ef9f40c4292cab08510ca99e, type: 3}
   - BuildingGridPos: {x: 23, y: 23}
     BuildingWidth: 2
     BuildingLength: 2
@@ -990,7 +991,8 @@ MonoBehaviour:
     NeedToCreateSmallBoxOnTheTop: 1
     Material: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
     RampsCollection: []
-    gameObject: {fileID: 0}
+    inetrnalGameObjectObstacleInstance: {fileID: 0}
+    buildingPrefab: {fileID: 0}
   _RampsCollection:
   - i: 9
     j: 12

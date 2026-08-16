@@ -13,7 +13,7 @@ public class ObstacleFactory : IObstacleFactory
             if (obstacle.BuildingWidth <= 0 || obstacle.BuildingLength <= 0) continue;
 
             var obstacleGO = CreateSingleObstacle(obstacle, obstacleConfig, obstacleConfig.PlatformHeight, obstacleConfig.Parent);
-            obstacle.gameObject = obstacleGO;
+            obstacle.inetrnalGameObjectObstacleInstance = obstacleGO;
         }
     }
 
@@ -45,21 +45,40 @@ public class ObstacleFactory : IObstacleFactory
 
         Vector3 pos = new(x, y, z);
 
-        GameObject building = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        //building.name = $"Obstacle_{gridPos.x}_{gridPos.y}";
+        GameObject building;
 
-        if (obstacle.Name != "")
+        // If obstacle provides a prefab, instantiate it; otherwise create a cube primitive
+        if (obstacle.buildingPrefab != null)
         {
-            building.name = obstacle.Name;
+            //prefab oveerride position:
+            pos.y = baseY; // 👈 база (не половина своєї висоти, бо prefab вже має свою висоту) //baseY
+            pos.z += 1; // 👈 щоб prefab не перекривався з SM (бо SM має довжину 2)     // 2 ?
+            pos.x += 1.5f; // 👈 щоб prefab не перекривався з SM (бо SM має довжину 2)  // 2 ?
+
+            building = Object.Instantiate(obstacle.buildingPrefab, pos, Quaternion.identity, parent);
+
+            if (obstacle.Name is null || obstacle.Name == "")
+                building.name = $"Building-Obstacle_{gridPos.x}_{gridPos.y}";
+            else
+                building.name = obstacle.Name;
+
+            // keep prefab's original scale to avoid unexpected stretching
         }
+        else
+        {
+            building = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            if (obstacle.Name is null || obstacle.Name == "")
+            {
+                building.name = $"Raw-Obstacle_{gridPos.x}_{gridPos.y}";
+            }
+            building.transform.localScale = new Vector3(width * cellSize, height, length * cellSize);
+            building.transform.position = pos;
+            building.transform.SetParent(parent);
 
-        building.transform.localScale = new Vector3(width * cellSize, height, length * cellSize);
-        building.transform.position = pos;
-        building.transform.SetParent(parent);
-
-        var material = obstacle.Material;
-        if (material != null)
-            building.GetComponent<Renderer>().material = material;
+            var material = obstacle.Material;
+            if (material != null)
+                building.GetComponent<Renderer>().material = material;
+        }
 
         // міняємо парента смол-бокса на Obstacle
         if (obstacle.SmallBoxes != null)
@@ -70,7 +89,10 @@ public class ObstacleFactory : IObstacleFactory
             }
         }
 
-        var rb = building.AddComponent<Rigidbody>();
+        // Ensure Rigidbody exists but don't duplicate if prefab already has one
+        var rb = building.GetComponent<Rigidbody>();
+        if (rb == null)
+            rb = building.AddComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
 
