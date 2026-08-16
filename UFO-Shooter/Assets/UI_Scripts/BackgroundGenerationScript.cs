@@ -43,7 +43,7 @@ public class BackgroundGenerationScript : MonoBehaviour
     [SerializeField] private Button _btnGenerate;
     [SerializeField] private GameController gameController;
 
-    [Header("Obstacles (Buildings)")]
+    [Header("Obstacles (Buildings, hills, trees etc.)")]
     [SerializeField] private Material Level1_ObstacleMaterial;
     [SerializeField] private Material Level2_ObstacleMaterial;
     [SerializeField] private Material Level3_ObstacleMaterial;
