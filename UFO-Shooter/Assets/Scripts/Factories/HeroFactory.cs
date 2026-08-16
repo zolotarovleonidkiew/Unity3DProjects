@@ -10,7 +10,6 @@ public class HeroFactory : MonoBehaviour
     private Material _heroMaterial;
     private List<WeaponData> _startingWeapons;
     private GameObject _bulletPrefab;
-    private GameObject _heroPrefab;
     private BackgroundGenerationScript _ground;
     private GameObject _HeroesCollectionGUI;
     private Material _gridMaterialHighlited;
@@ -20,7 +19,6 @@ public class HeroFactory : MonoBehaviour
         Material heroMaterial,
         List<WeaponData> startingWeapons,
         GameObject bulletPrefab,
-        GameObject heroPrefab,
         BackgroundGenerationScript ground,
         GameObject heroesCollectionGUI,
         Material gridMaterialHighlited
@@ -30,13 +28,12 @@ public class HeroFactory : MonoBehaviour
         _heroMaterial = heroMaterial;
         _startingWeapons = startingWeapons;
         _bulletPrefab = bulletPrefab;
-        _heroPrefab = heroPrefab;
         _ground = ground;
         _HeroesCollectionGUI = heroesCollectionGUI;
         _gridMaterialHighlited = gridMaterialHighlited;
     }
 
-    public Hero CreateHero(GameObject targetCell, int index)
+    public Hero CreateHero(GameObject targetCell, int index, GameObject creaturePrefab = null)
     {
         if (targetCell == null) return null;
 
@@ -46,9 +43,9 @@ public class HeroFactory : MonoBehaviour
         GameObject player;
 
         // If ground provides a hero prefab - instantiate it, otherwise fall back to a primitive
-        if (_ground != null && _heroPrefab != null)
+        if (_ground != null && creaturePrefab != null)
         {
-            player = Object.Instantiate(_heroPrefab);
+            player = Object.Instantiate(creaturePrefab);
             player.name = $"Hero_{index}";
             // place prefab at desired position (keep prefab rotation)
             player.transform.position = new Vector3(pos.x, playerY, pos.z);

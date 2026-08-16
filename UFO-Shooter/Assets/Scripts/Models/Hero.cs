@@ -286,8 +286,21 @@ public class Hero : MonoBehaviour
 
                 if (alien != null)
                 {
-                    Debug.LogWarning("[SHOOTNG] Alien found :)");
-                    ShootAt(alien.transform);
+                    // prefer the child's TargetShootingPoint if present
+                    var targetPoint = alien.Find("TargetShootingPoint");
+                    if (targetPoint != null)
+                    {
+                        Debug.LogWarning("[SHOOTNG] Alien found, targeting TargetShootingPoint :)");
+                        ShootAt(targetPoint);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[SHOOTNG] TargetShootingPoint not found, targeting alien transform :)");
+                        ShootAt(alien);
+                    }
+
+                    //Shooting end hero's turn
+                    ActiveMovementRoundsAvailable = 0;
                 }
                 else
                 {

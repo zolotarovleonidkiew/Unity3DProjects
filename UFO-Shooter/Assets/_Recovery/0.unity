@@ -939,16 +939,12 @@ MonoBehaviour:
   heroesGridPositions:
   - GridPosition: {x: 7, y: 12}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 0}
   - GridPosition: {x: 3, y: 3}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 0}
   - GridPosition: {x: 6, y: 6}
-    GroundLayer: 1
-    CreaturePrefab: {fileID: 0}
+    GroundLayer: 2
   - GridPosition: {x: 2, y: 22}
-    GroundLayer: 1
-    CreaturePrefab: {fileID: 0}
+    GroundLayer: 2
   playerSize: 1
   heroBoxMaterial: {fileID: 2100000, guid: 5e964e2fefdd3e840adc9a3ddeb1d201, type: 2}
   heroStartingWeapons:
@@ -960,22 +956,16 @@ MonoBehaviour:
   aliensGridPositions:
   - GridPosition: {x: 20, y: 20}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 19, y: 20}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 18, y: 20}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 17, y: 20}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 16, y: 20}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 15, y: 20}
     GroundLayer: 1
-    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   alienSize: 1
   alienBoxMaterial: {fileID: 2100000, guid: 30e355cd8b555154cbdb9b9da78a3285, type: 2}
   AlienCollectionGUI: {fileID: 181500366}

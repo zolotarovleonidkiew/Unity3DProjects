@@ -10,4 +10,9 @@ public class UILiveCreatureDisposition
 {
     public Vector2Int GridPosition;
     public GroundHierarchyLevel GroundLayer;
+
+    /// <summary>
+    /// Heros and aliens prefabs here
+    /// </summary>
+    public GameObject CreaturePrefab = null;
 }
