@@ -993,6 +993,8 @@ MonoBehaviour:
     RampsCollection: []
     inetrnalGameObjectObstacleInstance: {fileID: 0}
     buildingPrefab: {fileID: 919132149155446097, guid: bf60d292ef9f40c4292cab08510ca99e, type: 3}
+    IsTree: 0
+    RotateY: 0
   - BuildingGridPos: {x: 23, y: 23}
     BuildingWidth: 2
     BuildingLength: 2
@@ -1002,6 +1004,19 @@ MonoBehaviour:
     RampsCollection: []
     inetrnalGameObjectObstacleInstance: {fileID: 0}
     buildingPrefab: {fileID: 0}
+    IsTree: 0
+    RotateY: 0
+  - BuildingGridPos: {x: 1, y: 1}
+    BuildingWidth: 1
+    BuildingLength: 1
+    BuildingHeight: 1
+    NeedToCreateSmallBoxOnTheTop: 0
+    Material: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
+    RampsCollection: []
+    inetrnalGameObjectObstacleInstance: {fileID: 0}
+    buildingPrefab: {fileID: 919132149155446097, guid: c4265488106cfd041b03bff4e0cb4119, type: 3}
+    IsTree: 1
+    RotateY: 50
   _RampsCollection:
   - i: 9
     j: 12

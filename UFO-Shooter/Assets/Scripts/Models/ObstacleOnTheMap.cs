@@ -43,8 +43,18 @@ public class ObstacleOnTheMap
     /// </summary>
     public GameObject buildingPrefab = null;
 
-    public ObstacleOnTheMap(string name, Vector2Int pos, int width, int length, float height, bool needSmallBoxOnTop, 
-        Material material, ObstacleOnTheMap nestedObstacle = null)
+    /// <summary>
+    /// Represents flag that this obstacle is a tree (for special handling in the code)
+    /// </summary>
+    public bool IsTree = false;
+
+    /// <summary>
+    /// if > 0 then rotating obstacle
+    /// </summary>
+    public float RotateY = 0;
+
+    public ObstacleOnTheMap(string name, Vector2Int pos, int width, int length, float height, bool needSmallBoxOnTop,
+        Material material, ObstacleOnTheMap nestedObstacle = null, bool isTree = false, float rotateY = 0)
     {
         Name = name;
         BuildingGridPos = pos;
@@ -54,6 +64,9 @@ public class ObstacleOnTheMap
         NeedToCreateSmallBoxOnTheTop = needSmallBoxOnTop;
         Material = material;
         NestedObstacle = nestedObstacle;
+        IsTree = isTree;
+        RotateY = rotateY;
+
         //obstacles only
         SmallBoxes = new List<GameObject>();
 

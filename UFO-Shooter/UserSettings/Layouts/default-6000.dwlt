@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 321}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 38
+  controlID: 39
   draggingID: 0
 --- !u!114 &6
 MonoBehaviour:
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 39
+  controlID: 40
   draggingID: 0
 --- !u!114 &7
 MonoBehaviour:
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 40
+  controlID: 41
   draggingID: 0
 --- !u!114 &8
 MonoBehaviour:
@@ -699,11 +699,16 @@ MonoBehaviour:
       m_LastClickedID:
         m_rawData: 0
       m_ExpandedIDs:
-      - m_rawData: 568105589213713624
-      - m_rawData: 568105589213727288
-      - m_rawData: 568105589213741840
-      - m_rawData: 568105589213756022
-      - m_rawData: 568105584918829942
+      - m_rawData: 568105589213435408
+      - m_rawData: 568105589213439586
+      - m_rawData: 568105589213690884
+      - m_rawData: 568105589213725600
+      - m_rawData: 568105589213756066
+      - m_rawData: 568105584918829064
+      - m_rawData: 568105584918829122
+      - m_rawData: 568105584918829158
+      - m_rawData: 568105584918829166
+      - m_rawData: 568105584918829196
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -721,7 +726,7 @@ MonoBehaviour:
         m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_TrimLeadingAndTrailingWhitespace: 0
-        m_ClientGUIView: {fileID: 0}
+        m_ClientGUIView: {fileID: 8}
       m_SearchString: 
     m_ExpandedScenes: []
     m_CurrenRootEntityId:
@@ -1271,9 +1276,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 16.652971, y: 0.28836432, z: -5.9848914}
+    m_Target: {x: 2.3413575, y: 0.98051673, z: 20.206575}
     speed: 2
-    m_Value: {x: 16.652971, y: 0.28836432, z: -5.9848914}
+    m_Value: {x: 2.3413575, y: 0.98051673, z: 20.206575}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1320,20 +1325,20 @@ MonoBehaviour:
     m_gridOpacity: 0.5
     m_NearestPlaneToHandleMode: 0
   m_Rotation:
-    m_Target: {x: -0.13060324, y: -0.7170771, z: 0.1395589, w: -0.6703631}
+    m_Target: {x: -0.014279369, y: 0.9834956, z: -0.090569854, w: -0.15654632}
     speed: 2
-    m_Value: {x: 0.13060322, y: 0.7170771, z: -0.13955888, w: 0.67036307}
+    m_Value: {x: -0.014278108, y: 0.9834085, z: -0.09056183, w: -0.15653247}
   m_Size:
-    m_Target: 32.138153
+    m_Target: 0.016037531
     speed: 2
-    m_Value: 32.138153
+    m_Value: 0.016037531
   m_Ortho:
     m_Target: 0
     speed: 2
     m_Value: 0
   m_CameraSettings:
-    m_Speed: 1
-    m_SpeedNormalized: 0.5
+    m_Speed: 1.6001996
+    m_SpeedNormalized: 0.7999998
     m_SpeedMin: 0.001
     m_SpeedMax: 2
     m_EasingEnabled: 1
@@ -1413,7 +1418,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefab/DUMMY_objects/D_Houses
+    - Assets/Prefab/DUMMY_objects/D_Humans
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1423,21 +1428,21 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Prefab/DUMMY_objects/D_Houses
+  - Assets/Prefab/DUMMY_objects/D_Humans
   m_LastFoldersGridSize: 16
   m_LastProjectPath: D:\Git\Unity3DProjects\UFO-Shooter
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
+    scrollPos: {x: 0, y: 176}
     m_SelectedIDs:
-    - m_rawData: 568105584918830106
+    - m_rawData: 568105584918829746
     m_LastClickedID:
-      m_rawData: 568105584918830106
+      m_rawData: 568105584918829746
     m_ExpandedIDs:
     - m_rawData: 0
-    - m_rawData: 568105584918829638
+    - m_rawData: 568105584918829696
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1471,7 +1476,7 @@ MonoBehaviour:
       m_rawData: 0
     m_ExpandedIDs:
     - m_rawData: 0
-    - m_rawData: 568105584918829638
+    - m_rawData: 568105584918829696
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1499,9 +1504,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: []
+    m_SelectedInstanceIDs:
+    - m_rawData: 568105584918829102
     m_LastClickedEntityId:
-      m_rawData: 0
+      m_rawData: 568105584918829102
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:
@@ -1617,7 +1623,7 @@ MonoBehaviour:
   m_ObjectsLockedBeforeSerialization: []
   m_EntityIdsLockedBeforeSerialization: []
   m_PreviewResizer:
-    m_CachedPref: 160
+    m_CachedPref: 151
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectEntityId:
