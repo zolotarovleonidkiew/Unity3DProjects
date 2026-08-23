@@ -999,14 +999,14 @@ MonoBehaviour:
   - BuildingGridPos: {x: 23, y: 23}
     BuildingWidth: 2
     BuildingLength: 2
-    BuildingHeight: 1
+    BuildingHeight: 6
     NeedToCreateSmallBoxOnTheTop: 1
     Material: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
     RampsCollection: []
     inetrnalGameObjectObstacleInstance: {fileID: 0}
-    buildingPrefab: {fileID: 0}
+    buildingPrefab: {fileID: 919132149155446097, guid: 23ab950ee2b7c5b41a60dfd1d362d0f1, type: 3}
     IsTree: 0
-    RotateY: 0
+    RotateY: 180
   - BuildingGridPos: {x: 1, y: 1}
     BuildingWidth: 1
     BuildingLength: 1

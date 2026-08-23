@@ -60,8 +60,8 @@ public class ObstacleFactory : IObstacleFactory
             {             
                 //building prefab override position:
                 pos.y = baseY; // 👈 база (не половина своєї висоти, бо prefab вже має свою висоту)
-                pos.z += 1; // 👈 щоб prefab не перекривався з SM (бо SM має довжину 2)
-                pos.x += 1.5f; // 👈 щоб prefab не перекривався з SM (бо SM має довжину 2)
+               // pos.z += 1; // 👈 щоб prefab не перекривався з SM (бо SM має довжину 2)
+               // pos.x += 1.5f; // 👈 щоб prefab не перекривався з SM (бо SM має довжину 2)
             }
 
             gameObstacle = Object.Instantiate(obstacle.buildingPrefab, pos, Quaternion.identity, parent);
