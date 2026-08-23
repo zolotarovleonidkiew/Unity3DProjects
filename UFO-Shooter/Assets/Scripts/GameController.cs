@@ -10,6 +10,7 @@ using static Constants;
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
+    [SerializeField]  private ObstructionManager obstructionManager;
 
     public int CurrentRound { get; private set; } = 1;
     public bool IsHeroTurn { get; private set; } = true;
@@ -29,6 +30,21 @@ public class GameController : MonoBehaviour
      : null;
 
     private bool AnyHeroWithActiveMovePoints => heroes.Any(h => h.CanMoving);
+
+    /// <summary>
+    /// Викликається із BackgroundGenerationScript для реєстраціі ObstructionManager
+    /// </summary>
+    public void RegisterObstructionManager(ObstructionManager om)
+    {
+        if (obstructionManager is null)
+        {
+            obstructionManager = om;
+        }
+        else
+        {
+            throw new System.Exception("[GameController] ObstructionManager вже зареєстрований!");
+        }
+    }
 
     /// <summary>
     /// Викликається із BackgroundGenerationScript для додавання героя
@@ -161,6 +177,8 @@ public class GameController : MonoBehaviour
         if (ActiveHero != null)
         {
             ActiveHero.ShowAvailableMoves();
+            // Сообщаем ObstructionManager, какой герой сейчас активен — чтобы управлять обструкциями
+            obstructionManager?.SetActiveHeroObstructionTarget(ActiveHero.transform);
         }
 
         Debug.Log($"[GameController] Починається хід героя. Раунд: {CurrentRound}. Активний: {ActiveHero?.name}");
@@ -236,6 +254,9 @@ public class GameController : MonoBehaviour
 
         //переводимо камер в режмс слідування при переключенні героя
         FindObjectOfType<CameraMovement>().FocusOnHero();
+
+        // Обновляем ObstructionManager при смене активного героя
+        obstructionManager?.SetActiveHeroObstructionTarget(ActiveHero?.transform);
 
         Debug.Log($"[GameController] Активний герой змінено на: {ActiveHero?.name} (index {activeHeroIndex})");
     }

@@ -14,7 +14,7 @@ public static class Constants
     public static class TacticMapConstructingConstants
     {
         /// <summary>
-        /// Висота 2ого поверху (відставь від 1ого до другого поверху)
+        /// Висота 2ого поверху (відстань від 1ого до другого поверху)
         /// </summary>
         public static float Floor2Height = 4.2f; //(0,2f - висота ліфта)
     }
@@ -44,13 +44,13 @@ public static class Constants
     /// </summary>
     public static class GUIConstants
     {
-        public static string OurTurn = "Наш хід...";
-        public static string AlienTurn = "Хід прибульців...";
+        public static string OurTurn = "<<< Наш хід >>>";
+        public static string AlienTurn = "<<< Хід прибульців >>>";
         public static int TurnMessageDisplayTimeInSecond = 3;
     }
 
     /// <summary>
-    /// INT-значення для кастоминихх layer's
+    /// INT-значення для кастомних layer's
     /// </summary>
     public static class Layers
     {

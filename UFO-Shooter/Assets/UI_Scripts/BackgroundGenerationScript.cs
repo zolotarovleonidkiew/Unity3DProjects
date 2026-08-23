@@ -65,6 +65,9 @@ public class BackgroundGenerationScript : MonoBehaviour
     [SerializeField] private List<Vector2Int> liftGridPosCollection = new List<Vector2Int> { new(2, 2) };
     [SerializeField] private Material liftMaterial;
 
+    [Header("Misc.")]
+    [SerializeField] private ObstructionManager obstructionManager;
+
     public GameObject parent;
     public Material gridBoxMaterial;
     public Material gridBoxMaterialHighlited;
@@ -193,6 +196,8 @@ public class BackgroundGenerationScript : MonoBehaviour
             if (al != null)
                 gameController.RegisterAlien(al);
         }
+
+        gameController.RegisterObstructionManager(obstructionManager);
 
         //game started:
 
