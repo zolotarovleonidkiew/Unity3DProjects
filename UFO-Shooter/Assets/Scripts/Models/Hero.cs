@@ -5,10 +5,18 @@ using UnityEngine;
 public class Hero : MonoBehaviour
 {
     public int CurrentFloor = 1;
-    public bool isAlive => Health > 0;
+    public bool isAlive => CurentHealth > 0;
     public bool CanMoving => ActiveMovementRoundsAvailable > 0;
 
-    [SerializeField] private int Health;
+    #region Hero data
+    public int MaxHealth;
+    public int CurentHealth;
+
+    public float Speed;
+    public float DetectionRange;
+    public float AttackCooldown = 1f;
+    #endregion
+
 
     /// <summary>
     /// Кількість раундів на пересування/дії
@@ -18,7 +26,7 @@ public class Hero : MonoBehaviour
     /// <summary>
     /// Відобразити доступні клітинки для пересування.
     /// </summary>
-    [SerializeField] private bool toShowAvailableMovementSquares;
+    [SerializeField] private bool ShowAvailableMovementSquares;
 
     /// <summary>
     /// Кількість smallBox, яку може пройти наш герой за 1 раунд
@@ -29,7 +37,7 @@ public class Hero : MonoBehaviour
     /// <summary>
     /// Лінка на BackgroundGenerationScript (в якому є smallCubes)
     /// </summary>
-    [SerializeField] private BackgroundGenerationScript groundObject;
+    [SerializeField] private BackgroundGenerationScript groundObject; //TO DO : убрать линк на скрипт
     
     /// <summary>
     /// Текстура доступного переміщення героя, для smallBox only
@@ -83,9 +91,9 @@ public class Hero : MonoBehaviour
     {
         groundObject = script;
     }
-    public void SettoShowAvailableMovementSquares()
+    public void SetFlag_ShowAvailableMovementSquares()
     {
-        toShowAvailableMovementSquares = true;
+        ShowAvailableMovementSquares = true;
     }
     public void SetHighlightMaterial(Material m)
     {
@@ -96,7 +104,6 @@ public class Hero : MonoBehaviour
     #region Events
     private void Start()
     {
-        Health = Constants.GlobalLivingConstans.MaxHealth;
         ActiveMovementRoundsAvailable = Constants.GlobalLivingConstans.MaxActionRounds;
 
         // Якщо SetStartingWeapons() вже викликано до Start(), то activeWeapon вже може бути встановлено.
@@ -106,7 +113,7 @@ public class Hero : MonoBehaviour
             activeWeapon = weapons[0];
         }
 
-        if (toShowAvailableMovementSquares && groundObject == null)
+        if (ShowAvailableMovementSquares && groundObject == null)
         {
             Debug.LogError("[Hero.cs] Cannot use 'toShowAvailableMovementSquares' flag due to groundObject is null!");
             return;
@@ -117,7 +124,7 @@ public class Hero : MonoBehaviour
             CacheGridRenderers();
             FindHeroGridCoords();
 
-            if (toShowAvailableMovementSquares)
+            if (ShowAvailableMovementSquares)
             {
                 HighlightAvailableMoves();
             }
@@ -238,7 +245,7 @@ public class Hero : MonoBehaviour
     {
         ActiveMovementRoundsAvailable = points;
 
-        if (toShowAvailableMovementSquares && groundObject != null)
+        if (ShowAvailableMovementSquares && groundObject != null)
         {
             HighlightAvailableMoves();
         }
@@ -441,7 +448,15 @@ public class Hero : MonoBehaviour
 
         GameObject bulletObj = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
         Bullet bullet = bulletObj.GetComponent<Bullet>();
+        if (bullet == null)
+        {
+            Debug.LogWarning("ShootAt: bulletPrefab does not contain a Bullet component");
+            Destroy(bulletObj);
+            return;
+        }
+
         bullet.speed = bulletSpeed;
+        bullet.SetShotData(gameObject, activeWeapon.data);
         bullet.SetTarget(target);
 
         //TODO : visuals
@@ -455,7 +470,7 @@ public class Hero : MonoBehaviour
         //    // TODO: тут можна запустити анімацію героя
         //}
 
-        Debug.Log($"[Hero] Стрельнув з {activeWeapon.data.weaponType} в {target.name}");
+        //Debug.Log($"[Hero] Стрельнув з {activeWeapon.data.weaponType} в {target.name}");
     }
     #endregion
 
@@ -464,7 +479,7 @@ public class Hero : MonoBehaviour
     /// </summary>
     public void ShowAvailableMoves()
     {
-        if (toShowAvailableMovementSquares && groundObject != null)
+        if (ShowAvailableMovementSquares && groundObject != null)
             HighlightAvailableMoves();
     }
 
@@ -481,7 +496,7 @@ public class Hero : MonoBehaviour
     /// </summary>
     public void SetShowAvailableMovementSquaresFlag(bool value)
     {
-        toShowAvailableMovementSquares = value;
+        ShowAvailableMovementSquares = value;
     }
 
     /// <summary>
@@ -499,5 +514,25 @@ public class Hero : MonoBehaviour
     {
         return GameController.Instance != null
             && GameController.Instance.ActiveHero == this;
+    }
+
+    /// <summary>
+    /// Apply damage to the hero, reducing current health. If health drops to 0 or below, the hero is considered dead.
+    /// </summary>
+    internal void TakeDamage(int damage)
+    {
+        if (damage > 0)
+        {
+            CurentHealth -= damage;
+            if (CurentHealth <= 0)
+            {
+                Die();
+            }
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log($"[Hero] {name} has died.");
     }
 }

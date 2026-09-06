@@ -6,13 +6,13 @@ using UnityEngine;
 /// </summary>
 public class HeroFactory : MonoBehaviour
 {
-    private float _playerSize;
-    private Material _heroMaterial;
+    private float _playerSize;    
     private List<WeaponData> _startingWeapons;
     private GameObject _bulletPrefab;
     private BackgroundGenerationScript _ground;
     private GameObject _HeroesCollectionGUI;
     private Material _gridMaterialHighlited;
+    private Material _heroMaterial;
 
     public HeroFactory(
         float playerSize,
@@ -24,11 +24,11 @@ public class HeroFactory : MonoBehaviour
         Material gridMaterialHighlited
     )
     {
+        _ground = ground;
         _playerSize = playerSize;
         _heroMaterial = heroMaterial;
         _startingWeapons = startingWeapons;
-        _bulletPrefab = bulletPrefab;
-        _ground = ground;
+        _bulletPrefab = bulletPrefab;        
         _HeroesCollectionGUI = heroesCollectionGUI;
         _gridMaterialHighlited = gridMaterialHighlited;
     }
@@ -40,6 +40,8 @@ public class HeroFactory : MonoBehaviour
         Vector3 pos = targetCell.transform.position;
         float playerY = _ground.bigHeight + _playerSize / 2f;
 
+        #region Hero Game Object
+        var heroData = new HeroActivist();
         GameObject player;
 
         // If ground provides a hero prefab - instantiate it, otherwise fall back to a primitive
@@ -58,18 +60,13 @@ public class HeroFactory : MonoBehaviour
             player.transform.position = new Vector3(pos.x, playerY, pos.z);
         }
         player.tag = Constants.TagConstans.HeroTag;
+        player.transform.SetParent(_HeroesCollectionGUI.transform);
+        #endregion
+
+        #region Physics Setup
 
         // Ensure Collider exists so the hero won't fall through the floor
-        var col = player.GetComponent<Collider>();
-        if (col == null)
-        {
-            // add a capsule collider as a sensible default
-            var capsule = player.AddComponent<CapsuleCollider>();
-            capsule.height = _playerSize;
-            capsule.radius = _playerSize / 2f;
-            capsule.center = new Vector3(0f, _playerSize / 2f, 0f);
-            col = capsule;
-        }
+        var col = player.GetComponent<Collider>(); //Capsule Collider in the Prefab
 
         // Make sure transforms are synced so bounds are correct, then align bottom of collider to desired ground Y
         Physics.SyncTransforms();
@@ -88,18 +85,26 @@ public class HeroFactory : MonoBehaviour
             rb.mass = 1f;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
+        #endregion
 
-        // Ensure Hero component exists (prefab might already have it)
-        var sh = player.GetComponent<Hero>();
-        if (sh == null)
+        #region Hero Settings
+        var hero = player.GetComponent<Hero>();
+        if (hero == null)
         {
-            sh = player.AddComponent<Hero>();
+            hero = player.AddComponent<Hero>();
+
+            //Setup parameters (hero data)
+            hero.MaxHealth = heroData.Health;
+            hero.CurentHealth = heroData.Health;
+            hero.Speed = heroData.Speed;
+            hero.DetectionRange = heroData.DetectionRange;
+
         }
-        sh.SettoShowAvailableMovementSquares();
-        sh.SetGroundObject(_ground);
-        sh.SetStartingWeapons(_startingWeapons);
-        sh.SetBulletPrefab(_bulletPrefab);
-        sh.SetHighlightMaterial(_gridMaterialHighlited);
+        hero.SetFlag_ShowAvailableMovementSquares();
+        hero.SetGroundObject(_ground);
+        hero.SetStartingWeapons(_startingWeapons);
+        hero.SetBulletPrefab(_bulletPrefab); //TO DO: depends from current weapon
+        hero.SetHighlightMaterial(_gridMaterialHighlited);
 
         // Prefer existing FirePoint (common in prefab). Fallback to ShootPoint or create a new ShootPoint if none exist.
         Transform shootPointT = player.transform.Find("FirePoint");
@@ -107,12 +112,17 @@ public class HeroFactory : MonoBehaviour
             shootPointT = player.transform.Find("ShootPoint");
 
         // do not create a ShootPoint here; prefer prefab's FirePoint or existing ShootPoint
-        sh.SetShootPoint(shootPointT);
+        hero.SetShootPoint(shootPointT);
 
-        var hms = player.AddComponent<HeroMovement>();
-        hms.SetMoveSpeed(3);
+        var heroMovement = player.AddComponent<HeroMovement>();
+        heroMovement.SetMoveSpeed(3);
+        #endregion
 
-        player.transform.SetParent(_HeroesCollectionGUI.transform);
-        return sh;
+        #region + компонет расчета урона
+        var damageCalculator = player.AddComponent<ShootingDamageCalculations>();
+        damageCalculator.isAlien = false;
+        damageCalculator.isHero = true;
+        #endregion
+        return hero;
     }
 }

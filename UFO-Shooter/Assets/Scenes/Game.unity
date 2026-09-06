@@ -939,17 +939,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heroesGridPositions:
   - GridPosition: {x: 7, y: 12}
+    alienTypesEnum: 0
     GroundLayer: 1
-    CreaturePrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
+    CreaturePrefab: {fileID: 3672549016830304368, guid: a088b474241bb424da58ed971d7bfb17, type: 3}
   - GridPosition: {x: 3, y: 3}
+    alienTypesEnum: 0
     GroundLayer: 1
-    CreaturePrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
+    CreaturePrefab: {fileID: 3672549016830304368, guid: a088b474241bb424da58ed971d7bfb17, type: 3}
   - GridPosition: {x: 6, y: 6}
+    alienTypesEnum: 0
     GroundLayer: 1
-    CreaturePrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
+    CreaturePrefab: {fileID: 3672549016830304368, guid: a088b474241bb424da58ed971d7bfb17, type: 3}
   - GridPosition: {x: 2, y: 22}
+    alienTypesEnum: 0
     GroundLayer: 1
-    CreaturePrefab: {fileID: 7087246438474678962, guid: 8c98db4adb39128489385c85e8f8961b, type: 3}
+    CreaturePrefab: {fileID: 3672549016830304368, guid: a088b474241bb424da58ed971d7bfb17, type: 3}
   playerSize: 1
   heroBoxMaterial: {fileID: 2100000, guid: 5e964e2fefdd3e840adc9a3ddeb1d201, type: 2}
   heroStartingWeapons:
@@ -959,65 +963,96 @@ MonoBehaviour:
   HeroesCollectionGUI: {fileID: 1246712479}
   aliensGridPositions:
   - GridPosition: {x: 20, y: 20}
+    alienTypesEnum: 0
     GroundLayer: 1
     CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 19, y: 20}
+    alienTypesEnum: 1
     GroundLayer: 1
     CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 18, y: 20}
+    alienTypesEnum: 2
     GroundLayer: 1
     CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 17, y: 20}
+    alienTypesEnum: 3
     GroundLayer: 1
     CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 16, y: 20}
+    alienTypesEnum: 4
     GroundLayer: 1
     CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   - GridPosition: {x: 15, y: 20}
+    alienTypesEnum: 5
     GroundLayer: 1
     CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  - GridPosition: {x: 14, y: 20}
+    alienTypesEnum: 6
+    GroundLayer: 1
+    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  - GridPosition: {x: 13, y: 20}
+    alienTypesEnum: 7
+    GroundLayer: 1
+    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_0_Greys_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_0_Light_Drone_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_1_Heavy_Drone_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_2_Assault_Trooper_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_2_Insect_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_3_Assault_Machine_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_3_Master_Mind_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_4_Insect_Matriarch_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   alienSize: 1
   alienBoxMaterial: {fileID: 2100000, guid: 30e355cd8b555154cbdb9b9da78a3285, type: 2}
   AlienCollectionGUI: {fileID: 181500366}
   _btnGenerate: {fileID: 798812049}
   gameController: {fileID: 165614359}
-  Level1_ObstacleMaterial: {fileID: 2100000, guid: 6886c69b5fdd0654da418ad566cfb6ec, type: 2}
-  Level2_ObstacleMaterial: {fileID: 2100000, guid: 9e03f3fc0b5bd3845b9b7ca3e128cd95, type: 2}
-  Level3_ObstacleMaterial: {fileID: 2100000, guid: da66822c962c5c74485290e774f6fd93, type: 2}
   _obstacles:
-  - BuildingGridPos: {x: 20, y: 10}
+  - Name: 
+    ObstacleGridPos: {x: 20, y: 10}
     BuildingWidth: 3
     BuildingLength: 2
     BuildingHeight: 2
     NeedToCreateSmallBoxOnTheTop: 0
     Material: {fileID: 2100000, guid: be900a8fd2f125b449f0513c1b908674, type: 2}
-    RampsCollection: []
-    inetrnalGameObjectObstacleInstance: {fileID: 0}
-    buildingPrefab: {fileID: 919132149155446097, guid: bf60d292ef9f40c4292cab08510ca99e, type: 3}
+    ObstaclePrefab: {fileID: 919132149155446097, guid: bf60d292ef9f40c4292cab08510ca99e, type: 3}
     IsTree: 0
     RotateY: 0
-  - BuildingGridPos: {x: 23, y: 23}
+    AllowedClimbing: 0
+    Climbing_from_coords: {x: 0, y: 0}
+    Climbing_to_coords: {x: 0, y: 0}
+    inetrnalGameObjectObstacleInstance: {fileID: 0}
+    RampsCollection: []
+  - Name: 
+    ObstacleGridPos: {x: 23, y: 23}
     BuildingWidth: 2
     BuildingLength: 2
     BuildingHeight: 6
     NeedToCreateSmallBoxOnTheTop: 1
     Material: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
-    RampsCollection: []
-    inetrnalGameObjectObstacleInstance: {fileID: 0}
-    buildingPrefab: {fileID: 919132149155446097, guid: 23ab950ee2b7c5b41a60dfd1d362d0f1, type: 3}
+    ObstaclePrefab: {fileID: 919132149155446097, guid: 23ab950ee2b7c5b41a60dfd1d362d0f1, type: 3}
     IsTree: 0
     RotateY: 180
-  - BuildingGridPos: {x: 1, y: 1}
+    AllowedClimbing: 1
+    Climbing_from_coords: {x: 21, y: 23}
+    Climbing_to_coords: {x: 23, y: 22}
+    inetrnalGameObjectObstacleInstance: {fileID: 0}
+    RampsCollection: []
+  - Name: 
+    ObstacleGridPos: {x: 1, y: 1}
     BuildingWidth: 1
     BuildingLength: 1
     BuildingHeight: 1
     NeedToCreateSmallBoxOnTheTop: 0
     Material: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
-    RampsCollection: []
-    inetrnalGameObjectObstacleInstance: {fileID: 0}
-    buildingPrefab: {fileID: 919132149155446097, guid: c4265488106cfd041b03bff4e0cb4119, type: 3}
+    ObstaclePrefab: {fileID: 919132149155446097, guid: c4265488106cfd041b03bff4e0cb4119, type: 3}
     IsTree: 1
     RotateY: 50
+    AllowedClimbing: 0
+    Climbing_from_coords: {x: 0, y: 0}
+    Climbing_to_coords: {x: 0, y: 0}
+    inetrnalGameObjectObstacleInstance: {fileID: 0}
+    RampsCollection: []
   _RampsCollection:
   - i: 9
     j: 12
@@ -1043,6 +1078,34 @@ MonoBehaviour:
     obstacleIndex: 4
     GO: {fileID: 0}
     parent: {fileID: 0}
+  Level1_ObstacleMaterial: {fileID: 2100000, guid: 6886c69b5fdd0654da418ad566cfb6ec, type: 2}
+  Level2_ObstacleMaterial: {fileID: 2100000, guid: 9e03f3fc0b5bd3845b9b7ca3e128cd95, type: 2}
+  Level3_ObstacleMaterial: {fileID: 2100000, guid: da66822c962c5c74485290e774f6fd93, type: 2}
+  _hills:
+  - Name: Hill1__w:7_l:9
+    Position2D: {x: 10, y: 10}
+    Width: 7
+    Length: 9
+    Height: 1
+    NeedToCreateSmallBoxOnTheTop: 1
+    Material: {fileID: 2100000, guid: 6886c69b5fdd0654da418ad566cfb6ec, type: 2}
+    NextHillIsNestedForCurrentHill: 1
+  - Name: Hill2__(level2)_w:2_l:3
+    Position2D: {x: 10, y: 10}
+    Width: 3
+    Length: 2
+    Height: 1
+    NeedToCreateSmallBoxOnTheTop: 1
+    Material: {fileID: 2100000, guid: 9e03f3fc0b5bd3845b9b7ca3e128cd95, type: 2}
+    NextHillIsNestedForCurrentHill: 1
+  - Name: Hill3__(level3)_w:1_l:1
+    Position2D: {x: 10, y: 10}
+    Width: 1
+    Length: 1
+    Height: 1
+    NeedToCreateSmallBoxOnTheTop: 1
+    Material: {fileID: 2100000, guid: da66822c962c5c74485290e774f6fd93, type: 2}
+    NextHillIsNestedForCurrentHill: 0
   width: 25
   length: 25
   groundBoxMaterial: {fileID: 2100000, guid: 78acda840464b5b4390a6b137a6834df, type: 2}

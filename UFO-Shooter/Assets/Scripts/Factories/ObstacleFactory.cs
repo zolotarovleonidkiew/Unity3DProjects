@@ -27,7 +27,7 @@ public class ObstacleFactory : IObstacleFactory
         var totalWidth = obstacleConfig.TotalWidth;
         var totalLength = obstacleConfig.TotalLength;
 
-        var gridPos = obstacle.BuildingGridPos;
+        var gridPos = obstacle.ObstacleGridPos;
         var width = obstacle.BuildingWidth;
         var length = obstacle.BuildingLength;
         var height = obstacle.BuildingHeight;
@@ -48,7 +48,7 @@ public class ObstacleFactory : IObstacleFactory
         GameObject gameObstacle;
 
         // If obstacle provides a prefab, instantiate it; otherwise create a cube primitive
-        if (obstacle.buildingPrefab != null)
+        if (obstacle.ObstaclePrefab != null)
         {
             var obstacleName = obstacle.Name;
 
@@ -64,7 +64,7 @@ public class ObstacleFactory : IObstacleFactory
                // pos.x += 1.5f; // 👈 щоб prefab не перекривався з SM (бо SM має довжину 2)
             }
 
-            gameObstacle = Object.Instantiate(obstacle.buildingPrefab, pos, Quaternion.identity, parent);
+            gameObstacle = Object.Instantiate(obstacle.ObstaclePrefab, pos, Quaternion.identity, parent);
 
             if (obstacle.IsTree)
             {
@@ -80,9 +80,13 @@ public class ObstacleFactory : IObstacleFactory
         else
         {
             gameObstacle = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            if (obstacle.Name is null || obstacle.Name == "")
+            if (string.IsNullOrEmpty(obstacle.Name))
             {
                 gameObstacle.name = $"Raw-Obstacle_{gridPos.x}_{gridPos.y}";
+            }
+            else
+            {
+                gameObstacle.name = obstacle.Name;
             }
             gameObstacle.transform.localScale = new Vector3(width * cellSize, height, length * cellSize);
             gameObstacle.transform.position = pos;
@@ -116,11 +120,11 @@ public class ObstacleFactory : IObstacleFactory
                 gameObstacle.transform);
         }
 
-        //поворот по Y
-        if (obstacle.RotateY != 0)
-        {
-            gameObstacle.transform.Rotate(0f, obstacle.RotateY, 0f);
-        }
+        ////поворот по Y
+        //if (obstacle.RotateY != 0)
+        //{
+        //    gameObstacle.transform.Rotate(0f, obstacle.RotateY, 0f);
+        //}
 
         return gameObstacle;
     }
@@ -136,6 +140,7 @@ public class ObstacleFactory : IObstacleFactory
         public int TotalWidth { get; set; }
         public int TotalLength { get; set; }
         public List<ObstacleOnTheMap> Obstacles { get; set; }
+        public List<HillOnTheMap> Hills { get; set; }        
         public Material Level1_ObstacleMaterial { get; set; }
         public Material Level2_ObstacleMaterial { get; set; }
         public Material Level3_ObstacleMaterial { get; set; }

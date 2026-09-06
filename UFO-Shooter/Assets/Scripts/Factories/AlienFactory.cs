@@ -3,25 +3,27 @@ using UnityEngine;
 public class AlienFactory
 {
     private float _alienSize;
-    private Material _alienMaterial;
+    private Material _alienDefaultMaterial = null;
     private BackgroundGenerationScript _ground;
     private GameObject AlienCollectionGUI;
 
-    public AlienFactory(float alienSize, Material alienMaterial, BackgroundGenerationScript ground, GameObject alienCollectionGUI)
+    public AlienFactory(float alienSize, Material alienDefaultMaterial, BackgroundGenerationScript ground, GameObject alienCollectionGUI)
     {
         _alienSize = alienSize;
-        _alienMaterial = alienMaterial;
+        _alienDefaultMaterial = alienDefaultMaterial;
         _ground = ground;
+
         AlienCollectionGUI = alienCollectionGUI;
     }
 
-    public Alien CreateAlien(GameObject targetCell, int index, GameObject creaturePrefab = null)
+    public Alien CreateAlien(AlienTypesEnum alienTypesEnum, GameObject targetCell, int index, GameObject creaturePrefab = null)
     {
         if (targetCell == null) return null;
 
         Vector3 pos = targetCell.transform.position;
         float alienY = _ground.bigHeight + _alienSize / 2f;
 
+        #region Alien Game Object
         GameObject alienGO;
 
         if (creaturePrefab != null)
@@ -35,12 +37,14 @@ public class AlienFactory
             alienGO.transform.localScale = new Vector3(_alienSize, _alienSize, _alienSize);            
         }
 
-        alienGO.transform.position = new Vector3(pos.x, alienY, pos.z);
-
         alienGO.name = $"Alien_{index}";
         alienGO.tag = Constants.TagConstans.AlienTag;
+        alienGO.transform.position = new Vector3(pos.x, alienY, pos.z);
+        alienGO.transform.SetParent(AlienCollectionGUI.transform);
 
-        //+
+        #endregion
+
+        #region Physics Setup        
         var col = alienGO.GetComponent<Collider>();
         if (col == null)
         {
@@ -69,13 +73,55 @@ public class AlienFactory
             rb.mass = 1f;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
-        //-
+        #endregion
 
-        var alien = alienGO.AddComponent<Alien>();
-        alien.SetGroundObject(_ground);
+        #region Alien Settings
+        var alienData = GetAlienDataByType(alienTypesEnum);
 
-        alienGO.transform.SetParent(AlienCollectionGUI.transform);
+        var alien = alienGO.AddComponent<Alien>();     
+        alien.MaxHealth = alienData.Health;
+        alien.CurentHealth = alienData.Health;
+        alien.Damage = alienData.Damage;
+        alien.Speed = alienData.Speed;
+        alien.DetectionRange = alienData.DetectionRange;
+        alien.AttackCooldown = alienData.AttackCooldown;
+        alien.CanFly = alienData.CanFly;
+        alien.isFlying = false; // Default value, can be changed later if needed
+        alien.FlyHeight = alienData.FlyHeight;
+        #endregion
+
+        #region + компонет расчета урона
+        var damageCalculator = alienGO.AddComponent<ShootingDamageCalculations>();
+        damageCalculator.isAlien = true;
+        damageCalculator.isHero = false;
+        #endregion
 
         return alien;
+    }
+
+    private AlienData GetAlienDataByType(AlienTypesEnum alienType)
+    {
+        switch (alienType)
+        {
+            case AlienTypesEnum.level_0_Greys:
+                return new AlienGreys();
+            case AlienTypesEnum.level_0_Light_Drone:
+                return new AlienLightDrone();
+            case AlienTypesEnum.level_1_Heavy_Drone:
+                return new AlienHeavyDrone();
+            case AlienTypesEnum.level_2_Assault_Trooper:
+                return new AlienAssaultTrooper ();
+            case AlienTypesEnum.level_2_Insect:
+                return new AlienInsect();
+            case AlienTypesEnum.level_3_Master_Mind:
+                return new AlienMasterMind ();
+            case AlienTypesEnum.level_3_Assault_Machine:
+                return new AlienAssaultMachine();
+            case AlienTypesEnum.level_4_Insect_Matriarch:
+                return new AlienInsectMatriarch();
+            default:
+                Debug.LogWarning($"Unknown alien type: {alienType}");
+                return null;
+        }
     }
 }

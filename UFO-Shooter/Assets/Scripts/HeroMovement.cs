@@ -26,7 +26,6 @@ public class HeroMovement : MonoBehaviour
     }
 
     private bool isMoving = false;
-    private Vector3 targetPos;
     private int targetI, targetJ;
 
     //Необхідна при заході на Преешкоду (схил та інші), бо
@@ -86,7 +85,7 @@ public class HeroMovement : MonoBehaviour
         // Optional: if your grid is at a fixed Y, force that Y:
         // worldPoint.y = clicked.transform.position.y;
 
-        Debug.Log($"Clicked: {clicked.name}, hit.point={worldPoint}, colliderCenter={hit.collider.bounds.center}");
+        //Debug.Log($"Clicked: {clicked.name}, hit.point={worldPoint}, colliderCenter={hit.collider.bounds.center}");
 
         if (!GridGenerator_05.GetGridCoordsFromWorld(worldPoint, out int i, out int j))
         {
@@ -103,12 +102,19 @@ public class HeroMovement : MonoBehaviour
         targetI = i;
         targetJ = j;
 
+        /*
+         Hills - это должны бытьобычные obstacle с топ-боксами сверху
+         */
+
         //перевірка що герой та ціль пеерміщення на одній ПРЕГРАДІ
         var heroCoords = hero.GetHeroCoords();
         // guard against missing ground or its grid generator to avoid NullReferenceException
-        var heroObstacle = ground?.GetGridGenerator?.GetObstacleAt(heroCoords.x, heroCoords.y);
+        
+        var heroObstacle = StaticTacticalData.GetObstacleAt(heroCoords.x, heroCoords.y);
+            //ground?.GetGridGenerator?.GetObstacleAt(heroCoords.x, heroCoords.y);
 
-        var obstacle = ground?.GetGridGenerator?.GetObstacleAt(i, j);
+        var obstacle = StaticTacticalData.GetObstacleAt(i, j); //НЕ ВСЕГДА СРАБАТЫВАЕТ !!! иногда null, напримр SB 9/16
+        //ground?.GetGridGenerator?.GetObstacleAt(i, j);
 
         if ((obstacle != null) && (heroObstacle != obstacle)) // це перешкода
         {

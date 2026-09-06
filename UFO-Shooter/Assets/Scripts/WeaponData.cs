@@ -5,7 +5,8 @@ public class WeaponData : ScriptableObject
 {
     public string weaponName;
     public WeaponType weaponType;
-    public int damage;
+    public int minDamage;
+    public int maxDamage;
     public float fireRate;
     public int magazineSize; // напр. 12
     public float reloadTime;

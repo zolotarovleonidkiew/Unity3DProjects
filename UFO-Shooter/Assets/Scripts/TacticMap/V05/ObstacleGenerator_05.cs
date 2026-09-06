@@ -12,7 +12,6 @@ public class ObstacleGenerator_05 : IObstacleGenerator
 
     private const float SmallBoxHeight = 0.5f;
     private const float LiftAboveGround = 0.3f;
-    private const float bigHeight = 0.5f;
 
     public void CreateObstaclesAndRamps(GridConfig config, GameObject layer, GameObject[,] layerSmallBoxes, ObstacleConfig obstacleConfig)
     {
@@ -48,8 +47,8 @@ public class ObstacleGenerator_05 : IObstacleGenerator
             if (obs.NestedObstacle != null)
                 FillMappingRecursive(obs.NestedObstacle);
 
-            int rawStartX = obs.BuildingGridPos.x;
-            int rawStartZ = obs.BuildingGridPos.y;
+            int rawStartX = obs.ObstacleGridPos.x;
+            int rawStartZ = obs.ObstacleGridPos.y;
             int startX = rawStartX - (coordsOneBased ? 1 : 0);
             int startZ = rawStartZ - (coordsOneBased ? 1 : 0);
 
@@ -103,6 +102,11 @@ public class ObstacleGenerator_05 : IObstacleGenerator
                         center.z + zTop
                     );
 
+                    /*
+                     Тут мы создаем TopSmallBox, если у ObstacleOnTheMap стоит флаг NeedToCreateSmallBoxOnTheTop = true.
+                     В проивном случае ничего не делаем, так как смол-боксы уже созданы ранее при создании платформы
+                     */
+
                     GameObject topBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     topBox.name = $"TopSmallBox_{i}_{j}";
                     topBox.transform.localScale = new Vector3(config.CellSize, SmallBoxHeight, config.CellSize);
@@ -114,42 +118,20 @@ public class ObstacleGenerator_05 : IObstacleGenerator
                     topRend.enabled = false; // hide visuals, keep collider
                     topBox.GetComponent<BoxCollider>().isTrigger = true;
 
+                    //Added component WayPoint (navigations)
+                    WayPoint wayPoint1 = topBox.gameObject.AddComponent<WayPoint>();
+                    wayPoint1.CreateDefaultWayPoint(i, j);
+
                     if (obstacle.SmallBoxes is null)
                     {
                         obstacle.SmallBoxes = new();
                     }
                     obstacle.SmallBoxes.Add(topBox);
 
+                    //заменяем смол бокс - так как координаты изменились по высоте
                     layerSmallBoxes[i, j] = topBox;
                     continue;
                 }
-
-                // 🔹 otherwise create regular small-box (or lift-cell)
-                float x = -bigWidth / 2f + (i + 0.5f) * config.CellSize;
-                float z = -bigLength / 2f + (j + 0.5f) * config.CellSize;
-                Vector3 smallPos = new Vector3(
-                    center.x + x,
-                    bigHeight + LiftAboveGround,
-                    center.z + z
-                );
-
-                if (config.LiftPositions != null && config.LiftPositions.Any(l => l.x == i && l.y == j))
-                {
-                    smallPos.y = bigHeight * 2 + LiftAboveGround;
-                }
-
-                GameObject sb = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                sb.name = $"SmallBox_{i}_{j}";
-                sb.transform.localScale = new Vector3(config.CellSize, SmallBoxHeight, config.CellSize);
-                sb.transform.position = smallPos;
-                sb.transform.SetParent(layer.transform);
-                sb.tag = Constants.TagConstans.FloorGridTag;
-                var smallRend = sb.GetComponent<Renderer>();
-                smallRend.material = config.GridMaterial;
-                smallRend.enabled = false; // hide visuals, keep collider
-                sb.GetComponent<BoxCollider>().isTrigger = true;
-
-                layerSmallBoxes[i, j] = sb;
             }
         }
     }
@@ -271,6 +253,10 @@ public class ObstacleGenerator_05 : IObstacleGenerator
         mc.convex = false;
         mc.isTrigger = false;
 
+        //test
+        var rb = ramp.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+
         // rotate according to direction
         switch (direction)
         {
@@ -287,6 +273,10 @@ public class ObstacleGenerator_05 : IObstacleGenerator
         topBox.transform.localScale = new Vector3(config.CellSize, SmallBoxHeight, config.CellSize);
         topBox.tag = Constants.TagConstans.FloorGridTag;
         topBox.GetComponent<Renderer>().material = config.GridMaterial;
+
+        //Added component WayPoint (navigations)
+        WayPoint wayPoint = topBox.gameObject.AddComponent<WayPoint>();
+        wayPoint.CreateDefaultWayPoint(i, j);
 
         float forwardOffset = halfL;
         float verticalOffset = h + (SmallBoxHeight / 2f);
@@ -328,8 +318,8 @@ public class ObstacleGenerator_05 : IObstacleGenerator
 
     private ObstacleOnTheMap GetObstacleAtRecursive(ObstacleOnTheMap obs, int i, int j)
     {
-        int startX = obs.BuildingGridPos.x;
-        int startZ = obs.BuildingGridPos.y;
+        int startX = obs.ObstacleGridPos.x;
+        int startZ = obs.ObstacleGridPos.y;
 
         int endX = startX + obs.BuildingWidth - 1;
         int endZ = startZ + obs.BuildingLength - 1;
@@ -387,13 +377,45 @@ public class ObstacleGenerator_05 : IObstacleGenerator
 
     private void GenerateHillsAndClimbs(ObstacleConfig obstacleConfig)
     {
-        var hill_level1 = new ObstacleOnTheMap("Obstacle__w:7_l:9", new Vector2Int(10, 10), 7, 9, 1f, needSmallBoxOnTop: true, obstacleConfig.Level1_ObstacleMaterial);
-        var hill_level2 = new ObstacleOnTheMap("Obstacle_(level2)_w:2_l:3", new Vector2Int(10, 10), 3, 2, 1f, needSmallBoxOnTop: true, obstacleConfig.Level2_ObstacleMaterial);
-        var hill_level3 = new ObstacleOnTheMap("Obstacle_(level3)_w:1_l:1", new Vector2Int(10, 10), 1, 1, 1f, needSmallBoxOnTop: true, obstacleConfig.Level3_ObstacleMaterial);
-        hill_level2.NestedObstacle = hill_level3;
-        hill_level1.NestedObstacle = hill_level2;
+        //OLD : moved to inspector as HillOnTheMap
+        //var hill_level1 = new ObstacleOnTheMap("Obstacle__w:7_l:9", new Vector2Int(10, 10), 7, 9, 1f, needSmallBoxOnTop: true, obstacleConfig.Level1_ObstacleMaterial);
+        //var hill_level2 = new ObstacleOnTheMap("Obstacle_(level2)_w:2_l:3", new Vector2Int(10, 10), 3, 2, 1f, needSmallBoxOnTop: true, obstacleConfig.Level2_ObstacleMaterial);
+        //var hill_level3 = new ObstacleOnTheMap("Obstacle_(level3)_w:1_l:1", new Vector2Int(10, 10), 1, 1, 1f, needSmallBoxOnTop: true, obstacleConfig.Level3_ObstacleMaterial);
+        //hill_level2.NestedObstacle = hill_level3;
+        //hill_level1.NestedObstacle = hill_level2;
 
-        obstacleConfig.Obstacles.Add(hill_level1);
+        //obstacleConfig.Obstacles.Add(hill_level1);
+        var newHills = new List<ObstacleOnTheMap>();
+
+        foreach (var hill in obstacleConfig.Hills)
+        {
+            if (hill != null)
+            {
+                var o = new ObstacleOnTheMap(
+                        hill.Name,
+                        hill.Position2D,
+                        hill.Width,
+                        hill.Length,
+                        hill.Height,
+                        hill.NeedToCreateSmallBoxOnTheTop,
+                        hill.Material);
+
+                newHills.Add(o);
+
+                //set nested hills (if required)
+                var previousHillNestedRequired = newHills.Count() > 1 
+                    ? obstacleConfig.Hills.ToArray()[newHills.Count() - 2].NextHillIsNestedForCurrentHill 
+                    : false;
+
+                if (newHills.Count() > 1 && previousHillNestedRequired)
+                {
+                    newHills[newHills.Count - 2].NestedObstacle = newHills[newHills.Count - 1];
+                }
+            }
+        }
+
+        //ADDING TO COMMON OBSTACLES LIST
+        obstacleConfig.Obstacles.AddRange(newHills);
     }
 
     private bool DetectCoordsOneBased(GridConfig gridConfig)
@@ -403,7 +425,7 @@ public class ObstacleGenerator_05 : IObstacleGenerator
         foreach (var o in gridConfig.Obstacles ?? new List<ObstacleOnTheMap>())
         {
             if (o == null) continue;
-            if (o.BuildingGridPos.x == 0 || o.BuildingGridPos.y == 0) return false;
+            if (o.ObstacleGridPos.x == 0 || o.ObstacleGridPos.y == 0) return false;
         }
         foreach (var r in gridConfig.Ramps ?? new List<Ramp>())
         {

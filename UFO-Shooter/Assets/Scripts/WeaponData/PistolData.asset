@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c356e56c447c1dc44a1a945b58df97f7, type: 3}
   m_Name: PistolData
   m_EditorClassIdentifier: 
-  weaponName: 
+  weaponName: Glock-25
   weaponType: 0
-  damage: 2
+  minDamage: 1
+  maxDamage: 3
   fireRate: 0
   magazineSize: 12
   reloadTime: 0

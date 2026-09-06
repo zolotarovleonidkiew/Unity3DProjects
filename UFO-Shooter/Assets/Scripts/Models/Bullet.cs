@@ -1,9 +1,36 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     public float speed = 10f; // швидкість кулі
+    public bool IsHeroShooter { get; private set; }
+    public bool IsAlienShooter { get; private set; }
+    public string ShooterName { get; private set; }
+    public string WeaponName { get; private set; }
+    public WeaponData WeaponData { get; private set; }
+
     private Transform target;
+    private bool hasHit;
+
+    public void SetShotData(GameObject shooter, WeaponData weaponData)
+    {
+        WeaponData = weaponData;
+        IsHeroShooter = shooter != null && shooter.GetComponent<Hero>() != null;
+        IsAlienShooter = shooter != null && shooter.GetComponent<Alien>() != null;
+        ShooterName = shooter != null ? shooter.name : "Unknown";
+        WeaponName = weaponData != null && !string.IsNullOrWhiteSpace(weaponData.weaponName)
+            ? weaponData.weaponName
+            : weaponData != null ? weaponData.weaponType.ToString() : "Unknown";
+    }
+
+    public bool TryRegisterHit()
+    {
+        if (hasHit) return false;
+
+        hasHit = true;
+        return true;
+    }
 
     public void SetTarget(Transform targetTransform)
     {
@@ -11,6 +38,16 @@ public class Bullet : MonoBehaviour
         // Розвертаємо пулю у напрямку цілі
         transform.LookAt(target.position);
     }
+    
+    void Start()
+    {        
+        if (GetComponent<Rigidbody>() == null)
+        {
+            var rb = transform.AddComponent<Rigidbody>();
+            rb.isKinematic = true;
+        }
+    }
+
 
     void Update()
     {

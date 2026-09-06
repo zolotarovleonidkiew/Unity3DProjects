@@ -95,6 +95,10 @@ public class GridGenerator_05 : IGridGenerator
                 rend.enabled = false;
                 smallBox.GetComponent<BoxCollider>().isTrigger = true;
 
+                //Added component WayPoint (navigations)
+                WayPoint wayPoint1 = smallBox.gameObject.AddComponent<WayPoint>();
+                wayPoint1.CreateDefaultWayPoint(i, j);
+
                 smallCubes[i, j] = smallBox;
             }
         }

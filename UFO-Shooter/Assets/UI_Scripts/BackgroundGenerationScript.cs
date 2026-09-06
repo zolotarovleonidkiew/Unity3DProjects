@@ -10,7 +10,7 @@ using static ObstacleFactory;
 
 public class BackgroundGenerationScript : MonoBehaviour
 {
-    [Header("Hero Settings")]
+    [Header("=== Hero Settings ===")]
     public List<UILiveCreatureDisposition> heroesGridPositions = new()
     {
         new UILiveCreatureDisposition { GridPosition = new Vector2Int(0, 0), GroundLayer = GroundHierarchyLevel.Level_1 },
@@ -21,34 +21,50 @@ public class BackgroundGenerationScript : MonoBehaviour
     public float playerSize = 1f;
     public Material heroBoxMaterial;
     [SerializeField] private List<WeaponData> heroStartingWeapons;
-    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject bulletPrefab; //TO DO: make it a list of prefabs for different weapons
     [SerializeField] private GameObject HeroesCollectionGUI;
+    [Header("=== Hero Settings END===")]
 
-    [Header("Alien Settings")]
+    [Header("=== Alien Settings ===")]
     public List<UILiveCreatureDisposition> aliensGridPositions = new()
     {
-        new UILiveCreatureDisposition { GridPosition = new Vector2Int(2, 2), GroundLayer = GroundHierarchyLevel.Level_1 },
-        new UILiveCreatureDisposition { GridPosition = new Vector2Int(3, 2), GroundLayer = GroundHierarchyLevel.Level_1 },
-        new UILiveCreatureDisposition { GridPosition = new Vector2Int(2, 3), GroundLayer = GroundHierarchyLevel.Level_1 },
-        new UILiveCreatureDisposition { GridPosition = new Vector2Int(3, 3), GroundLayer = GroundHierarchyLevel.Level_1 },
-        new UILiveCreatureDisposition { GridPosition = new Vector2Int(4, 2), GroundLayer = GroundHierarchyLevel.Level_1 },
-        new UILiveCreatureDisposition { GridPosition = new Vector2Int(4, 3), GroundLayer = GroundHierarchyLevel.Level_1 }
+        new UILiveCreatureDisposition { GridPosition = new Vector2Int(2, 2), alienTypesEnum = AlienTypesEnum.level_0_Greys,             GroundLayer = GroundHierarchyLevel.Level_1 },
+        new UILiveCreatureDisposition { GridPosition = new Vector2Int(3, 2), alienTypesEnum = AlienTypesEnum.level_0_Light_Drone,       GroundLayer = GroundHierarchyLevel.Level_1 },
+        new UILiveCreatureDisposition { GridPosition = new Vector2Int(2, 3), alienTypesEnum = AlienTypesEnum.level_1_Heavy_Drone,       GroundLayer = GroundHierarchyLevel.Level_1 },
+        new UILiveCreatureDisposition { GridPosition = new Vector2Int(3, 3), alienTypesEnum = AlienTypesEnum.level_2_Assault_Trooper,   GroundLayer = GroundHierarchyLevel.Level_1 },
+        new UILiveCreatureDisposition { GridPosition = new Vector2Int(4, 2), alienTypesEnum = AlienTypesEnum.level_2_Insect,            GroundLayer = GroundHierarchyLevel.Level_1 },
+        new UILiveCreatureDisposition { GridPosition = new Vector2Int(4, 3), alienTypesEnum = AlienTypesEnum.level_3_Assault_Machine,   GroundLayer = GroundHierarchyLevel.Level_1 },
+        new UILiveCreatureDisposition { GridPosition = new Vector2Int(5, 3), alienTypesEnum = AlienTypesEnum.level_3_Master_Mind,       GroundLayer = GroundHierarchyLevel.Level_1 },
+        new UILiveCreatureDisposition { GridPosition = new Vector2Int(3, 3), alienTypesEnum = AlienTypesEnum.level_4_Insect_Matriarch,  GroundLayer = GroundHierarchyLevel.Level_1 }
     };
+
+    [SerializeField] private GameObject level_0_Greys_Prefab;
+    [SerializeField] private GameObject level_0_Light_Drone_Prefab;
+    [SerializeField] private GameObject level_1_Heavy_Drone_Prefab;
+    [SerializeField] private GameObject level_2_Assault_Trooper_Prefab;
+    [SerializeField] private GameObject level_2_Insect_Prefab;
+    [SerializeField] private GameObject level_3_Assault_Machine_Prefab;
+    [SerializeField] private GameObject level_3_Master_Mind_Prefab;
+    [SerializeField] private GameObject level_4_Insect_Matriarch_Prefab;
 
     public float alienSize = 1f;
     public Material alienBoxMaterial;
     [SerializeField] private GameObject AlienCollectionGUI;
+    [Header("=== Alien Settings END===")]
 
     [Header("Misc. Settings")]
     [SerializeField] private Button _btnGenerate;
     [SerializeField] private GameController gameController;
 
-    [Header("Obstacles (Buildings, hills, trees etc.)")]
+    [Header("Obstacles => Buildings, trees")]
+    [SerializeField] private List<ObstacleOnTheMap> _obstacles;    
+    [SerializeField] private List<Ramp> _RampsCollection;
     [SerializeField] private Material Level1_ObstacleMaterial;
     [SerializeField] private Material Level2_ObstacleMaterial;
     [SerializeField] private Material Level3_ObstacleMaterial;
-    [SerializeField] private List<ObstacleOnTheMap> _obstacles;    
-    [SerializeField] private List<Ramp> _RampsCollection;
+
+    [Header("Obstacles => Hills (calls 'RampsCollection')")]
+    [SerializeField] private List<HillOnTheMap> _hills;
 
     [Header("Grid (counts)")]
     public int width = 25;
@@ -98,8 +114,9 @@ public class BackgroundGenerationScript : MonoBehaviour
         IGridGenerator gridGenerator = new GridGenerator_05();
         IObstacleGenerator obstacleGenerator = new ObstacleGenerator_05();
         ILiftGenerator liftGenerator = new LiftGenerator_05();
-
         ILandCreator landReactor = new LandCreator(gridGenerator, obstacleGenerator, liftGenerator);
+
+        #region Main Land
 
         var landCreatorConfig = new LandCreatorConfig {
             GridConfig = new GridConfig
@@ -120,6 +137,7 @@ public class BackgroundGenerationScript : MonoBehaviour
             {
                 CellSize = cellSize,
                 Obstacles = _obstacles,
+                Hills = _hills,
                 Parent = parent.transform,
                 PlatformHeight = bigHeight,
                 TotalLength = length,
@@ -133,8 +151,10 @@ public class BackgroundGenerationScript : MonoBehaviour
             HeroesCollectionGUI = HeroesCollectionGUI
         };
 
-        var platformLayersCollection = landReactor.CreateLand(landCreatorConfig);
+        IGroundHierarchy platformLayersCollection = landReactor.CreateLand(landCreatorConfig);
 
+        #endregion
+        
         //live enities:
         var heroFactory = new HeroFactory(playerSize, heroBoxMaterial, heroStartingWeapons, bulletPrefab, this, HeroesCollectionGUI, gridBoxMaterialHighlited);
         var alienFactory = new AlienFactory(alienSize, alienBoxMaterial, this, AlienCollectionGUI);
@@ -192,13 +212,17 @@ public class BackgroundGenerationScript : MonoBehaviour
                 }
             }
 
-            Alien al = alienFactory.CreateAlien(targetCell, a, alienPosition.CreaturePrefab);
+            //choose required alien prefab based on alienTypesEnum +
+            GameObject alienPrefab = GetAlienPrefabByType(alienPosition.alienTypesEnum);
+
+            Alien al = alienFactory.CreateAlien(alienPosition.alienTypesEnum, targetCell, a, alienPrefab);
             if (al != null)
                 gameController.RegisterAlien(al);
         }
 
         gameController.RegisterObstructionManager(obstructionManager);
 
+        ValidateSmallBoxes(platformLayersCollection);
         //game started:
 
         //запуск першого ходу першого героя
@@ -214,6 +238,12 @@ public class BackgroundGenerationScript : MonoBehaviour
 
         //закрити вікно генерації обїєкту
         CloseScriptWindow();
+
+        //Test static data:
+        StaticTacticalData.GroundHierarchy = platformLayersCollection;
+        StaticTacticalData.Obstacles = _obstacles;
+
+
     }
 
     private void ShowGUI()
@@ -223,5 +253,48 @@ public class BackgroundGenerationScript : MonoBehaviour
     private void CloseScriptWindow()
     {
         canvas.enabled = false;
+    }
+
+    private GameObject GetAlienPrefabByType(AlienTypesEnum alienTypesEnum)
+    {
+        GameObject prefab = null;
+        switch (alienTypesEnum)
+        {
+            case AlienTypesEnum.level_0_Greys:
+                prefab = level_0_Greys_Prefab;
+                break;
+            case AlienTypesEnum.level_0_Light_Drone:
+                prefab = level_0_Light_Drone_Prefab;
+                break;
+            case AlienTypesEnum.level_1_Heavy_Drone:
+                prefab = level_1_Heavy_Drone_Prefab;
+                break;
+            case AlienTypesEnum.level_2_Assault_Trooper:
+                prefab = level_2_Assault_Trooper_Prefab;
+                break;
+            case AlienTypesEnum.level_2_Insect:
+                prefab = level_2_Insect_Prefab;
+                break;
+            case AlienTypesEnum.level_3_Assault_Machine:
+                prefab = level_3_Assault_Machine_Prefab;
+                break;
+            case AlienTypesEnum.level_3_Master_Mind:
+                prefab = level_3_Master_Mind_Prefab;
+                break;
+            case AlienTypesEnum.level_4_Insect_Matriarch:
+                prefab = level_4_Insect_Matriarch_Prefab;
+                break;
+        }
+
+        return prefab;
+    }
+
+    /// <summary>
+    /// Validates and modifies WayPoint component in SB.
+    /// </summary>
+    private void ValidateSmallBoxes(IGroundHierarchy platformLayersCollection)
+    {
+        var v  = new SmallBoxesValidation();
+        v.ValidateAndFix(platformLayersCollection);
     }
 }

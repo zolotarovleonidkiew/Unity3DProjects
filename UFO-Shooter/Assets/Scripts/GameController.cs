@@ -181,7 +181,7 @@ public class GameController : MonoBehaviour
             obstructionManager?.SetActiveHeroObstructionTarget(ActiveHero.transform);
         }
 
-        Debug.Log($"[GameController] Починається хід героя. Раунд: {CurrentRound}. Активний: {ActiveHero?.name}");
+       // Debug.Log($"[GameController] Починається хід героя. Раунд: {CurrentRound}. Активний: {ActiveHero?.name}");
     }
 
     private void EndHeroTurn()
@@ -191,7 +191,7 @@ public class GameController : MonoBehaviour
         //ActiveHero?.SetActiveFlag(false); //to do
 
         IsHeroTurn = false;
-        Debug.Log("[GameController] Хід героя завершено. Тепер ходять прибульці...");
+        //Debug.Log("[GameController] Хід героя завершено. Тепер ходять прибульці...");
     }
 
     private void EndAlienTurn()

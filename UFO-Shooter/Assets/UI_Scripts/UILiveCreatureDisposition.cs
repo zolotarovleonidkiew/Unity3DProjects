@@ -9,10 +9,11 @@ using UnityEngine;
 public class UILiveCreatureDisposition
 {
     public Vector2Int GridPosition;
+    public AlienTypesEnum alienTypesEnum; 
     public GroundHierarchyLevel GroundLayer;
 
     /// <summary>
-    /// Heros and aliens prefabs here
+    /// Heros and aliens prefabs here - should be removed
     /// </summary>
     public GameObject CreaturePrefab = null;
 }
