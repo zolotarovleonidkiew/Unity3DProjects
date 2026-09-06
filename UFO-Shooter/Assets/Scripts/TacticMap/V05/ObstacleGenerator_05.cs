@@ -9,6 +9,7 @@ public class ObstacleGenerator_05 : IObstacleGenerator
     public const string Algorith_version = "0.5";
 
     public IObstacleFactory obstacleFactory = new ObstacleFactory();
+    private readonly SmallBoxCreatingService _smallBoxCreatingService = new SmallBoxCreatingService();
 
     private const float SmallBoxHeight = 0.5f;
     private const float LiftAboveGround = 0.3f;
@@ -17,9 +18,10 @@ public class ObstacleGenerator_05 : IObstacleGenerator
     {
         GenerateHillsAndClimbs(obstacleConfig);
 
-        CreateObstacles(config, layer, layerSmallBoxes);
+        var cellObstacles = CreateObstacles(config, layer, layerSmallBoxes);
 
         obstacleFactory.CreateObstacle(obstacleConfig);
+        CreateTopBoxes(config, layer, layerSmallBoxes, cellObstacles);
 
         CreateRamps(config, layer, layerSmallBoxes);
         var flatternObstacles = config.Obstacles.FlatternNestedObstacles();
@@ -30,7 +32,7 @@ public class ObstacleGenerator_05 : IObstacleGenerator
         }
     }
 
-    private void CreateObstacles(GridConfig config, GameObject layer, GameObject[,] layerSmallBoxes)
+    private ObstacleOnTheMap[,] CreateObstacles(GridConfig config, GameObject layer, GameObject[,] layerSmallBoxes)
     {
         bool coordsOneBased = DetectCoordsOneBased(config);
         if (coordsOneBased)
@@ -89,49 +91,65 @@ public class ObstacleGenerator_05 : IObstacleGenerator
                         layerSmallBoxes[i, j] = null;
                     }
 
-                    // optionally create top-box on obstacle at the same grid cell center
-                    if (!obstacle.NeedToCreateSmallBoxOnTheTop)
-                        continue;
+                }
+            }
+        }
 
-                    float xTop = -bigWidth / 2f + (i + 0.5f) * config.CellSize;
-                    float zTop = -bigLength / 2f + (j + 0.5f) * config.CellSize;
+        return cellObstacle;
+    }
 
-                    Vector3 topPos = new Vector3(
-                        center.x + xTop,
-                        GetTotalHeight(config.Obstacles, obstacle) + LiftAboveGround + SmallBoxHeight,
-                        center.z + zTop
-                    );
+    private void CreateTopBoxes(
+        GridConfig config,
+        GameObject layer,
+        GameObject[,] layerSmallBoxes,
+        ObstacleOnTheMap[,] cellObstacles)
+    {
+        float bigWidth = config.Width * config.CellSize;
+        float bigLength = config.Length * config.CellSize;
+        Vector3 center = layer.transform.position;
 
-                    /*
-                     Тут мы создаем TopSmallBox, если у ObstacleOnTheMap стоит флаг NeedToCreateSmallBoxOnTheTop = true.
-                     В проивном случае ничего не делаем, так как смол-боксы уже созданы ранее при создании платформы
-                     */
+        for (int i = 0; i < config.Width; i++)
+        {
+            for (int j = 0; j < config.Length; j++)
+            {
+                var obstacle = cellObstacles[i, j];
+                if (obstacle == null || !obstacle.NeedToCreateSmallBoxOnTheTop)
+                    continue;
 
-                    GameObject topBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    topBox.name = $"TopSmallBox_{i}_{j}";
-                    topBox.transform.localScale = new Vector3(config.CellSize, SmallBoxHeight, config.CellSize);
-                    topBox.transform.position = topPos;
-                    topBox.transform.SetParent(layer.transform);
-                    topBox.tag = Constants.TagConstans.FloorGridTag;
-                    var topRend = topBox.GetComponent<Renderer>();
-                    topRend.material = config.GroundMaterial;
-                    topRend.enabled = false; // hide visuals, keep collider
-                    topBox.GetComponent<BoxCollider>().isTrigger = true;
-
-                    //Added component WayPoint (navigations)
-                    WayPoint wayPoint1 = topBox.gameObject.AddComponent<WayPoint>();
-                    wayPoint1.CreateDefaultWayPoint(i, j);
-
-                    if (obstacle.SmallBoxes is null)
-                    {
-                        obstacle.SmallBoxes = new();
-                    }
-                    obstacle.SmallBoxes.Add(topBox);
-
-                    //заменяем смол бокс - так как координаты изменились по высоте
-                    layerSmallBoxes[i, j] = topBox;
+                var obstacleGameObject = obstacle.inetrnalGameObjectObstacleInstance;
+                if (obstacleGameObject == null)
+                {
+                    Debug.LogWarning($"[ObstacleGenerator_05] Cannot create top box: obstacle instance is missing for cell {i},{j}");
                     continue;
                 }
+
+                float xTop = -bigWidth / 2f + (i + 0.5f) * config.CellSize;
+                float zTop = -bigLength / 2f + (j + 0.5f) * config.CellSize;
+
+                Vector3 topWorldPosition = new Vector3(
+                    center.x + xTop,
+                    GetTotalHeight(config.Obstacles, obstacle) + LiftAboveGround + SmallBoxHeight,
+                    center.z + zTop
+                );
+                Vector3 topLocalPosition = obstacleGameObject.transform.InverseTransformPoint(topWorldPosition);
+
+                GameObject topBox = _smallBoxCreatingService.CreateSmallBox(
+                    $"TopSmallBox_{i}_{j}",
+                    topLocalPosition,
+                    new Vector3(config.CellSize, SmallBoxHeight, config.CellSize),
+                    obstacleGameObject.transform,
+                    config.GroundMaterial,
+                    i,
+                    j,
+                    useLocalPosition: true);
+
+                if (obstacle.SmallBoxes is null)
+                {
+                    obstacle.SmallBoxes = new();
+                }
+                obstacle.SmallBoxes.Add(topBox);
+
+                layerSmallBoxes[i, j] = topBox;
             }
         }
     }
@@ -267,23 +285,18 @@ public class ObstacleGenerator_05 : IObstacleGenerator
         }
 
         // top small-box on ramp
-        GameObject topBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        topBox.name = $"RampTopBox_{i}_{j}";
-        topBox.transform.SetParent(ramp.transform, false);
-        topBox.transform.localScale = new Vector3(config.CellSize, SmallBoxHeight, config.CellSize);
-        topBox.tag = Constants.TagConstans.FloorGridTag;
-        topBox.GetComponent<Renderer>().material = config.GridMaterial;
-
-        //Added component WayPoint (navigations)
-        WayPoint wayPoint = topBox.gameObject.AddComponent<WayPoint>();
-        wayPoint.CreateDefaultWayPoint(i, j);
-
         float forwardOffset = halfL;
         float verticalOffset = h + (SmallBoxHeight / 2f);
-        topBox.transform.localPosition = new Vector3(0f, verticalOffset, forwardOffset);
-
-        var topBoxCollider = topBox.GetComponent<BoxCollider>();
-        topBoxCollider.isTrigger = true;
+        GameObject topBox = _smallBoxCreatingService.CreateSmallBox(
+            $"RampTopBox_{i}_{j}",
+            new Vector3(0f, verticalOffset, forwardOffset),
+            new Vector3(config.CellSize, SmallBoxHeight, config.CellSize),
+            ramp.transform,
+            config.GridMaterial,
+            i,
+            j,
+            useLocalPosition: true,
+            hideRenderer: false);
 
         var marker = topBox.AddComponent<RampMarker>();
         marker.targetCell = targetCell;

@@ -1,9 +1,6 @@
 using Assets.Scripts.TacticMap;
 using Assets.Scripts.TacticMap.V05;
-
 using System.Collections.Generic;
-
-using Unity.VisualScripting.FullSerializer;
 
 using UnityEngine;
 
@@ -11,6 +8,7 @@ public class GridGenerator_05 : IGridGenerator
 {
     public const string Algorith_version = "0.5";
 
+    private readonly SmallBoxCreatingService _smallBoxCreatingService = new SmallBoxCreatingService();
     private const float SmallBoxHeight = 0.5f;
     private const float LiftAboveGround = 0.3f;
 
@@ -84,20 +82,14 @@ public class GridGenerator_05 : IGridGenerator
                     center.z + z
                 );
 
-                GameObject smallBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                smallBox.name = $"SmallBox_{i}_{j}";
-                smallBox.transform.localScale = new Vector3(config.CellSize, SmallBoxHeight, config.CellSize);
-                smallBox.transform.position = smallPos;
-                smallBox.transform.SetParent(platform.transform);
-                smallBox.tag = Constants.TagConstans.FloorGridTag;
-                var rend = smallBox.GetComponent<Renderer>();
-                rend.material = config.GridMaterial;
-                rend.enabled = false;
-                smallBox.GetComponent<BoxCollider>().isTrigger = true;
-
-                //Added component WayPoint (navigations)
-                WayPoint wayPoint1 = smallBox.gameObject.AddComponent<WayPoint>();
-                wayPoint1.CreateDefaultWayPoint(i, j);
+                GameObject smallBox = _smallBoxCreatingService.CreateSmallBox(
+                    $"SmallBox_{i}_{j}",
+                    smallPos,
+                    new Vector3(config.CellSize, SmallBoxHeight, config.CellSize),
+                    platform.transform,
+                    config.GridMaterial,
+                    i,
+                    j);
 
                 smallCubes[i, j] = smallBox;
             }

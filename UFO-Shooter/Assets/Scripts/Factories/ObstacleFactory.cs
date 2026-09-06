@@ -116,15 +116,16 @@ public class ObstacleFactory : IObstacleFactory
         // 👇 створюємо вкладений obstacle (якщо є)
         if (obstacle.NestedObstacle != null)
         {
-            CreateSingleObstacle(obstacle.NestedObstacle, obstacleConfig, baseY + height, 
+            var nestedObstacleGO = CreateSingleObstacle(obstacle.NestedObstacle, obstacleConfig, baseY + height, 
                 gameObstacle.transform);
+            obstacle.NestedObstacle.inetrnalGameObjectObstacleInstance = nestedObstacleGO;
         }
 
-        ////поворот по Y
-        //if (obstacle.RotateY != 0)
-        //{
-        //    gameObstacle.transform.Rotate(0f, obstacle.RotateY, 0f);
-        //}
+        //поворот по Y
+        if (obstacle.RotateY != 0)
+        {
+            gameObstacle.transform.Rotate(0f, obstacle.RotateY, 0f);
+        }
 
         return gameObstacle;
     }

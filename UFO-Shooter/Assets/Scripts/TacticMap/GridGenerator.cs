@@ -6,6 +6,7 @@ using UnityEngine;
 /// </summary>
 public class GridGenerator
 {
+    private readonly SmallBoxCreatingService _smallBoxCreatingService = new SmallBoxCreatingService();
     private int _width;
     private int _length;
     private float _cellSize;
@@ -107,21 +108,14 @@ public class GridGenerator
                         center.z + zTop
                     );
 
-                    GameObject topBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    topBox.name = $"TopSmallBox_{i}_{j}";
-                    topBox.transform.localScale = new Vector3(_cellSize, _smallHeight, _cellSize);
-                    topBox.transform.position = topPos;
-                    topBox.transform.SetParent(_bigBox.transform);
-                    topBox.tag = Constants.TagConstans.FloorGridTag;
-                    //topBox.GetComponent<Renderer>().material = _gridMaterial;
-                    var topRend = topBox.GetComponent<Renderer>();
-                    topRend.material = _gridMaterial;
-                    topRend.enabled = false; // ховаємо візуал, залишаємо колайдер
-                    topBox.GetComponent<BoxCollider>().isTrigger = true;
-
-                    //Added component WayPoint (navigations)
-                    WayPoint wayPoint1 = topBox.gameObject.AddComponent<WayPoint>();
-                    wayPoint1.CreateDefaultWayPoint(i, j);
+                    GameObject topBox = _smallBoxCreatingService.CreateSmallBox(
+                        $"TopSmallBox_{i}_{j}",
+                        topPos,
+                        new Vector3(_cellSize, _smallHeight, _cellSize),
+                        _bigBox.transform,
+                        _gridMaterial,
+                        i,
+                        j);
 
                     //додаємо створений смол-бокс в колекцію (ObstacleOnTheMap), щоб потім паретна переасаайнити конкретному обстеклу
                     //видалити???
@@ -149,21 +143,14 @@ public class GridGenerator
                     smallPos.y = bigHeight.Value * 2 + _liftAboveBig;
                 }
 
-                GameObject smallBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                smallBox.name = $"SmallBox_{i}_{j}";
-                smallBox.transform.localScale = new Vector3(_cellSize, _smallHeight, _cellSize);
-                smallBox.transform.position = smallPos;
-                smallBox.transform.SetParent(_bigBox.transform);
-                smallBox.tag = Constants.TagConstans.FloorGridTag;
-                var smallRend = smallBox.GetComponent<Renderer>();
-                smallRend.material = _gridMaterial;
-                smallRend.enabled = false; // ховаємо візуал, залишаємо колайдер
-                //smallBox.GetComponent<Renderer>().material = _gridMaterial;
-                smallBox.GetComponent<BoxCollider>().isTrigger = true;
-
-                //Added component WayPoint (navigations)
-                WayPoint wayPoint2 = smallBox.gameObject.AddComponent<WayPoint>();
-                wayPoint2.CreateDefaultWayPoint(i, j);
+                GameObject smallBox = _smallBoxCreatingService.CreateSmallBox(
+                    $"SmallBox_{i}_{j}",
+                    smallPos,
+                    new Vector3(_cellSize, _smallHeight, _cellSize),
+                    _bigBox.transform,
+                    _gridMaterial,
+                    i,
+                    j);
 
                 _smallCubes[i, j] = smallBox;
             }
@@ -408,29 +395,21 @@ public class GridGenerator
 
         // *** Створюємо горизонтальний small-box зверху пандуса ***
         // ставимо його як дочірній об'єкт ramp і позиціонуємо локально на "фронті" (верхній край пандуса)
-        GameObject topBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        topBox.name = $"RampTopBox_{i}_{j}";
-        topBox.transform.SetParent(ramp.transform, false);
-
-        //Added component WayPoint (navigations)
-        WayPoint wayPoint3 = topBox.gameObject.AddComponent<WayPoint>();
-        wayPoint3.CreateDefaultWayPoint(i, j);
-
-        // розмір і матеріал для small-box
-        topBox.transform.localScale = new Vector3(_cellSize, _smallHeight, _cellSize);
-        topBox.tag = Constants.TagConstans.FloorGridTag;
-        topBox.GetComponent<Renderer>().material = _gridMaterial;
-
         // Локальна позиція: вперед на половину довжини + невеликий зміщ, вгору на (h + smallHeight/2)
         float forwardOffset = halfL; // front most position
         float verticalOffset = h + (_smallHeight / 2f);
 
         // Т.к. ramp є повернутий відповідно до direction, встановимо localPosition у локальних координатах ramp:
-        topBox.transform.localPosition = new Vector3(0f, verticalOffset, forwardOffset);
-
-        // зробимо small-box тригером (щоб він був "пішохідною клітинкою")
-        var topBoxCollider = topBox.GetComponent<BoxCollider>();
-        topBoxCollider.isTrigger = true;
+        GameObject topBox = _smallBoxCreatingService.CreateSmallBox(
+            $"RampTopBox_{i}_{j}",
+            new Vector3(0f, verticalOffset, forwardOffset),
+            new Vector3(_cellSize, _smallHeight, _cellSize),
+            ramp.transform,
+            _gridMaterial,
+            i,
+            j,
+            useLocalPosition: true,
+            hideRenderer: false);
 
         //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         var marker = topBox.AddComponent<RampMarker>();
