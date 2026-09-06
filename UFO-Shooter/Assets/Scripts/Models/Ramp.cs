@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -25,6 +26,10 @@ public class Ramp
     [HideInInspector]
     public Transform parent;
 
+
+    //Allowed/Disallowed movements
+    public List<Vector2Int> allowedMovements = new List<Vector2Int>();
+    public List<Vector2Int> disallowedMovements = new List<Vector2Int>();
 
 
     public Ramp(int i, int j, RampDirection direction, Transform parent, Material material, Vector2Int targetCell)

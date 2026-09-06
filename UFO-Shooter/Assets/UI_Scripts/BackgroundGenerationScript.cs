@@ -222,6 +222,10 @@ public class BackgroundGenerationScript : MonoBehaviour
 
         gameController.RegisterObstructionManager(obstructionManager);
 
+        //set static data
+        StaticTacticalData.GroundHierarchy = platformLayersCollection;
+        StaticTacticalData.Obstacles = _obstacles;
+
         ValidateSmallBoxes(platformLayersCollection);
         //game started:
 
@@ -238,11 +242,6 @@ public class BackgroundGenerationScript : MonoBehaviour
 
         //закрити вікно генерації обїєкту
         CloseScriptWindow();
-
-        //Test static data:
-        StaticTacticalData.GroundHierarchy = platformLayersCollection;
-        StaticTacticalData.Obstacles = _obstacles;
-
 
     }
 
@@ -295,6 +294,6 @@ public class BackgroundGenerationScript : MonoBehaviour
     private void ValidateSmallBoxes(IGroundHierarchy platformLayersCollection)
     {
         var v  = new SmallBoxesValidation();
-        v.ValidateAndFix(platformLayersCollection);
+        v.ValidateAndFix(platformLayersCollection, _RampsCollection, _hills);
     }
 }

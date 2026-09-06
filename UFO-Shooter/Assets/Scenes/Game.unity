@@ -1035,7 +1035,7 @@ MonoBehaviour:
     RotateY: 180
     AllowedClimbing: 1
     Climbing_from_coords: {x: 21, y: 23}
-    Climbing_to_coords: {x: 23, y: 22}
+    Climbing_to_coords: {x: 22, y: 23}
     inetrnalGameObjectObstacleInstance: {fileID: 0}
     RampsCollection: []
   - Name: 
@@ -1062,6 +1062,12 @@ MonoBehaviour:
     obstacleIndex: 2
     GO: {fileID: 0}
     parent: {fileID: 0}
+    allowedMovements:
+    - {x: 7, y: 11}
+    - {x: 9, y: 11}
+    disallowedMovements:
+    - {x: 8, y: 12}
+    - {x: 8, y: 10}
   - i: 12
     j: 12
     direction: 1
@@ -1070,6 +1076,12 @@ MonoBehaviour:
     obstacleIndex: 3
     GO: {fileID: 0}
     parent: {fileID: 0}
+    allowedMovements:
+    - {x: 11, y: 12}
+    - {x: 11, y: 10}
+    disallowedMovements:
+    - {x: 10, y: 11}
+    - {x: 12, y: 11}
   - i: 11
     j: 10
     direction: 3
@@ -1078,6 +1090,12 @@ MonoBehaviour:
     obstacleIndex: 4
     GO: {fileID: 0}
     parent: {fileID: 0}
+    allowedMovements:
+    - {x: 11, y: 9}
+    - {x: 9, y: 9}
+    disallowedMovements:
+    - {x: 10, y: 10}
+    - {x: 10, y: 8}
   Level1_ObstacleMaterial: {fileID: 2100000, guid: 6886c69b5fdd0654da418ad566cfb6ec, type: 2}
   Level2_ObstacleMaterial: {fileID: 2100000, guid: 9e03f3fc0b5bd3845b9b7ca3e128cd95, type: 2}
   Level3_ObstacleMaterial: {fileID: 2100000, guid: da66822c962c5c74485290e774f6fd93, type: 2}
