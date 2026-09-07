@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 using UnityEngine;
 
@@ -31,6 +30,7 @@ public class HeroMovement : MonoBehaviour
     //Необхідна при заході на Преешкоду (схил та інші), бо
     // заходимо через Ramp
     private Queue<Vector3> currentPath = new Queue<Vector3>();
+    private readonly CreatureMovingService creatureMovingService = new CreatureMovingService();
 
     private void Start()
     {
@@ -79,81 +79,34 @@ public class HeroMovement : MonoBehaviour
         if (!clicked.CompareTag(Constants.TagConstans.FloorGridTag))
             return;
 
-        // Use the exact contact point (hit.point) instead of transform.position
-        Vector3 worldPoint = hit.point;
-
-        // Optional: if your grid is at a fixed Y, force that Y:
-        // worldPoint.y = clicked.transform.position.y;
-
-        //Debug.Log($"Clicked: {clicked.name}, hit.point={worldPoint}, colliderCenter={hit.collider.bounds.center}");
-
-        if (!GridGenerator_05.GetGridCoordsFromWorld(worldPoint, out int i, out int j))
-        {
-            Debug.LogWarning($"GetGridCoordsFromWorld returned false for point {worldPoint}");
-            return;
-        }
-        
-        // перевірка доступності саме для цього героя
-        if (!hero.IsCellAvailable(i, j))
+        var targetWayPoint = clicked.GetComponent<WayPoint>();
+        if (targetWayPoint == null)
             return;
 
-        // встановлюємо ціль і починаємо рух
-        //targetPos = new Vector3(clicked.transform.position.x, transform.position.y, clicked.transform.position.z);
+        int i = Mathf.RoundToInt(targetWayPoint.Corrds.x);
+        int j = Mathf.RoundToInt(targetWayPoint.Corrds.y);
         targetI = i;
         targetJ = j;
 
-        /*
-         Hills - это должны бытьобычные obstacle с топ-боксами сверху
-         */
-
-        //перевірка що герой та ціль пеерміщення на одній ПРЕГРАДІ
         var heroCoords = hero.GetHeroCoords();
-        // guard against missing ground or its grid generator to avoid NullReferenceException
-        
-        var heroObstacle = StaticTacticalData.GetObstacleAt(heroCoords.x, heroCoords.y);
-            //ground?.GetGridGenerator?.GetObstacleAt(heroCoords.x, heroCoords.y);
+        if (StaticTacticalData.GroundHierarchy == null)
+            return;
 
-        var obstacle = StaticTacticalData.GetObstacleAt(i, j); //НЕ ВСЕГДА СРАБАТЫВАЕТ !!! иногда null, напримр SB 9/16
-        //ground?.GetGridGenerator?.GetObstacleAt(i, j);
+        if (!creatureMovingService.TryCreatePath(
+                StaticTacticalData.GroundHierarchy,
+                (GroundHierarchyLevel)hero.CurrentFloor,
+                heroCoords,
+                targetWayPoint,
+                hero.MovementPointsPerRound,
+                out var newPath))
+            return;
 
-        if ((obstacle != null) && (heroObstacle != obstacle)) // це перешкода
-        {
-            // шукаємо рампу, яка веде на цю клітинку
-            GameObject ramp = FindRampForObstacle(obstacle);//FindRampForObstacle(i, j);
-            if (ramp == null) return;
+        currentPath = newPath;
 
-            currentPath.Clear();
-            currentPath.Enqueue(ramp.transform.position);       // крок 1 → на рампу
-            currentPath.Enqueue(clicked.transform.position);    // крок 2 → у ціль на obstacle
-        }
-        else
-        {
-            // звичайний рух
-            currentPath.Clear();
-            currentPath.Enqueue(clicked.transform.position);
-        }
         // під час руху прибираємо підсвітку
         hero.ClearHighlights();
 
         isMoving = true;
-    }
-
-    private GameObject FindRampForObstacle(ObstacleOnTheMap obstacle)
-    {
-        var rampsCollection = obstacle.RampsCollection;
-
-        if (!rampsCollection.Any())
-        {
-            Debug.LogError("Нема заїзду на цю перешкоду()");
-            return null;
-        }
-
-        //проверить длинну и маршрут до рампы
-        //брать ближайший
-
-        return rampsCollection.First();
-
-        //delete RampOwner ????
     }
 
     private void MoveTowardsTarget()

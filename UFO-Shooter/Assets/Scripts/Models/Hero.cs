@@ -101,6 +101,9 @@ public class Hero : MonoBehaviour
     }
     #endregion
 
+    //services:
+    private readonly HighlightAvailableMovesService _highlightAvailableMovesService = new HighlightAvailableMovesService();
+
     #region Events
     private void Start()
     {
@@ -124,10 +127,6 @@ public class Hero : MonoBehaviour
             CacheGridRenderers();
             FindHeroGridCoords();
 
-            if (ShowAvailableMovementSquares)
-            {
-                HighlightAvailableMoves();
-            }
         }
     }
 
@@ -157,32 +156,14 @@ public class Hero : MonoBehaviour
         //temp
         if (cellRenderers == null) return;
 
-        int w = groundObject.width;
-        int l = groundObject.length;
-
-        for (int i = 0; i < w; i++)
-        {
-            for (int j = 0; j < l; j++)
-            {
-                var rend = cellRenderers[i, j];
-                if (rend == null) continue;
-
-                float dx = i - heroI;
-                float dz = j - heroJ;
-                float distance = Mathf.Sqrt(dx * dx + dz * dz);
-
-                if (distance > 0f && distance <= MovementPointsPerRound)
-                {
-                    rend.enabled = true;
-                    if (highlightMaterial != null)
-                        rend.material = highlightMaterial; // опційно змінюємо матеріал підсвітки
-                }
-                else
-                {
-                    rend.enabled = false;
-                }
-            }
-        }
+        _highlightAvailableMovesService.HighlightAvailableMoves(
+            groundObject,
+            cellRenderers,
+            new Vector2Int(heroI, heroJ),
+            MovementPointsPerRound,
+            highlightMaterial,
+            StaticTacticalData.GroundHierarchy,
+            (GroundHierarchyLevel)CurrentFloor);
     }
 
     /// <summary>

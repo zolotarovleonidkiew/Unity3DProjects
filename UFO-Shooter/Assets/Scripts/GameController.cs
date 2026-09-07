@@ -9,28 +9,26 @@ using static Constants;
 /// </summary>
 public class GameController : MonoBehaviour
 {
+    //singletone
     public static GameController Instance;
-    [SerializeField]  private ObstructionManager obstructionManager;
 
-    public int CurrentRound { get; private set; } = 1;
-    public bool IsHeroTurn { get; private set; } = true;
-
+    //armies
     [SerializeField] private List<Alien> aliens = new();
     [SerializeField] private List<Hero> heroes = new();
-    [SerializeField] private int heroMovesPerTurn = Constants.GlobalLivingConstans.MaxActionRounds;
 
-    //to do later...
-    [SerializeField] private TacticalMapTargetsEnum MapTarget = TacticalMapTargetsEnum.AlienAnnihilation;
-    [SerializeField] private float SquadReputation = 50;
-
+    //game round data
+    public int CurrentRound { get; private set; } = 1;
+    public bool IsHeroTurn { get; private set; } = true;
     private int activeHeroIndex = 0;
+    private bool gameStarted;
 
-    public Hero ActiveHero => (heroes.Count > 0 && activeHeroIndex >= 0 && activeHeroIndex < heroes.Count)
-     ? heroes[activeHeroIndex]
-     : null;
 
-    private bool AnyHeroWithActiveMovePoints => heroes.Any(h => h.CanMoving);
+    //tactical data - visuals
+    [SerializeField]  private ObstructionManager obstructionManager;
 
+    //tactical data - inner kitchen
+    [SerializeField] private int heroMovesPerTurn = Constants.GlobalLivingConstans.MaxActionRounds;
+    
     /// <summary>
     /// Викликається із BackgroundGenerationScript для реєстраціі ObstructionManager
     /// </summary>
@@ -71,14 +69,32 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
+    /// Active Hero
+    /// </summary>
+    public Hero ActiveHero => (heroes.Count > 0 && activeHeroIndex >= 0 && activeHeroIndex < heroes.Count)
+     ? heroes[activeHeroIndex]
+     : null;
+
+    private bool AnyHeroWithActiveMovePoints => heroes.Any(h => h.CanMoving);
+
+    //Plans for future
+    [SerializeField] private TacticalMapTargetsEnum MapTarget = TacticalMapTargetsEnum.AlienAnnihilation;
+    [SerializeField] private float SquadReputation = 50;
+
+    //************************************************************************************************************************
+
+
+
+    /// <summary>
     /// Викликається із BackgroundGenerationScript - відкласти початок першого ходу до повного завершення реєстрацій героїв та інший обїектів
     /// </summary>
     public void BeginGame()
     {
-        if (heroes.Count > 0)
-        {
-            StartHeroTurn();
-        }
+        if (gameStarted || heroes.Count == 0)
+            return;
+
+        gameStarted = true;
+        StartHeroTurn();
     }
 
     /// <summary>
@@ -105,16 +121,18 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        if (heroes.Count > 0)
-        {
-            StartHeroTurn();
-        }
     }
 
     private float lastManualSwitchTime;
     private void Update()
     {
         if (heroes.Count == 0) return;
+
+        if (!gameStarted)
+        {
+            BeginGame();
+            return;
+        }
 
         if (IsHeroTurn)
         {
