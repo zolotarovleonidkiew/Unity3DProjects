@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,8 +6,6 @@ using UnityEngine;
 public class HeroFactory : MonoBehaviour
 {
     private float _playerSize;    
-    private List<WeaponData> _startingWeapons;
-    private GameObject _bulletPrefab;
     private BackgroundGenerationScript _ground;
     private GameObject _HeroesCollectionGUI;
     private Material _gridMaterialHighlited;
@@ -17,8 +14,6 @@ public class HeroFactory : MonoBehaviour
     public HeroFactory(
         float playerSize,
         Material heroMaterial,
-        List<WeaponData> startingWeapons,
-        GameObject bulletPrefab,
         BackgroundGenerationScript ground,
         GameObject heroesCollectionGUI,
         Material gridMaterialHighlited
@@ -27,13 +22,15 @@ public class HeroFactory : MonoBehaviour
         _ground = ground;
         _playerSize = playerSize;
         _heroMaterial = heroMaterial;
-        _startingWeapons = startingWeapons;
-        _bulletPrefab = bulletPrefab;        
         _HeroesCollectionGUI = heroesCollectionGUI;
         _gridMaterialHighlited = gridMaterialHighlited;
     }
 
-    public Hero CreateHero(GameObject targetCell, int index, GameObject creaturePrefab = null)
+    public Hero CreateHero(
+        GameObject targetCell,
+        int index,
+        UILiveCreatureDisposition disposition,
+        GameObject creaturePrefab = null)
     {
         if (targetCell == null) return null;
 
@@ -102,8 +99,8 @@ public class HeroFactory : MonoBehaviour
         }
         hero.SetFlag_ShowAvailableMovementSquares();
         hero.SetGroundObject(_ground);
-        hero.SetStartingWeapons(_startingWeapons);
-        hero.SetBulletPrefab(_bulletPrefab); //TO DO: depends from current weapon
+        hero.SetStartingWeapons(disposition?.heroStartingWeapons);
+        hero.SetGrenadeCount(disposition?.GrenadeCount ?? 0);
         hero.SetHighlightMaterial(_gridMaterialHighlited);
 
         // Prefer existing FirePoint (common in prefab). Fallback to ShootPoint or create a new ShootPoint if none exist.

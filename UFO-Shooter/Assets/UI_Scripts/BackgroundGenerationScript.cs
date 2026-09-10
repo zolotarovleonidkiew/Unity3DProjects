@@ -20,8 +20,6 @@ public class BackgroundGenerationScript : MonoBehaviour
     };
     public float playerSize = 1f;
     public Material heroBoxMaterial;
-    [SerializeField] private List<WeaponData> heroStartingWeapons;
-    [SerializeField] private GameObject bulletPrefab; //TO DO: make it a list of prefabs for different weapons
     [SerializeField] private GameObject HeroesCollectionGUI;
     [Header("=== Hero Settings END===")]
 
@@ -156,7 +154,7 @@ public class BackgroundGenerationScript : MonoBehaviour
         #endregion
         
         //live enities:
-        var heroFactory = new HeroFactory(playerSize, heroBoxMaterial, heroStartingWeapons, bulletPrefab, this, HeroesCollectionGUI, gridBoxMaterialHighlited);
+        var heroFactory = new HeroFactory(playerSize, heroBoxMaterial, this, HeroesCollectionGUI, gridBoxMaterialHighlited);
         var alienFactory = new AlienFactory(alienSize, alienBoxMaterial, this, AlienCollectionGUI);
 
         // Герої    
@@ -187,7 +185,7 @@ public class BackgroundGenerationScript : MonoBehaviour
                 }
             }
 
-            Hero hero = heroFactory.CreateHero(targetCell, h, heroPosition.CreaturePrefab);
+            Hero hero = heroFactory.CreateHero(targetCell, h, heroPosition, heroPosition.CreaturePrefab);
             if (hero != null)
                 gameController.RegisterHero(hero);
         }

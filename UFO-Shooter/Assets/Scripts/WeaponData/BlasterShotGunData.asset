@@ -10,14 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c356e56c447c1dc44a1a945b58df97f7, type: 3}
-  m_Name: BlasterShotGun
+  m_Name: BlasterShotGunData
   m_EditorClassIdentifier: 
+  weaponName: Blaster ShotGun
   weaponType: 10
-  owner: 0
-  maxAmmoPerMagazine: 4
+  minDamage: 15
+  maxDamage: 18
+  hasRadiusOfDamage: 0
+  RadiusOfDamage: 0
   maxMagazines: 3
-  currentAmmo: 4
   currentMagazines: 3
-  prefab: {fileID: 0}
-  fireAnimation: {fileID: 0}
-  fireSound: {fileID: 0}
+  maxAmmoPerMagazine: 4
+  currentAmmoCount: 4
+  spriteWeapon: {fileID: 21300000, guid: 7635005269ccc3145b6b10de9a963116, type: 3}
+  bulltPrefab: {fileID: 3512912493674784436, guid: d3f887187a13106469f4ea84d6778d76, type: 3}

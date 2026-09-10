@@ -1,31 +1,34 @@
 
-//NEW
+using UnityEngine;
+
 [System.Serializable]
 public class HeroWeapon
 {
     public WeaponData data;
-    public int currentAmmo;
 
     public HeroWeapon(WeaponData weaponData)
     {
-        data = weaponData;
-        currentAmmo = weaponData != null ? weaponData.maxAmmoPerMagazine : 0;
+        data = weaponData != null ? Object.Instantiate(weaponData) : null;
     }
 
     public bool CanShoot()
     {
-        return currentAmmo > 0;
+        return data != null && data.currentAmmoCount > 0;
     }
 
     public void Shoot()
     {
-        if (currentAmmo > 0)
-            currentAmmo--;
+        if (CanShoot())
+            data.currentAmmoCount--;
     }
 
     public void Reload()
     {
-        if (data != null) currentAmmo = data.maxAmmoPerMagazine;
+        if (data == null || data.currentAmmoCount == data.maxAmmoPerMagazine || data.currentMagazines <= 0)
+            return;
+
+        data.currentMagazines--;
+        data.currentAmmoCount = data.maxAmmoPerMagazine;
     }
 
 }

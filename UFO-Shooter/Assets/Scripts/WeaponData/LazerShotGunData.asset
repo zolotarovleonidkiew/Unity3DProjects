@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c356e56c447c1dc44a1a945b58df97f7, type: 3}
   m_Name: LazerShotGunData
   m_EditorClassIdentifier: 
+  weaponName: Lazer ShotGun
   weaponType: 5
-  owner: 0
-  maxAmmoPerMagazine: 3
+  minDamage: 13
+  maxDamage: 17
+  hasRadiusOfDamage: 0
+  RadiusOfDamage: 0
   maxMagazines: 3
-  currentAmmo: 3
   currentMagazines: 3
-  prefab: {fileID: 0}
-  fireAnimation: {fileID: 0}
-  fireSound: {fileID: 0}
+  maxAmmoPerMagazine: 3
+  currentAmmoCount: 3
+  spriteWeapon: {fileID: 21300000, guid: 9c199db2f645f6b45a4e472aa48e398e, type: 3}
+  bulltPrefab: {fileID: 5924875826302583872, guid: 5ca17a819a178604ab5686c6c784cbfc, type: 3}

@@ -3,55 +3,23 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Game/WeaponData")]
 public class WeaponData : ScriptableObject
 {
-    public string weaponName;
-    public WeaponType weaponType;
-    public int minDamage;
-    public int maxDamage;
-    public float fireRate;
-    public int magazineSize; // напр. 12
-    public float reloadTime;
+    public string weaponName;     // Имя оружия
+    public WeaponType weaponType; // Тип
+    public int minDamage;         // Мин ...
+    public int maxDamage;         // и Макс урон
+    public bool hasRadiusOfDamage; // Flag - наносит урон по площади?
+    public float RadiusOfDamage;   // Радиус урона по площади
 
-    [Header("Ammo Settings")]
-    public int maxAmmoPerMagazine = 10;  // максимальна кількість патронів у магазині
-    public int maxMagazines = 3;         // скільки магазинів можна носити
-    public int currentAmmo;              // поточна кількість патронів у магазині
-    public int currentMagazines;         // поточна кількість магазинів
+    [Header("Ammo Settings")]    
+    public int maxMagazines;             // MAX магазинів можна носити
+    public int currentMagazines;         // залишилось магазинів
+    public int maxAmmoPerMagazine;       // MAX кількість патронів у магазині
+    public int currentAmmoCount;         // залишилось патронів у магазині
+    
 
-
-    //OLD
-    //public WeaponType weaponType;
-    //public WeaponOwner owner;
-
-    //[Header("Ammo Settings")]
-    //public int maxAmmoPerMagazine = 10;  // максимальна кількість патронів у магазині
-    //public int maxMagazines = 3;         // скільки магазинів можна носити
-    //public int currentAmmo;              // поточна кількість патронів у магазині
-    //public int currentMagazines;         // поточна кількість магазинів
-
-    //[Header("References")]
-    //public GameObject prefab;            // префаб зброї
-    //public AnimationClip fireAnimation;  // анімація пострілу
-    //public AudioClip fireSound;          // звук пострілу
-
-    //public void Reload()
-    //{
-    //    if (currentMagazines > 0)
-    //    {
-    //        currentMagazines--;
-    //        currentAmmo = maxAmmoPerMagazine;
-    //    }
-    //}
-
-    //public bool CanShoot()
-    //{
-    //    return currentAmmo > 0;
-    //}
-
-    //public void Shoot()
-    //{
-    //    if (currentAmmo > 0)
-    //    {
-    //        currentAmmo--;
-    //    }
-    //}
+    //Visuals
+    [SerializeField] private Sprite spriteWeapon;
+    public Sprite SpriteWeapon => spriteWeapon;
+    [SerializeField] private GameObject bulltPrefab; //TO DO: add bullet prefab to weapon data
+    public GameObject BulltPrefab => bulltPrefab;
 }

@@ -15,6 +15,7 @@ public class Hero : MonoBehaviour
     public float Speed;
     public float DetectionRange;
     public float AttackCooldown = 1f;
+    public int GrenadeCount { get; private set; }
     #endregion
 
 
@@ -47,9 +48,9 @@ public class Hero : MonoBehaviour
     [Header("Hero Weapons")]
     [SerializeField] private List<HeroWeapon> weapons = new List<HeroWeapon>();
     private HeroWeapon activeWeapon;
+    public IReadOnlyList<HeroWeapon> Weapons => weapons;
 
     [Header("Shooting")]
-    [SerializeField] private GameObject bulletPrefab; // префаб кулі
     [SerializeField] private float bulletSpeed = 15f; // швидкість кулі
     private Transform shootPoint;
 
@@ -72,13 +73,12 @@ public class Hero : MonoBehaviour
     private int heroI;
     private int heroJ;
 
-    public void SetBulletPrefab(GameObject _prefab)
-    {
-        bulletPrefab = _prefab;
-    }
     public void SetStartingWeapons(List<WeaponData> startingWeapons)
     {
         weapons.Clear();
+        if (startingWeapons == null)
+            return;
+
         foreach (var w in startingWeapons)
         {
             weapons.Add(new HeroWeapon(w)); // створюємо копію зі своїм боєзапасом
@@ -86,6 +86,10 @@ public class Hero : MonoBehaviour
 
         if (weapons.Count > 0)
             activeWeapon = weapons[0];
+    }
+    public void SetGrenadeCount(int grenadeCount)
+    {
+        GrenadeCount = grenadeCount;//Mathf.Clamp(grenadeCount, 0, 3);//?
     }
     public void SetGroundObject(BackgroundGenerationScript script)
     {
@@ -141,6 +145,8 @@ public class Hero : MonoBehaviour
         // Перемикання зброї на цифри
         if (Input.GetKeyDown(KeyCode.Alpha1)) SwitchWeapon(WeaponType.Pistol);
         if (Input.GetKeyDown(KeyCode.Alpha2)) SwitchWeapon(WeaponType.Rifle);
+        if (Input.GetKeyDown(KeyCode.R))
+            ReloadActiveWeapon();
     }
     #endregion
 
@@ -240,6 +246,11 @@ public class Hero : MonoBehaviour
         return activeWeapon;
     }
 
+    public int GetActiveWeaponIndex()
+    {
+        return activeWeapon == null || weapons == null ? -1 : weapons.IndexOf(activeWeapon);
+    }
+
     /// <summary>
     /// Змінити зброю
     /// </summary>
@@ -257,6 +268,24 @@ public class Hero : MonoBehaviour
         {
             Debug.LogWarning($"[Hero] {name} doesn't have weapon {type}");
         }
+    }
+
+    public void SelectWeapon(int weaponIndex)
+    {
+        if (weapons == null || weaponIndex < 0 || weaponIndex >= weapons.Count)
+            return;
+
+        HeroWeapon selectedWeapon = weapons[weaponIndex];
+        if (selectedWeapon?.data == null)
+            return;
+
+        activeWeapon = selectedWeapon;
+        Debug.Log($"Выбрано активным оружие {selectedWeapon.data.weaponName}");
+    }
+
+    private void ReloadActiveWeapon()
+    {
+        activeWeapon?.Reload();
     }
 
     private void ShootAlien()
@@ -398,7 +427,7 @@ public class Hero : MonoBehaviour
 
         if (!activeWeapon.CanShoot())
         {
-            Debug.Log($"{name} — {activeWeapon.data.weaponName} нема патронів!");
+            Debug.Log($"{name} — {activeWeapon.data?.weaponName} нема патронів!");
             return;
         }
 
@@ -421,9 +450,10 @@ public class Hero : MonoBehaviour
         if (firePoint == null)
             firePoint = transform;
 
+        GameObject bulletPrefab = activeWeapon.data?.BulltPrefab;
         if (bulletPrefab == null)
         {
-            Debug.LogWarning("ShootAt: bulletPrefab is not assigned");
+            Debug.LogWarning($"ShootAt: bullet prefab is not assigned for weapon '{activeWeapon.data?.weaponName}'");
             return;
         }
 
@@ -439,6 +469,7 @@ public class Hero : MonoBehaviour
         bullet.speed = bulletSpeed;
         bullet.SetShotData(gameObject, activeWeapon.data);
         bullet.SetTarget(target);
+        activeWeapon.Shoot();
 
         //TODO : visuals
         // Відтворюємо звук/анімацію (якщо є)

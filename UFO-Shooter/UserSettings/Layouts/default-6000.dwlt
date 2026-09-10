@@ -1356,15 +1356,15 @@ MonoBehaviour:
   m_OverrideSceneCullingMask: 6917529027641081856
   m_SceneIsLit: 1
   m_SceneLighting: 1
-  m_2DMode: 0
+  m_2DMode: 1
   m_isRotationLocked: 0
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -1.9158064, y: -2.631154, z: -10.440268}
+    m_Target: {x: 960, y: 540, z: 0}
     speed: 2
-    m_Value: {x: -5.629609, y: -0.99200124, z: -3.7232523}
+    m_Value: {x: -6.888681, y: -2.2768595, z: 6.2204804}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1411,15 +1411,15 @@ MonoBehaviour:
     m_gridOpacity: 0.5
     m_NearestPlaneToHandleMode: 0
   m_Rotation:
-    m_Target: {x: -0.3192393, y: 0.6765426, z: -0.51133233, w: -0.4236269}
+    m_Target: {x: 0, y: 0, z: 0, w: 1}
     speed: 2
-    m_Value: {x: -0.30685958, y: 0.6906558, z: -0.49483356, w: -0.42955273}
+    m_Value: {x: -0.5765992, y: -0.15339552, z: 0.11068278, w: -0.7951714}
   m_Size:
-    m_Target: 11.195488
+    m_Target: 693.25214
     speed: 2
-    m_Value: 6.6111465
+    m_Value: 8.785728
   m_Ortho:
-    m_Target: 0
+    m_Target: 1
     speed: 2
     m_Value: 0
   m_CameraSettings:
@@ -1437,7 +1437,7 @@ MonoBehaviour:
     m_FarClip: 10000
     m_DynamicClip: 1
     m_OcclusionCulling: 0
-  m_LastSceneViewRotation: {x: 0.32308426, y: 0.19263613, z: -0.067357115, w: 0.9241954}
+  m_LastSceneViewRotation: {x: 0.5765992, y: 0.15339553, z: -0.11068278, w: 0.7951714}
   m_LastSceneViewOrtho: 0
   m_Viewpoint:
     m_SceneView: {fileID: 15}
@@ -1528,8 +1528,8 @@ MonoBehaviour:
       m_rawData: 568105584918840210
     m_ExpandedIDs:
     - m_rawData: 0
-    - m_rawData: 568105584918839882
-    - m_rawData: 568105584918839884
+    - m_rawData: 568105584918839898
+    - m_rawData: 568105584918839900
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1563,8 +1563,8 @@ MonoBehaviour:
       m_rawData: 0
     m_ExpandedIDs:
     - m_rawData: 0
-    - m_rawData: 568105584918839882
-    - m_rawData: 568105584918839884
+    - m_rawData: 568105584918839898
+    - m_rawData: 568105584918839900
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

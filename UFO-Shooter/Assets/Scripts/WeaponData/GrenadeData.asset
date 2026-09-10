@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c356e56c447c1dc44a1a945b58df97f7, type: 3}
   m_Name: GrenadeData
   m_EditorClassIdentifier: 
+  weaponName: Grenade
   weaponType: 6
-  owner: 0
-  maxAmmoPerMagazine: 1
-  maxMagazines: 0
-  currentAmmo: 1
-  currentMagazines: 0
-  prefab: {fileID: 0}
-  fireAnimation: {fileID: 0}
-  fireSound: {fileID: 0}
+  minDamage: 5
+  maxDamage: 5
+  hasRadiusOfDamage: 1
+  RadiusOfDamage: 4
+  maxMagazines: 1
+  currentMagazines: 1
+  maxAmmoPerMagazine: 3
+  currentAmmoCount: 3
+  spriteWeapon: {fileID: 21300000, guid: c260fd53a70d90e46a315ce3dd98d2cc, type: 3}
+  bulltPrefab: {fileID: 5924875826302583872, guid: a412393950bdb83428b02729608dd9b9, type: 3}

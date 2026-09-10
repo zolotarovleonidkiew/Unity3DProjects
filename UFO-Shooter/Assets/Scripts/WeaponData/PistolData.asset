@@ -16,10 +16,11 @@ MonoBehaviour:
   weaponType: 0
   minDamage: 1
   maxDamage: 3
-  fireRate: 0
-  magazineSize: 12
-  reloadTime: 0
-  maxAmmoPerMagazine: 12
+  hasRadiusOfDamage: 0
+  RadiusOfDamage: 0
   maxMagazines: 3
-  currentAmmo: 12
   currentMagazines: 3
+  maxAmmoPerMagazine: 12
+  currentAmmoCount: 12
+  spriteWeapon: {fileID: 21300000, guid: 5ff97df129e8be949ae98a68ef8913c9, type: 3}
+  bulltPrefab: {fileID: 5924875826302583872, guid: a412393950bdb83428b02729608dd9b9, type: 3}

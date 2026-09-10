@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +12,8 @@ public class UILiveCreatureDisposition
     public Vector2Int GridPosition;
     public AlienTypesEnum alienTypesEnum; 
     public GroundHierarchyLevel GroundLayer;
-
+    public List<WeaponData> heroStartingWeapons;
+    public int GrenadeCount;
     /// <summary>
     /// Heros and aliens prefabs here - should be removed
     /// </summary>
