@@ -1804,11 +1804,12 @@ MonoBehaviour:
   HeroesCollectionGUI: {fileID: 1246712479}
   aliensGridPositions:
   - GridPosition: {x: 20, y: 20}
-    alienTypesEnum: 0
+    alienTypesEnum: 1
     GroundLayer: 1
-    heroStartingWeapons: []
+    heroStartingWeapons:
+    - {fileID: 11400000, guid: 67d05b8ed1cbf3745a41807ec2856820, type: 2}
     GrenadeCount: 0
-    CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+    CreaturePrefab: {fileID: 1130854754395139637, guid: e532e42d16947a742bdde39b1abf4919, type: 3}
   - GridPosition: {x: 19, y: 20}
     alienTypesEnum: 1
     GroundLayer: 1
@@ -1852,7 +1853,7 @@ MonoBehaviour:
     GrenadeCount: 0
     CreaturePrefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   level_0_Greys_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
-  level_0_Light_Drone_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
+  level_0_Light_Drone_Prefab: {fileID: 1130854754395139637, guid: e532e42d16947a742bdde39b1abf4919, type: 3}
   level_1_Heavy_Drone_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   level_2_Assault_Trooper_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}
   level_2_Insect_Prefab: {fileID: 8340702221716950639, guid: b9e696ab82dfda1468374115aadd9277, type: 3}

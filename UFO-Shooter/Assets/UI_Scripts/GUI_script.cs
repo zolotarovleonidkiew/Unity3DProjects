@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -90,6 +91,9 @@ public class GUI_script : MonoBehaviour
     #region Events
     void Update()
     {
+        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.F1))
+            SceneManager.LoadScene("MainGate");
+
         UpdateActiveHeroDisplay();
 
         //monitoring player state

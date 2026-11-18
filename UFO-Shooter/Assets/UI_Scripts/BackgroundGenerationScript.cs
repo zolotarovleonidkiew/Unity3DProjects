@@ -215,7 +215,27 @@ public class BackgroundGenerationScript : MonoBehaviour
 
             Alien al = alienFactory.CreateAlien(alienPosition.alienTypesEnum, targetCell, a, alienPrefab);
             if (al != null)
+            {
+                AlienDroneBehaviour droneBehaviour = alienPrefab != null
+                    ? alienPrefab.GetComponentInChildren<AlienDroneBehaviour>(true)
+                    : null;
+
+                if (droneBehaviour != null)
+                {
+                    Collider cellCollider = targetCell.GetComponent<Collider>();
+                    float surfaceHeight = cellCollider != null
+                        ? cellCollider.bounds.max.y
+                        : targetCell.transform.position.y;
+
+                    AlienDroneBehaviour spawnedDrone = al.GetComponentInChildren<AlienDroneBehaviour>(true);
+                    if (spawnedDrone != null)
+                    {
+                        spawnedDrone.SetSurfaceHeight(surfaceHeight);
+                    }
+                }
+
                 gameController.RegisterAlien(al);
+            }
         }
 
         gameController.RegisterObstructionManager(obstructionManager);
